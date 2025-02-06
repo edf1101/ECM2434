@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ generic_feature.name }}</title>
+</head>
+<body>
+<h3><a href="{% url 'locations:generic-feature-list' %}">
+    Back to Feature List
+</a></h3>
+<h1>{{ generic_feature.name }}</h1>
+<br>
+<img
+        src="{{ generic_feature.generic_img.url }}"
+        alt="Image of {{ generic_feature.name }}"
+/>
+
+<p>{{ generic_feature.description }}</p>
+
+
+</body>
+</html>

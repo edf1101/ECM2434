@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✨{{ individual_feature.feature.name }}✨</title>
+</head>
+<body>
+<h1>✨You have reached the {{ individual_feature.name }}✨</h1>
+<h3>Lat: {{ individual_feature.latitude }}, Lon: {{ individual_feature.longitude }},
+    Code: {{ individual_feature.slug }}</h3>
+<br>
+<img
+        src="{{ individual_feature.image.url }}"
+        alt="Image of {{ individual_feature.name }}"
+/>
+
+<h2> About this Feature </h2>
+<h3> {{ individual_feature.feature.name }}</h3>
+<p>{{ individual_feature.feature.description }}</p>
+
+
+</body>
+</html>

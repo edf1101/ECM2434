@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feature List</title>
+</head>
+<body>
+
+<h1>Feature List</h1>
+
+    {% for feature in generic_features %}
+        <article>
+            <h4>
+                <a href="{%  url 'locations:generic-feature' id=feature.id %}">
+                    {{ feature.name }}
+                </a>
+            </h4>
+        </article>
+    {% endfor %}
+
+</body>
+</html>
