@@ -4,7 +4,7 @@ picker in the admin menu.
 """
 from django.forms import ModelForm
 from django.forms.widgets import TextInput
-from .models import Feature
+from .models import FeatureType
 
 
 class FeatureForm(ModelForm):
@@ -18,7 +18,7 @@ class FeatureForm(ModelForm):
         This class is used to define the model and fields that the form will use.
         """
         fields = '__all__'
-        model = Feature
+        model = FeatureType
         widgets = {
             'colour': TextInput(attrs={'type': 'color'}),
         }

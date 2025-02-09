@@ -10,3 +10,11 @@ class LocationsConfig(AppConfig):
     """
     default_auto_field = "django.db.models.BigAutoField"
     name = "locations"
+
+    def ready(self) -> None:
+        """
+        When the app is set up it imports the signals from the signals file
+
+        :return: None
+        """
+        import locations.signals

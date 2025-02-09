@@ -2,13 +2,13 @@
 This class deals with how the models appear in the admin menu.
 """
 from django.contrib import admin
-from .models import Feature, IndividualFeature
+from .models import FeatureType, FeatureInstance, Map3DChunk, LocationsAppSettings
 from .forms import FeatureForm
 
 
-class FeatureAdmin(admin.ModelAdmin):
+class FeatureTypeAdmin(admin.ModelAdmin):
     """
-    This class decides how the Feature model appears in the admin menu.
+    This class decides how the FeatureType model appears in the admin menu.
     It has two sections, Feature Info and Display information.
     """
     form = FeatureForm
@@ -20,9 +20,9 @@ class FeatureAdmin(admin.ModelAdmin):
     list_display = ["name", "description"]
 
 
-class IndividualFeatureAdmin(admin.ModelAdmin):
+class FeatureInstanceAdmin(admin.ModelAdmin):
     """
-    This class decides how the IndividualFeature model appears in the admin menu.
+    This class decides how the FeatureInstance model appears in the admin menu.
     It has three sections, Feature Info, Location and Display information.
     """
     fieldsets = [
@@ -34,6 +34,52 @@ class IndividualFeatureAdmin(admin.ModelAdmin):
     search_fields = ["feature"]
 
 
+class Map3DChunkAdmin(admin.ModelAdmin):
+    """
+    This class decides how the IndividualFeature model appears in the admin menu.
+    It has three sections, Feature Info, Location and Display information.
+    """
+    fieldsets = [
+        ("File", {"fields": ["file", "file_original_name"]}),
+        ("Geodesic Coordinates", {"fields": ["center_lat", "center_lon",
+                                             "bottom_left_lat", "bottom_left_lon",
+                                             "top_right_lat", "top_right_lon"]}),
+        ("World space Coordinates", {"fields": ["bottom_left_x", "bottom_left_y", "bottom_left_z",
+                                                "top_right_x", "top_right_y", "top_right_z"]}),
+    ]
+    list_display = ["file_original_name"]
+    search_fields = ["file_original_name"]
+
+
+class LocationAppSettingsAdmin(admin.ModelAdmin):
+    """
+    This class decides how the LocationsAppSettings model appears in the admin menu.
+    """
+
+    # create a description for this admin page
+    readonly_fields = ('desc',)  # Add the method name here
+
+    def desc(self, obj=None) -> str:
+        """
+        Returns a description of the page.
+
+        :param obj: None
+        :return: A string description of the page.
+        """
+        return "This page is a singleton model that stores the settings for the Locations app."
+
+    desc.short_description = "Description"
+
+    fieldsets = [
+        (None, {"fields": ["desc"]}),
+        ("Geodesic Map Data", {"fields": ["min_lat", "max_lat", "min_lon", "max_lon"]},),
+        ("World Space Data",
+         {"fields": ["min_world_x", "max_world_x", "min_world_y", "max_world_y"]}),
+    ]
+
+
 # Register the models with their respective classes.
-admin.site.register(Feature, FeatureAdmin)
-admin.site.register(IndividualFeature, IndividualFeatureAdmin)
+admin.site.register(LocationsAppSettings, LocationAppSettingsAdmin)
+admin.site.register(FeatureType, FeatureTypeAdmin)
+admin.site.register(FeatureInstance, FeatureInstanceAdmin)
+admin.site.register(Map3DChunk, Map3DChunkAdmin)
