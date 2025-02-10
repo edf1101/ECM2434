@@ -1012,15 +1012,6 @@ DracoDecoder | Decoded 5053 vertices, 11280 indices
 DracoDecoder | Decoded 2799 vertices, 5535 indices
 glTF import finished in 0.01s
 Imported object <bpy_struct, Object("Mesh_0.118") at 0x11ed03608>
-{'center': (50.733833758303135, -3.523180590632292), 'bottom_left': (50.733478772866555, -3.5238897753338545), 'top_right': (50.73418873818452, -3.5224714141593783)}
-Tile center in Blender coordinates: {'bottom_left': Vector((776.3004150390625, -355.2215576171875, 105.83232116699219)), 'top_right': Vector((876.40478515625, -276.6650695800781, 127.30813598632812))}
-Data are loaded, start creating Blender stuff
-17:29:40 | INFO: Draco Decoder: Decode primitive [unnamed]
-DracoDecoder | Decoded 4719 vertices, 10008 indices
-17:29:40 | INFO: Draco Decoder: Decode primitive [unnamed]
-DracoDecoder | Decoded 1379 vertices, 2373 indices
-glTF import finished in 0.01s
-Imported object <bpy_struct, Object("Mesh_0.119") at 0x17a3a8c08>
 {'center': (50.735206315150336, -3.546515967477295), 'bottom_left': (50.73484907103519, -3.5472197065154627), 'top_right': (50.73556355581934, -3.5458122213158974)}
 Tile center in Blender coordinates: {'bottom_left': Vector((-870.7853393554688, -202.70883178710938, 58.676780700683594)), 'top_right': Vector((-771.4102783203125, -123.81387329101562, 72.75114440917969))}
 Data are loaded, start creating Blender stuff
@@ -2630,13 +2621,6 @@ Data are loaded, start creating Blender stuff
 DracoDecoder | Decoded 1619 vertices, 3477 indices
 glTF import finished in 0.01s
 Imported object <bpy_struct, Object("Mesh_0.326") at 0x302237208>
-{'center': (50.74001426798504, -3.5231813237307272), 'bottom_left': (50.739657171908625, -3.5238851409814593), 'top_right': (50.74037136061273, -3.5224775187526696)}
-Tile center in Blender coordinates: {'bottom_left': Vector((776.5192260742188, 332.1761169433594, 159.84405517578125)), 'top_right': Vector((875.8784790039062, 410.8769226074219, 174.07818603515625))}
-Data are loaded, start creating Blender stuff
-17:30:29 | INFO: Draco Decoder: Decode primitive [unnamed]
-DracoDecoder | Decoded 3344 vertices, 7728 indices
-glTF import finished in 0.01s
-Imported object <bpy_struct, Object("Mesh_0.327") at 0x302362008>
 {'center': (50.740697765958764, -3.53691561755619), 'bottom_left': (50.74034818251627, -3.537619421668351), 'top_right': (50.7410473471315, -3.53621179895037)}
 Tile center in Blender coordinates: {'bottom_left': Vector((-192.991455078125, 408.53729248046875, 108.01217651367188)), 'top_right': Vector((-93.6737060546875, 486.3788146972656, 143.6746368408203))}
 Data are loaded, start creating Blender stuff

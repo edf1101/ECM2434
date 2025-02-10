@@ -3,11 +3,7 @@ This module contains the views for the locations app.
 """
 from django.shortcuts import render
 from django.http import HttpResponse
-
 from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .chunk_handling import get_nearby_tiles
 
 
 def base_locations(request) -> HttpResponse:
@@ -69,61 +65,3 @@ def generic_feature_list(request) -> HttpResponse:
     generic_features = FeatureType.objects.all()
     context = {'feature_type_list': generic_features}
     return render(request, 'locations/feature_type_list.html', context)
-
-
-@api_view(['GET'])
-def nearby_tiles(request):
-    """
-    This function returns a list of nearby 3D map tiles given a latitude, longitude and distance.
-
-    :param request: The get request object that hopefully contains lat, lon and distance.
-    :return:
-    """
-    try:
-        # Get the lat, lon and distance from the GET request
-        lat = float(request.GET.get("lat"))
-        lon = float(request.GET.get("lon"))
-        max_distance = float(request.GET.get("distance", 100))
-
-        tiles = get_nearby_tiles(lat, lon, max_distance)  # Get tiles
-
-        # Create a response with the list of tiles
-        response_data = [
-            {"id": tile.id, "file": tile.file.url, "lat": tile.center_lat, "lon": tile.center_lon}
-            for tile in tiles
-        ]
-
-        return Response(response_data, status=200)
-
-    except (TypeError, ValueError):
-        return Response({"error": "Invalid parameters"}, status=400)
-
-
-@api_view(['GET'])
-def api_get_map_data(request):
-    """
-    This function returns the map settings data for the 3D map.
-
-    :param request: The get request object. No data to read here.
-    :return: The map settings data in JSON format.
-    """
-
-    # Get the map settings data from the LocationsAppSettings model
-    min_lat = LocationsAppSettings.get_instance().min_lat
-    max_lat = LocationsAppSettings.get_instance().max_lat
-    min_lon = LocationsAppSettings.get_instance().min_lon
-    max_lon = LocationsAppSettings.get_instance().max_lon
-
-    min_x = LocationsAppSettings.get_instance().min_world_x
-    max_x = LocationsAppSettings.get_instance().max_world_x
-
-    min_y = LocationsAppSettings.get_instance().min_world_y
-    max_y = LocationsAppSettings.get_instance().max_world_y
-
-    # Create a response with the map settings data
-    response_data = [
-        {"min_lat": min_lat, "max_lat": max_lat, "min_lon": min_lon, "max_lon": max_lon,
-         "min_x": min_x, "max_x": max_x, "min_y": min_y, "max_y": max_y}
-    ]
-
-    return Response(response_data, status=200)

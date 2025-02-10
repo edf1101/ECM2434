@@ -74,7 +74,10 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
         (None, {"fields": ["desc"]}),
         ("Geodesic Map Data", {"fields": ["min_lat", "max_lat", "min_lon", "max_lon"]},),
         ("World Space Data",
-         {"fields": ["min_world_x", "max_world_x", "min_world_y", "max_world_y"]}),
+         {"fields": ["min_world_x", "max_world_x",
+                     "min_world_y", "max_world_y",
+                     "min_world_z", "max_world_z"]}),
+        ("Camera Z Map", {"fields": ["camera_z_map"]}),
     ]
 
 

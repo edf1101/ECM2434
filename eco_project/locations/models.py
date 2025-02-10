@@ -121,6 +121,8 @@ class LocationsAppSettings(models.Model):
     max_world_y = models.FloatField(default=0.1)
     max_world_z = models.FloatField(default=0.1)
 
+    camera_z_map = models.ImageField(upload_to='locations/camera_z_map/', blank=True, null=True)
+
     def save(self, *args, **kwargs) -> None:
         """
         Overriding the save method to ensure there is only one instance of this model.
