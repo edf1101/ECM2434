@@ -3,7 +3,7 @@ This class deals with how the models appear in the admin menu.
 """
 from django.contrib import admin
 from .models import FeatureType, FeatureInstance, Map3DChunk, LocationsAppSettings, \
-    FeatureInstanceTileMap
+    FeatureInstanceTileMap, QuestionFeature, QuestionAnswer
 from .forms import FeatureForm, LocationsAppSettingsForm
 
 
@@ -30,8 +30,9 @@ class FeatureInstanceAdmin(admin.ModelAdmin):
         ("Feature Info", {"fields": ["name", "feature", "slug"]}),
         ("Location", {"fields": ["longitude", "latitude"]}),
         ("Display information", {"fields": ["specific_img"]}),
+        ("Question challenge?", {"fields": ["question"]}),
     ]
-    list_display = ["slug", "feature", "longitude", "latitude"]
+    list_display = ["slug", "feature", "longitude", "latitude", "has_question"]
     search_fields = ["feature"]
 
 
@@ -80,14 +81,39 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
                      "min_world_y", "max_world_y",
                      "min_world_z", "max_world_z"]}),
         ("Camera Z Map", {"fields": ["camera_z_map"]}),
-        ("Map Render Settings", {"fields": ["world_colour","render_dist"]}),
+        ("Map Render Settings", {"fields": ["world_colour", "render_dist"]}),
     ]
+
+
+class QuestionAnswerInline(admin.TabularInline):
+    """
+    This inline model means you edit QuestionAnswers in the QuestionFeature page.
+    """
+    model = QuestionAnswer
+    extra = 0
+
+
+class QuestionFeatureAdmin(admin.ModelAdmin):
+    """
+    This admin page is for creating and editing QuestionFeatures.
+    """
+    fieldsets = [
+        ("Question Text", {"fields": ["question_text"]}),
+        ("Answer Validation",
+         {"fields": ["case_sensitive", "use_fuzzy_comparison", "fuzzy_threshold"]}),
+    ]
+    inlines = [QuestionAnswerInline]
+
+    list_display = ["question_text"]
+    search_fields = ["question_text"]
 
 
 # Register the models with their respective classes.
 admin.site.register(LocationsAppSettings, LocationAppSettingsAdmin)
 admin.site.register(FeatureType, FeatureTypeAdmin)
 admin.site.register(FeatureInstance, FeatureInstanceAdmin)
-admin.site.register(Map3DChunk, Map3DChunkAdmin)
 
-admin.site.register(FeatureInstanceTileMap)
+admin.site.register(QuestionFeature, QuestionFeatureAdmin)
+
+# admin.site.register(Map3DChunk, Map3DChunkAdmin)  # Only for dev Gamekeeper doesn't need
+# admin.site.register(FeatureInstanceTileMap)  # Only for dev Gamekeeper doesn't need

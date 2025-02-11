@@ -171,6 +171,5 @@ def get_feature_instances(request) -> Response:
         {"lat": instance.latitude, "lon": instance.longitude, "colour": instance.feature.colour}
         for instance in feature_instances
     ]
-    # print (response_data)
 
     return Response(response_data, status=200)

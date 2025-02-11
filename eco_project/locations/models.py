@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile
 from typing import Self
+from thefuzz import fuzz
 
 
 # Create your models here.
@@ -44,6 +45,16 @@ class FeatureInstance(models.Model):
     latitude = models.FloatField()
     specific_img = models.ImageField(upload_to='locations/feature_instance_img/', blank=True,
                                      null=True)
+
+    question = models.ForeignKey('QuestionFeature', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
+
+    @property
+    def has_question(self) -> bool:
+        """
+        Returns whether this feature instance has a question or not.
+        """
+        return self.question is not None
 
     def __str__(self):
         """
@@ -184,3 +195,58 @@ class FeatureInstanceTileMap(models.Model):
         :return: The name of the feature and the original file name of the map chunk.
         """
         return f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "{self.map_chunk.file_original_name}"'
+
+
+class QuestionFeature(models.Model):
+    """
+    If a FeatureInstance comes with a question then the question and answer are stored in this model
+    The FeatureInstance model has an optional ForeignKey to this model
+    """
+
+    id: models.AutoField = models.AutoField(primary_key=True)
+    question_text: models.TextField = models.TextField(blank=False, null=False)
+
+    case_sensitive: models.BooleanField = models.BooleanField(default=False)
+    use_fuzzy_comparison: models.BooleanField = models.BooleanField(default=False)
+    fuzzy_threshold: models.IntegerField = models.IntegerField(default=65)
+
+    def __str__(self):
+        """
+        Returns a string representation of the object.
+        :return: The question.
+        """
+        return f'{self.question_text}'
+
+    def is_valid_answer(self, input_answer: str) -> bool:
+        """
+        This function checks if a given answer is valid for this question
+
+        :param input_answer: The answer to query
+        :return: A bool true or false for if this is a valid answer
+        """
+
+        # get all the answers for this question
+        answers: list[str] = [answer.choice_text for answer in self.questionanswer_set.all()]
+
+        valid = False
+        for correct_answer in answers:
+            correct_answer = correct_answer.lower() if not self.case_sensitive else correct_answer
+            input_answer = input_answer.lower() if not self.case_sensitive else input_answer
+
+            valid_non_fuzzy = (not self.use_fuzzy_comparison and input_answer == correct_answer)
+            valid_fuzzy = (self.use_fuzzy_comparison and
+                           fuzz.ratio(input_answer, correct_answer) > self.fuzzy_threshold)
+
+            if valid_fuzzy or valid_non_fuzzy:
+                valid = True
+                break
+
+        return valid
+
+
+class QuestionAnswer(models.Model):
+    question = models.ForeignKey(QuestionFeature, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.choice_text
