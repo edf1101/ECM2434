@@ -6,7 +6,8 @@ LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved 
 """
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .models import Map3DChunk, LocationsAppSettings
+from .models import Map3DChunk, LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
+    Map3DChunk
 from django.db.models import Min, Max
 
 
@@ -40,10 +41,10 @@ def update_min_max_pos(sender, instance, **kwargs) -> None:
         settings.save()
     else:
         # Calculate the min and max values from all Map3DChunk instances
-        min_lat_value = Map3DChunk.objects.aggregate(Min('center_lat'))['center_lat__min']
-        max_lat_value = Map3DChunk.objects.aggregate(Max('center_lat'))['center_lat__max']
-        min_lon_value = Map3DChunk.objects.aggregate(Min('center_lon'))['center_lon__min']
-        max_lon_value = Map3DChunk.objects.aggregate(Max('center_lon'))['center_lon__max']
+        min_lat_value = Map3DChunk.objects.aggregate(Min('bottom_left_lat'))['bottom_left_lat__min']
+        max_lat_value = Map3DChunk.objects.aggregate(Max('top_right_lat'))['top_right_lat__max']
+        min_lon_value = Map3DChunk.objects.aggregate(Min('bottom_left_lon'))['bottom_left_lon__min']
+        max_lon_value = Map3DChunk.objects.aggregate(Max('top_right_lon'))['top_right_lon__max']
 
         min_world_x_value = Map3DChunk.objects.aggregate(Min('bottom_left_x'))['bottom_left_x__min']
         max_world_x_value = Map3DChunk.objects.aggregate(Max('top_right_x'))['top_right_x__max']
@@ -70,3 +71,34 @@ def update_min_max_pos(sender, instance, **kwargs) -> None:
 
         # Save the updated settings
         settings.save()
+
+
+@receiver(post_save, sender=FeatureInstance)
+@receiver(post_delete, sender=FeatureInstance)
+@receiver(post_save, sender=Map3DChunk)
+@receiver(post_delete, sender=Map3DChunk)
+def update_tile_feature_map(sender, instance, **kwargs) -> None:
+    """
+    When a FeatureInstance or Map3DChunk is changed or deleted,
+    clear and rebuild the tile feature map.
+
+    This map shows which features reside in which map chunks.
+    """
+    # clear the existing tile feature map.
+    FeatureInstanceTileMap.objects.all().delete()
+
+    for feature in FeatureInstance.objects.all():
+        # use filter not loop for speed. Check it is inside chunk geodesic bounds
+        matching_chunks = Map3DChunk.objects.filter(
+            bottom_left_lat__lte=feature.latitude,
+            top_right_lat__gte=feature.latitude,
+            bottom_left_lon__lte=feature.longitude,
+            top_right_lon__gte=feature.longitude,
+        )
+        print(f'Feature {feature.name} is in chunks: {matching_chunks}')
+
+        for chunk in matching_chunks:  # add all matching pairs to the mapping
+            FeatureInstanceTileMap.objects.create(
+                feature_instance=feature,
+                map_chunk=chunk
+            )

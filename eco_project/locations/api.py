@@ -1,4 +1,5 @@
-from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings
+from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings, \
+    FeatureInstanceTileMap
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .chunk_handling import get_nearby_tiles
@@ -12,7 +13,7 @@ def nearby_tiles(request) -> Response:
     This function returns a list of nearby 3D map tiles given a latitude, longitude and distance.
 
     :param request: The get request object that hopefully contains lat, lon and distance.
-    :return:
+    :return: the JSON response containing the nearby tiles.
     """
     try:
         # Get the lat, lon and distance from the GET request
@@ -32,6 +33,47 @@ def nearby_tiles(request) -> Response:
 
     except (TypeError, ValueError):
         return Response({"error": "Invalid parameters"}, status=400)
+
+
+@api_view(['GET'])
+def get_features_for_tiles(request) -> Response:
+    """
+    Returns a dictionary where each key is a tile file URL and each value is a list of
+    features on that tile. Each feature is represented by its latitude, longitude, and feature colour.
+
+    Expects a GET parameter "tiles" with a comma-separated list of tile IDs.
+    """
+    tiles_param = request.GET.get("tiles")
+    if not tiles_param:
+        return Response({"error": "No tiles provided."}, status=400)
+
+    try:
+        tile_ids = [int(i) for i in tiles_param.split(',')]
+    except ValueError:
+        return Response({"error": "Invalid tile IDs provided."}, status=400)
+
+    # Get tile objects from the IDs
+    tiles = Map3DChunk.objects.filter(id__in=tile_ids)
+
+    # Build the response data dictionary: key = tile file URL, value = list of feature details
+    response_data = {}
+
+    for tile in tiles:
+        features_in_tile = []
+        # Get the mapping objects for this tile
+        tile_mappings = FeatureInstanceTileMap.objects.filter(map_chunk=tile)
+        for mapping in tile_mappings:
+            instance = mapping.feature_instance
+            features_in_tile.append({
+                "lat": instance.latitude,
+                "lon": instance.longitude,
+                "colour": instance.feature.colour,
+                "mesh_url": instance.feature.feature_mesh.url if instance.feature.feature_mesh
+                else "None"
+            })
+        response_data[tile.file.url] = features_in_tile
+
+    return Response(response_data, status=200)
 
 
 @api_view(['GET'])
@@ -60,6 +102,9 @@ def api_get_map_data(request) -> Response:
 
     camera_map_url = LocationsAppSettings.get_instance().camera_z_map.url
 
+    bg_colour = LocationsAppSettings.get_instance().world_colour
+    render_dist = LocationsAppSettings.get_instance().render_dist
+
     # Create a response with the map settings data
     response_data = [
         {"min_lat": min_lat, "max_lat": max_lat,
@@ -67,7 +112,9 @@ def api_get_map_data(request) -> Response:
          "min_x": min_x, "max_x": max_x,
          "min_y": min_y, "max_y": max_y,
          "min_z": min_z, "max_z": max_z,
-         "camera_map_url": camera_map_url}
+         "camera_map_url": camera_map_url,
+         "bg_colour": bg_colour,
+         "render_dist": render_dist}
     ]
 
     return Response(response_data, status=200)
@@ -81,6 +128,9 @@ def get_current_location(request) -> Response:
     :param request: The GET request object. No data to read here.
     :return: The current location of the user as a JSON response.
     """
+
+    lat, lon = 50.736061, -3.535170
+
     # For demo, choose a random lat lon within the map bounds, but not within 300m of the border.
     settings = LocationsAppSettings.get_instance()
     min_lat = settings.min_lat
@@ -104,3 +154,23 @@ def get_current_location(request) -> Response:
     lon = round(uniform(min_lon + margin_lon, max_lon - margin_lon), dp)
 
     return Response({"lat": lat, "lon": lon}, status=200)
+
+
+@api_view(['GET'])
+def get_feature_instances(request) -> Response:
+    """
+    This function returns all feature instances in the database.
+
+    :param request: The GET request object. No data to read here.
+    :return: A JSON response containing all feature instances.
+    """
+    feature_instances = FeatureInstance.objects.all()
+
+    # for each feature instance, return its lat, lon, featureType.colour
+    response_data = [
+        {"lat": instance.latitude, "lon": instance.longitude, "colour": instance.feature.colour}
+        for instance in feature_instances
+    ]
+    # print (response_data)
+
+    return Response(response_data, status=200)

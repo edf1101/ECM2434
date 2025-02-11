@@ -2,8 +2,9 @@
 This class deals with how the models appear in the admin menu.
 """
 from django.contrib import admin
-from .models import FeatureType, FeatureInstance, Map3DChunk, LocationsAppSettings
-from .forms import FeatureForm
+from .models import FeatureType, FeatureInstance, Map3DChunk, LocationsAppSettings, \
+    FeatureInstanceTileMap
+from .forms import FeatureForm, LocationsAppSettingsForm
 
 
 class FeatureTypeAdmin(admin.ModelAdmin):
@@ -14,7 +15,7 @@ class FeatureTypeAdmin(admin.ModelAdmin):
     form = FeatureForm
     fieldsets = [
         ("Feature Info", {"fields": ["name", "description"]}),
-        ("Display information", {"fields": ["colour", "generic_img"]}),
+        ("Display information", {"fields": ["colour", "generic_img", "feature_mesh"]}),
     ]
     search_fields = ["name"]
     list_display = ["name", "description"]
@@ -69,6 +70,7 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
         return "This page is a singleton model that stores the settings for the Locations app."
 
     desc.short_description = "Description"
+    form = LocationsAppSettingsForm
 
     fieldsets = [
         (None, {"fields": ["desc"]}),
@@ -78,6 +80,7 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
                      "min_world_y", "max_world_y",
                      "min_world_z", "max_world_z"]}),
         ("Camera Z Map", {"fields": ["camera_z_map"]}),
+        ("Map Render Settings", {"fields": ["world_colour","render_dist"]}),
     ]
 
 
@@ -86,3 +89,5 @@ admin.site.register(LocationsAppSettings, LocationAppSettingsAdmin)
 admin.site.register(FeatureType, FeatureTypeAdmin)
 admin.site.register(FeatureInstance, FeatureInstanceAdmin)
 admin.site.register(Map3DChunk, Map3DChunkAdmin)
+
+admin.site.register(FeatureInstanceTileMap)

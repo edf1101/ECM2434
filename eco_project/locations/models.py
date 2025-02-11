@@ -22,6 +22,7 @@ class FeatureType(models.Model):
     generic_img: models.ImageField = models.ImageField(
         upload_to='locations/feature_type_img/',
         blank=False)
+    feature_mesh = models.FileField(upload_to='locations/feature_mesh/', blank=True, null=True)
 
     def __str__(self):
         """
@@ -106,22 +107,27 @@ class LocationsAppSettings(models.Model):
 
     # Geodesic data
     # NB. min and maxes are set to different non 0 data to ensure no division by 0 errors
-    min_lat = models.FloatField(default=0.2)
-    min_lon = models.FloatField(default=0.2)
+    min_lat: models.FloatField = models.FloatField(default=0.2)
+    min_lon: models.FloatField = models.FloatField(default=0.2)
 
-    max_lat = models.FloatField(default=0.1)
-    max_lon = models.FloatField(default=0.1)
+    max_lat: models.FloatField = models.FloatField(default=0.1)
+    max_lon: models.FloatField = models.FloatField(default=0.1)
 
     # World space data
-    min_world_x = models.FloatField(default=0.2)
-    min_world_y = models.FloatField(default=0.2)
-    min_world_z = models.FloatField(default=0.2)
+    min_world_x: models.FloatField = models.FloatField(default=0.2)
+    min_world_y: models.FloatField = models.FloatField(default=0.2)
+    min_world_z: models.FloatField = models.FloatField(default=0.2)
 
-    max_world_x = models.FloatField(default=0.1)
-    max_world_y = models.FloatField(default=0.1)
-    max_world_z = models.FloatField(default=0.1)
+    max_world_x: models.FloatField = models.FloatField(default=0.1)
+    max_world_y: models.FloatField = models.FloatField(default=0.1)
+    max_world_z: models.FloatField = models.FloatField(default=0.1)
 
-    camera_z_map = models.ImageField(upload_to='locations/camera_z_map/', blank=True, null=True)
+    camera_z_map: models.ImageField = models.ImageField(upload_to='locations/camera_z_map/',
+                                                        blank=True, null=True)
+
+    world_colour: models.CharField = models.CharField(max_length=7,
+                                                      default="#000000")  # Hex colour code
+    render_dist: models.IntegerField = models.IntegerField(default=250)
 
     def save(self, *args, **kwargs) -> None:
         """
@@ -161,3 +167,20 @@ class LocationsAppSettings(models.Model):
         :return: String representation of the model.
         """
         return "Site Settings"
+
+
+class FeatureInstanceTileMap(models.Model):
+    """
+    This model links a FeatureInstance to a Map3DChunk.
+    """
+
+    feature_instance = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
+    map_chunk = models.ForeignKey(Map3DChunk, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """
+        Returns a string representation of the object.
+
+        :return: The name of the feature and the original file name of the map chunk.
+        """
+        return f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "{self.map_chunk.file_original_name}"'

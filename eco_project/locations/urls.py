@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/nearby-tiles/', api.nearby_tiles, name='nearby-tiles'),
     path('api/map_data/', api.api_get_map_data, name='map-data'),
     path('api/get_location/', api.get_current_location, name='get-location'),
+    path('api/get_feature_instances/', api.get_feature_instances, name='get-feature-instances'),
+    path('api/get_features_for_tile/', api.get_features_for_tiles, name='get-feature-for-tiles'),
 ]
