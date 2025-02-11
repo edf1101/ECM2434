@@ -12,7 +12,7 @@ class PetType(models.Model):
     description: models.TextField = models.TextField()
 
     base_image: models.ImageField = models.ImageField(
-        upload_to='pets/pet_imgs/',
+        upload_to='pet_imgs/',
         blank=False)
 
     def __str__(self):
