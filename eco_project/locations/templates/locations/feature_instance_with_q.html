@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>✨{{ feature_instance.feature.name }}✨</title>
+    <script>
+
+        /**
+         * Function to get a cookie
+         * @param name The name of the cookie
+         * @returns The cookie value
+         */
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';'); // split up cookie string into list
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim(); // trim whitespace
+
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        /**
+         * Function sending a POST request to the API to submit an answer
+         * @returns {Promise<void>} A promise that resolves when the answer is submitted
+         */
+        async function submitAnswer() {
+            // get required fields for the API
+            const answerText = document.getElementById('answer').value;
+            const questionId = document.getElementById('question-id').value;
+            const csrftoken = getCookie('csrftoken'); // django needs this for user authentication
+
+            // Create the POST request
+            const response = await fetch('/locations/api/submit_answer/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    answer: answerText,
+                    question_id: questionId
+                })
+            });
+            const data = await response.json();
+
+            alert(data.message); // show the message. Front end ppl can handle this better
+        }
+    </script>
+</head>
+<body>
+<h1>✨You have reached the {{ feature_instance.name }}✨</h1>
+<h3>
+    Lat: {{ feature_instance.latitude }},
+    Lon: {{ feature_instance.longitude }},
+    Code: {{ feature_instance.slug }}
+</h3>
+<br>
+<img src="{{ feature_instance.image.url }}" alt="Image of {{ feature_instance.name }}">
+
+<h2>About this Feature</h2>
+<h3>{{ feature_instance.feature.name }}</h3>
+<p>{{ feature_instance.feature.description }}</p>
+
+<h2>Question:</h2>
+<p>{{ question.question_text }}</p>
+<input type="hidden" id="question-id" value="{{ question.id }}">
+
+<input type="text" id="answer" placeholder="Your answer here">
+<button type="button" onclick="submitAnswer()">Submit Answer</button>
+
+</body>
+</html>

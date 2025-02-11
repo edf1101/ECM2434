@@ -46,15 +46,18 @@ class FeatureInstance(models.Model):
     specific_img = models.ImageField(upload_to='locations/feature_instance_img/', blank=True,
                                      null=True)
 
-    question = models.ForeignKey('QuestionFeature', on_delete=models.SET_NULL, null=True,
-                                 blank=True)
-
     @property
     def has_question(self) -> bool:
         """
         Returns whether this feature instance has a question or not.
         """
-        return self.question is not None
+        return self.questionfeature_set.exists()
+
+    def has_challenge(self) -> bool:
+        """
+        Returns whether this feature instance has a challenge or not.
+        """
+        return self.has_question
 
     def __str__(self):
         """
@@ -205,6 +208,7 @@ class QuestionFeature(models.Model):
 
     id: models.AutoField = models.AutoField(primary_key=True)
     question_text: models.TextField = models.TextField(blank=False, null=False)
+    feature: models.ForeignKey = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
 
     case_sensitive: models.BooleanField = models.BooleanField(default=False)
     use_fuzzy_comparison: models.BooleanField = models.BooleanField(default=False)

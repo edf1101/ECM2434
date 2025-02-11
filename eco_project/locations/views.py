@@ -38,7 +38,15 @@ def individual_feature_page(request, slug) -> HttpResponse:
     """
     feature_instance: FeatureInstance = FeatureInstance.objects.get(slug=slug)
     context = {'feature_instance': feature_instance}
-    return render(request, 'locations/feature_instance.html', context)
+
+    # get if feature has a question or not then return correct template
+    if feature_instance.has_question:
+        context['question'] = feature_instance.question
+        print(feature_instance.question)
+        return render(request, 'locations/feature_instance_with_q.html', context)
+    else:
+        context['question'] = None
+        return render(request, 'locations/feature_instance.html', context)
 
 
 def generic_feature_page(request, id_arg) -> HttpResponse:

@@ -26,13 +26,15 @@ class FeatureInstanceAdmin(admin.ModelAdmin):
     This class decides how the FeatureInstance model appears in the admin menu.
     It has three sections, Feature Info, Location and Display information.
     """
+    readonly_fields = ("has_challenge", "has_question")  # So you can see the challenge status
+
     fieldsets = [
         ("Feature Info", {"fields": ["name", "feature", "slug"]}),
         ("Location", {"fields": ["longitude", "latitude"]}),
         ("Display information", {"fields": ["specific_img"]}),
-        ("Question challenge?", {"fields": ["question"]}),
+        ("Challenge Info", {"fields": ["has_challenge", "has_question"]}),
     ]
-    list_display = ["slug", "feature", "longitude", "latitude", "has_question"]
+    list_display = ["slug", "feature", "longitude", "latitude", "has_challenge"]
     search_fields = ["feature"]
 
 
@@ -98,7 +100,7 @@ class QuestionFeatureAdmin(admin.ModelAdmin):
     This admin page is for creating and editing QuestionFeatures.
     """
     fieldsets = [
-        ("Question Text", {"fields": ["question_text"]}),
+        ("Question Details", {"fields": ["question_text", "feature"]}),
         ("Answer Validation",
          {"fields": ["case_sensitive", "use_fuzzy_comparison", "fuzzy_threshold"]}),
     ]

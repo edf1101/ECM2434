@@ -1,6 +1,7 @@
 from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings, \
-    FeatureInstanceTileMap
-from rest_framework.decorators import api_view
+    FeatureInstanceTileMap, QuestionFeature
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .chunk_handling import get_nearby_tiles
 from random import uniform
@@ -173,3 +174,43 @@ def get_feature_instances(request) -> Response:
     ]
 
     return Response(response_data, status=200)
+
+
+@api_view(['POST'])
+def submit_answer_api(request) -> Response:
+    """
+    This function handles the submission of answers to questions.
+
+    :param request: The POST request object. Need a JSON object with 'answer'
+    and 'question_id' keys.
+    :return: A JSON response with a message to the front end
+    """
+
+    signed_in = request.user and request.user.is_authenticated
+
+    answer_text = request.data.get('answer')
+    question_id = request.data.get('question_id')
+
+    try:
+        question = QuestionFeature.objects.get(id=question_id)
+    except QuestionFeature.DoesNotExist:
+        return Response({'error': 'Question not found'}, status=404)
+
+    valid = question.is_valid_answer(answer_text)
+
+    if not signed_in:  # handle non signed in users so they can still learn but just not get points
+        print(
+            f'Question: "{question.question_text}", Answer: "{answer_text}", User: not signed in"'
+            f'{" - Correct" if valid else " - Incorrect"}')
+        return Response({
+            'message': f'The answer is {"correct" if valid else "incorrect"} but you are not signed in',
+        })
+
+    # handle signed in users
+    print(f'Question: "{question.question_text}", Answer: "{answer_text}", User: "{request.user}"'
+          f'{" - Correct" if valid else " - Incorrect"}')
+
+    # Return response with required info
+    return Response({
+        'message': f'The answer is {"correct" if valid else "incorrect"}',
+    })
