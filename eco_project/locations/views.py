@@ -3,7 +3,7 @@ This module contains the views for the locations app.
 """
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings
+from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings,QuestionFeature
 
 
 def base_locations(request) -> HttpResponse:
@@ -40,9 +40,14 @@ def individual_feature_page(request, slug) -> HttpResponse:
     context = {'feature_instance': feature_instance}
 
     # get if feature has a question or not then return correct template
+    # get question from feature
+    question = None
+    for question in QuestionFeature.objects.all():
+        if question.feature == feature_instance.feature:
+            question = question.question
+
     if feature_instance.has_question:
-        context['question'] = feature_instance.question
-        print(feature_instance.question)
+        context['question'] = question
         return render(request, 'locations/feature_instance_with_q.html', context)
     else:
         context['question'] = None
