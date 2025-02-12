@@ -119,6 +119,12 @@ class LocationsAppSettings(models.Model):
     It will be a singleton model. This means that there will only be one instance of this model.
     """
 
+    class Meta:
+        """
+        Override the verbose name for this model.
+        """
+        verbose_name_plural = "Map Settings"
+
     # Geodesic data
     # NB. min and maxes are set to different non 0 data to ensure no division by 0 errors
     min_lat: models.FloatField = models.FloatField(default=0.2)
