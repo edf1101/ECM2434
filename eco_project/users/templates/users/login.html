@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+</head>
+<body>
+<h1>Login</h1>
+
+<form class="form-with-validation" action="{% url 'users:login' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button class="form-submit">Submit</button>
+
+    {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}"/>
+    {% endif %}
+</form>
+</body>
+</html>
