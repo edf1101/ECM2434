@@ -8,6 +8,20 @@
 <h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
 <i>Username: {{ user.username }}</i>
 
+<div class="badges" style="margin: 10px 0;">
+    {% for badge in badges %}
+        <span style="
+                background-color: {{ badge.colour }};
+                padding: 4px 8px;
+                margin-right: 4px;
+                border-radius: 3px;
+                color: #fff;
+                display: inline-block;">
+                {{ badge.title }}
+            </span>
+    {% endfor %}
+</div>
+
 {% if user.profile %}
     <p>Points: {{ user.profile.points }}</p>
     <p>Bio: {{ user.profile.bio }}</p>

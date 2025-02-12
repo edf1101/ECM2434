@@ -5,7 +5,9 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from .models import Profile
+from .models import Profile, Badge
+from django.forms import ModelForm
+from django.forms.widgets import TextInput
 
 
 class UserCreationFormWithNames(UserCreationForm):
@@ -108,4 +110,21 @@ class ModifyProfileForm(forms.ModelForm):
         fields = ['bio']
         labels = {
             'bio': 'Bio',
+        }
+
+
+class BadgeAdminForm(ModelForm):
+    """
+    This class is a form that enables use of a colour picker
+    for the colour field in the Badge model.
+    """
+
+    class Meta:
+        """
+        This class is used to define the model and fields that the form will use.
+        """
+        fields = '__all__'
+        model = Badge
+        widgets = {
+            'colour': TextInput(attrs={'type': 'color'}),
         }

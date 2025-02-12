@@ -1,11 +1,10 @@
 """
 This module contains the views for the users app.
 """
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, get_object_or_404
@@ -82,7 +81,13 @@ def profile_view(request, username) -> HttpResponse:
 
     user = get_object_or_404(get_user_model(), username=username)
 
-    context = {'user': user}
+    # get all the badges the user has
+    badge_instances = user.badgeinstance_set.all()
+    badges = [badge_instance.badge for badge_instance in badge_instances]
+    # sort the badges by their rarity so that the rarest ones are displayed first
+    badges.sort(key=lambda badge: badge.rarity, reverse=True)
+
+    context = {'user': user, 'badges': badges}
     return render(request, "users/profile.html", context=context)
 
 
@@ -128,7 +133,7 @@ def change_password(request) -> HttpResponse:
     @return: The response object.
     """
 
-    if not request.user.is_authenticated:  # handle non signed in users
+    if not request.user.is_authenticated:  # handle non-signed in users
         return redirect("users:login")
 
     if request.method == 'POST':
