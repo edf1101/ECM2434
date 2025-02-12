@@ -154,6 +154,12 @@ def get_current_location(request) -> Response:
     # lat = round(uniform(min_lat + margin_lat, max_lat - margin_lat), dp)
     # lon = round(uniform(min_lon + margin_lon, max_lon - margin_lon), dp)
 
+    # get the user's current location from the user object
+    if request.user.is_authenticated:
+        current_user = request.user
+        lat = current_user.profile.latitude
+        lon = current_user.profile.longitude
+
     return Response({"lat": lat, "lon": lon}, status=200)
 
 

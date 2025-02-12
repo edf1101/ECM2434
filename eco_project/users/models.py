@@ -12,7 +12,7 @@ class Profile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    points = models.IntegerField(default=0, blank=False, null=False)
+    points = models.PositiveIntegerField(default=0, blank=False, null=False)
     bio = models.TextField(blank=True, null=False)
 
     longitude = models.FloatField(blank=False, null=False, default=0)

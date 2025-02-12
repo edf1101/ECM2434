@@ -8,6 +8,7 @@ from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile
 from typing import Self
 from thefuzz import fuzz
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 # Create your models here.
@@ -218,7 +219,10 @@ class QuestionFeature(models.Model):
 
     case_sensitive: models.BooleanField = models.BooleanField(default=False)
     use_fuzzy_comparison: models.BooleanField = models.BooleanField(default=False)
-    fuzzy_threshold: models.IntegerField = models.IntegerField(default=65)
+    fuzzy_threshold: models.IntegerField = models.IntegerField(default=65,
+                                                               validators=[
+                                                                   MinValueValidator(0),
+                                                                   MaxValueValidator(100)])
 
     def __str__(self):
         """

@@ -14,4 +14,5 @@ urlpatterns = [
     path('edit/', views.edit_profile, name="edit"),
     path('change_password/', views.change_password, name='password_change'),
     path("profile/<str:username>/", views.profile_view, name="user_profile"),
+    path('api/update_location/', api.update_location, name='update_location'),
 ]

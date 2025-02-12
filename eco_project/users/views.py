@@ -86,6 +86,8 @@ def profile_view(request, username) -> HttpResponse:
     badges = [badge_instance.badge for badge_instance in badge_instances]
     # sort the badges by their rarity so that the rarest ones are displayed first
     badges.sort(key=lambda badge: badge.rarity, reverse=True)
+    # only show the first 5 badges
+    badges = badges[:5]
 
     context = {'user': user, 'badges': badges}
     return render(request, "users/profile.html", context=context)
