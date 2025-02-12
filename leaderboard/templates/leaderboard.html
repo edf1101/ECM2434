@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Leaderboard</title>
+</head>
+<body>
+    <h1>Pet Leaderboard</h1>
+    <table border="1">
+        <tr>
+            <th>Rank</th>
+            <th>Pet Name</th>
+            <th>Points</th>
+        </tr>
+        {% for pet in pets %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ pet.name }}</td>
+            <td>{{ pet.points }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No pets available</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
