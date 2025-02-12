@@ -150,6 +150,9 @@ class LocationsAppSettings(models.Model):
                                                       default="#000000")  # Hex colour code
     render_dist: models.IntegerField = models.IntegerField(default=250)
 
+    default_lat: models.FloatField = models.FloatField(default=0, blank=False, null=False)
+    default_lon: models.FloatField = models.FloatField(default=0, blank=False, null=False)
+
     def save(self, *args, **kwargs) -> None:
         """
         Overriding the save method to ensure there is only one instance of this model.

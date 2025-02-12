@@ -84,6 +84,7 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
                      "min_world_z", "max_world_z"]}),
         ("Camera Z Map", {"fields": ["camera_z_map"]}),
         ("Map Render Settings", {"fields": ["world_colour", "render_dist"]}),
+        ("Default Position", {"fields": ["default_lat", "default_lon"]}),
     ]
 
 
