@@ -131,28 +131,28 @@ def get_current_location(request) -> Response:
     """
 
     lat, lon = 50.736061, -3.535170
-
-    # For demo, choose a random lat lon within the map bounds, but not within 300m of the border.
-    settings = LocationsAppSettings.get_instance()
-    min_lat = settings.min_lat
-    max_lat = settings.max_lat
-    min_lon = settings.min_lon
-    max_lon = settings.max_lon
-
-    # Calculate margin in degrees corresponding to 300 meters.
-    # 1 degree of latitude is approximately 111 km.
-    margin_lat = 300 / 111000  # in degrees
-
-    # For longitude, the conversion factor depends on latitude.
-    # Use the average latitude to compute the margin.
-    avg_lat = (min_lat + max_lat) / 2.0
-    margin_lon = 300 / (111000 * math.cos(math.radians(avg_lat)))
-
-    dp = 5  # number of decimal places to round to
-
-    # Choose a random latitude and longitude within the bounds, excluding the border margin.
-    lat = round(uniform(min_lat + margin_lat, max_lat - margin_lat), dp)
-    lon = round(uniform(min_lon + margin_lon, max_lon - margin_lon), dp)
+    #
+    # # For demo, choose a random lat lon within the map bounds, but not within 300m of the border.
+    # settings = LocationsAppSettings.get_instance()
+    # min_lat = settings.min_lat
+    # max_lat = settings.max_lat
+    # min_lon = settings.min_lon
+    # max_lon = settings.max_lon
+    #
+    # # Calculate margin in degrees corresponding to 300 meters.
+    # # 1 degree of latitude is approximately 111 km.
+    # margin_lat = 300 / 111000  # in degrees
+    #
+    # # For longitude, the conversion factor depends on latitude.
+    # # Use the average latitude to compute the margin.
+    # avg_lat = (min_lat + max_lat) / 2.0
+    # margin_lon = 300 / (111000 * math.cos(math.radians(avg_lat)))
+    #
+    # dp = 5  # number of decimal places to round to
+    #
+    # # Choose a random latitude and longitude within the bounds, excluding the border margin.
+    # lat = round(uniform(min_lat + margin_lat, max_lat - margin_lat), dp)
+    # lon = round(uniform(min_lon + margin_lon, max_lon - margin_lon), dp)
 
     return Response({"lat": lat, "lon": lon}, status=200)
 
