@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}</title>
+</head>
+<body>
+<h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
+<i>Username: {{ user.username }}</i>
+
+{% if user.profile %}
+    <p>Points: {{ user.profile.points }}</p>
+    <p>Bio: {{ user.profile.bio }}</p>
+{% endif %}
+
+</body>
+</html>

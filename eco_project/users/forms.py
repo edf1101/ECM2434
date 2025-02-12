@@ -4,6 +4,8 @@ This module contains the forms for the users app.
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from .models import Profile
 
 
 class UserCreationFormWithNames(UserCreationForm):
@@ -37,3 +39,73 @@ class UserCreationFormWithNames(UserCreationForm):
         if commit:
             user.save()
         return user
+
+    def is_valid(self) -> bool:
+        """
+        This method is used to check if the form is valid.
+
+        @return: True if the form is valid, False otherwise.
+        """
+
+        valid = super().is_valid()
+        if not valid:
+            return valid
+
+        # if first name is empty then its invalid
+        if not self.cleaned_data["first_name"]:
+            self.add_error("first_name", "This field is required.")
+            return False
+
+        return True
+
+
+class ModifyUserForm(forms.ModelForm):
+    """
+    This form is used to modify the user's first and last names.
+    It is used when a user wants to update their profile.
+    """
+
+    class Meta:
+        """
+        This class is used to define the fields that will be included in the form
+        """
+        model = get_user_model()
+        fields = ['first_name', 'last_name']
+        labels = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+        }
+
+    def is_valid(self) -> bool:
+        """
+        This method is used to check if the form is valid.
+
+        @return: True if the form is valid, False otherwise.
+        """
+        valid = super().is_valid()
+        if not valid:
+            return valid
+
+        # if first name is empty then its invalid
+        if not self.cleaned_data["first_name"]:
+            self.add_error("first_name", "This field is required.")
+            return False
+
+        return True
+
+
+class ModifyProfileForm(forms.ModelForm):
+    """
+    This form is used to modify the user's bio it has to be separate from the ModifyUserForm
+    since the bio is stored in a separate model.
+    """
+
+    class Meta:
+        """
+        This class is used to define the fields that will be included in the form.
+        """
+        model = Profile
+        fields = ['bio']
+        labels = {
+            'bio': 'Bio',
+        }

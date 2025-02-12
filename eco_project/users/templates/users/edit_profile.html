@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+</head>
+<body>
+<h1>Edit Profile</h1>
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    <h3>User Information</h3>
+    {{ user_form.non_field_errors }}
+    <p>
+        {{ user_form.first_name.label_tag }}<br>
+        {{ user_form.first_name }}<br>
+        {% for error in user_form.first_name.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+    <p>
+        {{ user_form.last_name.label_tag }}<br>
+        {{ user_form.last_name }}<br>
+        {% for error in user_form.last_name.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+
+    <h3>Profile Information</h3>
+    {{ profile_form.non_field_errors }}
+    <p>
+        {{ profile_form.bio.label_tag }}<br>
+        {{ profile_form.bio }}<br>
+        {% for error in profile_form.bio.errors %}
+            <span class="error">{{ error }}</span><br>
+        {% endfor %}
+    </p>
+
+    <button type="submit">Save Changes</button>
+</form>
+</body>
+</html>
