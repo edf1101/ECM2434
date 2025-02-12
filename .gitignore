@@ -170,5 +170,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# ignore the locations media since it is generated per developer machine
+eco_project/media/locations/
 
 .DS_STORE
