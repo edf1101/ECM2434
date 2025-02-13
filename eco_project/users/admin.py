@@ -9,6 +9,9 @@ from .forms import BadgeAdminForm
 
 
 class BadgeInstanceInline(admin.TabularInline):
+    """
+    This is the inline class for the BadgeInstance model, it goes inside the user admin view.
+    """
     model = BadgeInstance
     extra = 0  # You can adjust this to allow extra blank forms if needed
 
@@ -19,8 +22,6 @@ class ProfileInline(admin.StackedInline):
     """
     model = Profile
     can_delete = False
-    verbose_name_plural = 'Profile'
-
     # The fields that will be displayed in the inline
     fieldsets = (
         ('Profile', {'fields': ('bio',)}),

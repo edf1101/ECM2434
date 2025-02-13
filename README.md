@@ -11,3 +11,8 @@ You can then run the manage.py commands eg:
 ```shell
 python manage.py runserver
 ```
+
+To run pylint on the project:
+```shell
+pylint .
+```
