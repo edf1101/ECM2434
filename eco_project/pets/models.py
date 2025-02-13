@@ -1,5 +1,3 @@
-from tkinter.constants import CASCADE
-
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -40,7 +38,7 @@ class CosmeticType(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: The name of this cosmetic typw.
+        :return: The name of this cosmetic type.
         """
         return f'{self.name}'
 
@@ -60,7 +58,7 @@ class Cosmetic(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: The name of this cosmetic typw.
+        :return: The name of this cosmetic type.
         """
         return f'{self.name} ({self.type.name})'
 
