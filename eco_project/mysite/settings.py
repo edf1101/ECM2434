@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['192.168.0.168', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     "locations.apps.LocationsConfig",
+    "pets.apps.PetsConfig",
     "django.contrib.admin",
     "users.apps.UsersConfig",
     "django.contrib.auth",
