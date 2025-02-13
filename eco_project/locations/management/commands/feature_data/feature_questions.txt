@@ -1,0 +1,4 @@
+# lines are commented out.
+# format is each line: Question text, Feature instance slug, case sensitve (True or False),using fuzzy matching (True or False), Fuzzy matching threshold (0-100), remaining fields are answers
+#
+What colour is Water?,water-fountain-forum,False,True,65,Blue,Clear

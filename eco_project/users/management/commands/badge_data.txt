@@ -1,0 +1,6 @@
+# lines with # are commented out.
+# format is each line: Badge title, Badge description, Badge colour as #HEX, Badge rarity
+#
+100 Day Streak, You've logged in for 100 days in a row!, #d4b86c, 10
+10 Day Streak, You've logged in for 10 days in a row!, #bec8d1, 5
+1 Day Streak, You've logged in today!, #78c274, 1

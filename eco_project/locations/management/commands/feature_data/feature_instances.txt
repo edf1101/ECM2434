@@ -1,0 +1,6 @@
+# lines are commented out.
+# format is each line, instance name, general type name, slug, lat , lon, img path (or blank)
+# All fields are required except img path which can be left blank though please still add the end comma
+#
+Water fountain at the forum, Water Fountain, water-fountain-forum, 50.73527917001181, -3.533943183902057, drinking_at_fountain.jpeg
+Recycling bin at the INTO building, Recycling Bin, recycling-bin-into, 50.73619362331741, -3.5337695314801616, green bin.jpg
