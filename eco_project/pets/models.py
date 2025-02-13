@@ -1,6 +1,9 @@
+from tkinter.constants import CASCADE
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from users.models import Profile
 
 class PetType(models.Model):
     """
@@ -11,7 +14,7 @@ class PetType(models.Model):
     description = models.TextField()
 
     base_image = models.ImageField(
-        upload_to='pet_imgs/',
+        upload_to='pets/base_imgs/',
         name="Base Image",
         blank=False)
 
@@ -69,17 +72,15 @@ class Pet(models.Model):
     name = models.CharField(max_length=200)
     type = models.ForeignKey(PetType, on_delete=models.PROTECT) # Do not allow a PetType to be deleted if pets still exist of that type
 
-    points = models.IntegerField(default=0)
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
-    # TODO Point to user model once it has been created
-    # owner = models.OneToOneField("User", on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         """
         Returns a string representation of the object.
 
-        :return: The name of this pet and its type.
+        :return: A string representation of this pet
         """
-        return f'{self.name} ({self.type.name})'
+        return f'{self.owner.name}\'s {self.name} ({self.type.name})'
