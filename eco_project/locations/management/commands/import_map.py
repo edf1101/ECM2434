@@ -5,11 +5,12 @@ automates it. There must be the console_out.txt file from blender in the same di
 script and the exports folder with all the .glb files in the same directory as this script.
 """
 from django.core.management.base import BaseCommand
-from locations.models import Map3DChunk
+from locations.models import Map3DChunk, LocationsAppSettings
 from django.core.files import File
 import os
 from typing import Any
 from django.core.files.storage import default_storage
+from random import choice
 
 
 def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
@@ -133,3 +134,26 @@ class Command(BaseCommand):
             chunk.save()
 
         self.stdout.write(self.style.SUCCESS(f"Saved {len(chunk_dict)} chunks to database"))
+
+        image_path = os.path.join(os.getcwd(),
+                                  "locations/management/commands/heightmap.png")
+        # create some random letters to make the file name unique
+        letters = ''.join([choice('1234567890ABCDEF') for i in range(5)])
+
+        img_file = None
+        with open(image_path, 'rb') as f:
+            file = File(f)  # Create a Django file object
+
+            # Save it with a safe path so that unsafe error isn't raised
+            img_file = default_storage.save(
+                f'locations/camera_z_map/camera_height_map{letters}.png', file)
+
+        # Save the image path to the settings
+        settings = LocationsAppSettings.get_instance()
+        settings.camera_z_map = img_file
+
+        # set the colour and the render dist
+        settings.world_colour = '#106A1A'
+        settings.render_dist = 250
+
+        settings.save()

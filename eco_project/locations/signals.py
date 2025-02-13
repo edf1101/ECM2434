@@ -95,7 +95,6 @@ def update_tile_feature_map(sender, instance, **kwargs) -> None:
             bottom_left_lon__lte=feature.longitude,
             top_right_lon__gte=feature.longitude,
         )
-        print(f'Feature {feature.name} is in chunks: {matching_chunks}')
 
         for chunk in matching_chunks:  # add all matching pairs to the mapping
             FeatureInstanceTileMap.objects.create(
