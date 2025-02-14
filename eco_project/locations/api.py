@@ -133,7 +133,6 @@ def get_current_location(request) -> Response:
     # get default lat and lon
     default_lat = LocationsAppSettings.get_instance().default_lat
     default_lon = LocationsAppSettings.get_instance().default_lon
-
     # get the user's current location from the user object
     if request.user.is_authenticated:
         current_user = request.user

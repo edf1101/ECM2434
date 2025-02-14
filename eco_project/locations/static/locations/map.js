@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {GeoHelper} from './geolocation.js';
+import {GeoHelper} from '../geolocation.js';
 import {GltfLoader} from './gltfLoader.js';
 
 /**

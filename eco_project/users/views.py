@@ -49,10 +49,7 @@ def login_view(request) -> HttpResponse:
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            if 'next' in request.POST:
-                return redirect(request.POST.get('next'))
-            else:
-                return redirect("homepage")
+            return redirect("homepage")
     else:
         form = AuthenticationForm()
     return render(request, "users/login.html", {"form": form})

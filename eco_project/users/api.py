@@ -15,7 +15,7 @@ def update_location(request) -> JsonResponse:
     """
 
     if not request.user.is_authenticated:  # handle non-signed in users
-        return JsonResponse({'error': 'Not signed in'}, status=400)
+        return JsonResponse({'status': 'Not signed in'})
 
     lat = request.POST.get('lat')
     lon = request.POST.get('lon')
