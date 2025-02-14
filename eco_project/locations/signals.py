@@ -4,11 +4,36 @@ Signals are an action that gets triggered when a certain event occurs.
 These signals are used to update the min and max values of the lat/lon and world x/y/z of the
 LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved or deleted.
 """
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, post_init
 from django.dispatch import receiver
 from .models import Map3DChunk, LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
     Map3DChunk
 from django.db.models import Min, Max
+
+@receiver(post_save, sender=FeatureInstance)
+@receiver(post_save, sender=LocationsAppSettings)
+def update_feature_instance_qr_code(sender, instance, created, **kwargs) -> None:
+    """
+    Update the QR code of a FeatureInstance or all FeatureInstances.
+
+    :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
+    :param instance: The instance of the sender
+    :param created: Whether the instance was created or updated
+    """
+    # If this save is triggered by an update_qr_code call skip to avoid infinite recursion.
+    if hasattr(instance, '_skip_qr_update') and instance._skip_qr_update:
+        return
+
+    # If the sender is FeatureInstance, update only that instance this fixes infinite recursion
+    if sender == FeatureInstance:
+        instance._skip_qr_update = True
+        instance.update_qr_code(skip_signal=True)
+        instance._skip_qr_update = False
+    else:
+        for feature_instance in FeatureInstance.objects.all():
+            feature_instance._skip_qr_update = True
+            feature_instance.update_qr_code(skip_signal=True)
+            feature_instance._skip_qr_update = False
 
 
 @receiver(post_save, sender=Map3DChunk)

@@ -8,6 +8,13 @@ from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile
 from typing import Self
 from thefuzz import fuzz
+from qrcode import QRCode, constants
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
+from qrcode.image.styles.colormasks import RadialGradiantColorMask
+import os
+from django.conf import settings
+from django.contrib.staticfiles import finders
 
 
 # Create your models here.
@@ -45,6 +52,43 @@ class FeatureInstance(models.Model):
     latitude = models.FloatField()
     specific_img = models.ImageField(upload_to='locations/feature_instance_img/', blank=True,
                                      null=True)
+
+    qr_code = models.ImageField(upload_to='locations/qr_codes/', blank=True, null=True)
+
+    def update_qr_code(self, skip_signal=False) -> None:
+        """
+        Updates the QR code for this feature instance.
+
+        :param skip_signal: Whether to skip the signal that triggers this method.
+        """
+        # Find the absolute path of the static image
+        logo_path = finders.find("locations/ecopetLogoWhiteBG.png")
+        if not logo_path:
+            raise FileNotFoundError("Static file 'locations/ecopetLogoWhiteBG.png' not found.")
+
+        qr = QRCode(error_correction=constants.ERROR_CORRECT_H)
+        qr.add_data(f'{LocationsAppSettings.get_instance().qr_prefix}{self.slug}')
+
+        # make the image
+        img = qr.make_image(
+            image_factory=StyledPilImage,
+            module_drawer=RoundedModuleDrawer(),
+            embeded_image_path=logo_path,  # Use the absolute path from the finder
+            color_mask=RadialGradiantColorMask(center_color=(74, 107, 66),
+                                               edge_color=(24, 219, 34)),
+            error_correction=constants.ERROR_CORRECT_H,
+        )
+
+        qr_code_path = os.path.join(settings.MEDIA_ROOT, "locations/qr_codes/")
+
+        # Create the directory if it doesn't exist
+        os.makedirs(qr_code_path, exist_ok=True)
+        img_path = os.path.join(qr_code_path, f"{self.slug}.png")
+        img.save(img_path)
+
+        # Update the ImageField reference without triggering signals
+        self.__class__.objects.filter(pk=self.pk).update(
+            qr_code=f"locations/qr_codes/{self.slug}.png")
 
     @property
     def has_question(self) -> bool:
@@ -142,6 +186,10 @@ class LocationsAppSettings(models.Model):
     world_colour: models.CharField = models.CharField(max_length=7,
                                                       default="#000000")  # Hex colour code
     render_dist: models.IntegerField = models.IntegerField(default=250)
+
+    # what goes before the slug of the qr code ie 127.0.0.1:8000/locations/reached/
+    qr_prefix: models.CharField = models.CharField(max_length=200, default="", blank=True,
+                                                   null=False)
 
     def save(self, *args, **kwargs) -> None:
         """
