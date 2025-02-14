@@ -1,7 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-
-# Create your models here.
+from django.contrib.auth.models import User
 
 class PetType(models.Model):
     """
@@ -25,22 +24,14 @@ class PetType(models.Model):
 
 class Pet(models.Model):
     """
-    A model to store a specific user's pet
+    A model to store a specific user's pet.
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
-    type = models.ForeignKey(PetType, on_delete=models.PROTECT) # Do not allow a PetType to be deleted if pets still exist of that type
-
+    type = models.ForeignKey('PetType', on_delete=models.PROTECT)
     points = models.IntegerField(default=0)
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
-
-    # TODO
-    # owner: models.ForeignKey(...)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets')
 
     def __str__(self):
-        """
-        Returns a string representation of the object.
-
-        :return: The name of this pet and its type.
-        """
         return f'{self.name} ({self.type.name})'
