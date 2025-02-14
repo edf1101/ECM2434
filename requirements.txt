@@ -2,4 +2,6 @@ Django
 pillow
 djangorestframework
 thefuzz
+pylint
 pylint-django
+APScheduler
