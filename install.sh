@@ -1,5 +1,7 @@
 pip install -r requirements.txt
 cd eco_project || exit
+python manage.py flush --no-input
+python manage.py makemigrations
 python manage.py migrate
 python manage.py clear_feature_data
 python manage.py import_features
