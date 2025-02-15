@@ -1,11 +1,11 @@
 """
 This module contains the models needed for the users app
 """
-from django.contrib.auth.models import User
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from random import choices
-from django.core.exceptions import ValidationError
+
+from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 
 class Profile(models.Model):

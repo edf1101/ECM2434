@@ -1,12 +1,13 @@
 """
 This script imports features from a file into the database.
 """
-from django.core.management.base import BaseCommand
+import os
+from random import choice
+
 from django.core.files import File
 from django.core.files.storage import default_storage
+from django.core.management.base import BaseCommand
 from locations.models import FeatureType, FeatureInstance, QuestionAnswer, QuestionFeature
-from random import choice
-import os
 
 
 class Command(BaseCommand):

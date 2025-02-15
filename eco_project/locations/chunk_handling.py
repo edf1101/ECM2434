@@ -2,7 +2,9 @@
 This module contains functions for handling 3D map tiles and other geodesic calculations.
 """
 import math
+
 from django.db.models import Q
+
 from .models import Map3DChunk
 
 

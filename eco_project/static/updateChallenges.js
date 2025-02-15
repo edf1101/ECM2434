@@ -1,4 +1,4 @@
-import { getCookie } from "./cookieFetcher.js";
+import {getCookie} from "./cookieFetcher.js";
 
 fetch("challenges/update_streak/", {
     method: "POST",

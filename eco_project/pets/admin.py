@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import PetType, Pet, CosmeticType, Cosmetic
 
 admin.site.register(PetType)

@@ -2,9 +2,10 @@
 This class deals with how the models appear in the admin menu.
 """
 from django.contrib import admin
-from .models import FeatureType, FeatureInstance, Map3DChunk, LocationsAppSettings, \
-    FeatureInstanceTileMap, QuestionFeature, QuestionAnswer
+
 from .forms import FeatureForm, LocationsAppSettingsForm
+from .models import FeatureType, FeatureInstance, LocationsAppSettings, \
+    QuestionFeature, QuestionAnswer
 
 
 class FeatureTypeAdmin(admin.ModelAdmin):

@@ -2,13 +2,11 @@
 This module is a Django management command that clears the 3D map chunk data from the database
 and the media folder.
 """
+import os
+
 from django.core.management.base import BaseCommand
 from locations.models import Map3DChunk
 from mysite.settings import MEDIA_ROOT
-import os
-from typing import Any
-
-import json  # If reading from a file
 
 
 class Command(BaseCommand):

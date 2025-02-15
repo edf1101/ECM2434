@@ -1,15 +1,16 @@
 """
 This module contains the views for the users app.
 """
-from django.shortcuts import redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
-from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.contrib.auth import login, logout
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404
+
+from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm
 
 
 def registration_view(request) -> HttpResponse:
