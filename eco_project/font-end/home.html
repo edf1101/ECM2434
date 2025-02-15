@@ -1,78 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPet</title>
     <link rel="stylesheet" href="styleAll.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #99D887;
-            color: white;
-            text-align: center;
-        }
-        .splash-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: -100px;
-        }
-        .splash-logo {
-            height: 200px;
-            opacity: 0;
-            animation: fadeInLogo 2s forwards;
-        }
-        .splash-text {
-            font-size: 20px;
-            opacity: 0;
-            animation: fadeInText 2s forwards;
-            animation-delay: 1s;
-            margin-top: 20px;
-        }
-        @keyframes fadeInLogo {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        @keyframes fadeInText {
-            from {
-                opacity: 0;
-                transform: translateY(-20px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-    </style>
 </head>
 <body>
-    <div class="navbar">
-        <img src="./ecopetLogo.png" alt="Ecopet Logo" style="height:30px; position: absolute; left:15px;">
-        <a href="">Home</a>
-        <a href="leaderboard.html">Leaderboard</a>
+    <div class="top-bar">
+        <p>Hello [user name]! It's time to get [pet name] moving!</p>
     </div>
-    <div class="splash-container">
-        <img src="./ecopetLogo.png" alt="Ecopet Logo" class="splash-logo">
-        <p class="splash-text">
-            Look after your pet while you explore the campus and learn to save the planet!
-            Learn, play, and make sustainable choices.
-        </p>
+
+    <nav>
+        <div class="navbar">
+            <a href="#"><img src="ecopetLogo.png" alt="EcoPet Logo" class="logo"></a>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Pet Challenges</a></li>
+                <li><a href="#">Leaderboard</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="welcome-section">
+            <div class="map-container">
+                <a href="#"><img src="mapImage.jpg" alt="Map Image" class="map-image"></a>
+            </div>
+            <div class="welcome-text">
+                <h1>Welcome to EcoPet</h1>
+                <p>Adopt a pet, take care of them by completing tasks, and living sustainably.</p>
+                <p>Earn points to buy accessories for [Pet Name].</p>
+            </div>
+        </header>
+
+        <section class="clickable-sections">
+            <div class="section">
+                <a href="#">
+                    <img src="mapPointsIcon.png" alt="Map Points Icon" class="section-icon">
+                    <h2>Map Points</h2>
+                </a>
+            </div>
+            <div class="section">
+                <a href="#">
+                    <img src="petIcon.png" alt="Pet Icon" class="section-icon">
+                    <h2>Pet</h2>
+                </a>
+            </div>
+            <div class="section">
+                <a href="#">
+                    <img src="challengesIcon.png" alt="Challenges Icon" class="section-icon">
+                    <h2>Challenges</h2>
+                </a>
+            </div>
+        </section>
+
+        <section class="pet-info">
+            <h2>[pet_name]</h2>
+            <p>[pet]</p>
+            <a href="#"><img src="petImagePlaceholder.png" alt="Pet Image" class="pet-image"></a>
+        </section>
     </div>
+
     <footer>
-        <div class="footer">
-            <p>&copy; Copyright 2025. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="ecopetLogo.png" alt="EcoPet Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Help & Support</h3>
+                    <a href="#">Help</a>
+                    <a href="#">Other</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Customer service</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <a href="#">Sitemap</a>
+                    <a href="#">How to guides</a>
+                    <a href="#">Subscriptions</a>
+                    <a href="#">Contact us</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Make sure to keep your pet alive!</p>
         </div>
     </footer>
 </body>
