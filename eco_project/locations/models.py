@@ -15,6 +15,7 @@ from qrcode.image.styles.colormasks import RadialGradiantColorMask
 import os
 from django.conf import settings
 from django.contrib.staticfiles import finders
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 # Create your models here.
@@ -163,6 +164,12 @@ class LocationsAppSettings(models.Model):
     It will be a singleton model. This means that there will only be one instance of this model.
     """
 
+    class Meta:
+        """
+        Override the verbose name for this model.
+        """
+        verbose_name_plural = "Map Settings"
+
     # Geodesic data
     # NB. min and maxes are set to different non 0 data to ensure no division by 0 errors
     min_lat: models.FloatField = models.FloatField(default=0.2)
@@ -190,6 +197,8 @@ class LocationsAppSettings(models.Model):
     # what goes before the slug of the qr code ie 127.0.0.1:8000/locations/reached/
     qr_prefix: models.CharField = models.CharField(max_length=200, default="", blank=True,
                                                    null=False)
+    default_lat: models.FloatField = models.FloatField(default=0, blank=False, null=False)
+    default_lon: models.FloatField = models.FloatField(default=0, blank=False, null=False)
 
     def save(self, *args, **kwargs) -> None:
         """
@@ -260,7 +269,10 @@ class QuestionFeature(models.Model):
 
     case_sensitive: models.BooleanField = models.BooleanField(default=False)
     use_fuzzy_comparison: models.BooleanField = models.BooleanField(default=False)
-    fuzzy_threshold: models.IntegerField = models.IntegerField(default=65)
+    fuzzy_threshold: models.IntegerField = models.IntegerField(default=65,
+                                                               validators=[
+                                                                   MinValueValidator(0),
+                                                                   MaxValueValidator(100)])
 
     def __str__(self):
         """

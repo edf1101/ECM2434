@@ -86,6 +86,7 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
         ("Camera Z Map", {"fields": ["camera_z_map"]}),
         ("Map Render Settings", {"fields": ["world_colour", "render_dist"]}),
         ("QR Code Settings", {"fields": ["qr_prefix"]}),
+        ("Default Position", {"fields": ["default_lat", "default_lon"]}),
     ]
 
 

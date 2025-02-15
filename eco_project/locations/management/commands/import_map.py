@@ -155,5 +155,6 @@ class Command(BaseCommand):
         # set the colour and the render dist
         settings.world_colour = '#106A1A'
         settings.render_dist = 250
+        settings.default_lat, settings.default_lon = 50.73585506490216, -3.534556667162146
 
         settings.save()
