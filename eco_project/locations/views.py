@@ -13,7 +13,7 @@ def base_locations(request) -> HttpResponse:
     :param request: The request object that gets passed to the view.
     :return: An HTTP webpage to render to the user.
     """
-    return HttpResponse('Locations Homepage')
+    return render(request, 'locations/location_home.html')
 
 
 def test_map(request) -> HttpResponse:

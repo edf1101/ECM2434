@@ -1,10 +1,12 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Map Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPet - Map</title>
 
+    <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'locations/map.css' %}">
 
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
@@ -18,6 +20,141 @@
     </script>
 </head>
 <body>
-<script type="module" src="{% static 'locations/map.js' %}"></script>
+    <nav>
+        <div class="navbar">
+            <a href="/"><img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="logo"></a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/map">Map</a></li>
+                <li><a href="/features">Pet Challenges</a></li>
+                <li><a href="/leaderboard">Leaderboard</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Explore the Map</h1>
+        <p>Find locations and challenges for your pet.</p>
+        <div id="map" style="width: 100%; height: 500px;"></div> <!-- Adjust map container size -->
+    </div>
+
+    <script type="module">
+        import * as THREE from "three";
+        import { OrbitControls } from "three/addons/OrbitControls.js";
+
+        // Set up basic map scene with Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('map').appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+        const mapData = {
+            tiles: [],
+            features: []
+        };
+
+        // Function to load map tiles
+        async function loadMapData(lat, lon) {
+            try {
+                const response = await fetch(`/api/nearby-tiles/?lat=${lat}&lon=${lon}&distance=100`);
+                const tiles = await response.json();
+                mapData.tiles = tiles;
+
+                // For each tile, create a geometry (could be a simple plane or texture for a 3D view)
+                tiles.forEach(tile => {
+                    const geometry = new THREE.PlaneGeometry(5, 5);
+                    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                    const tileMesh = new THREE.Mesh(geometry, material);
+                    tileMesh.position.set(tile.lon, tile.lat, 0); // You might adjust the map positioning logic
+                    scene.add(tileMesh);
+                });
+
+                console.log("Loaded map tiles:", tiles);
+            } catch (error) {
+                console.error("Error loading map tiles:", error);
+            }
+        }
+
+        // Function to load features for specific tiles
+        async function loadFeaturesForTiles(tileIds) {
+            try {
+                const response = await fetch(`/api/get_features_for_tile/?tiles=${tileIds.join(',')}`);
+                const featureData = await response.json();
+                mapData.features = featureData;
+
+                // Create feature markers or other representations
+                Object.keys(featureData).forEach(tileFileUrl => {
+                    featureData[tileFileUrl].forEach(feature => {
+                        const featureGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+                        const featureMaterial = new THREE.MeshBasicMaterial({ color: feature.colour });
+                        const featureMarker = new THREE.Mesh(featureGeometry, featureMaterial);
+                        featureMarker.position.set(feature.lon, feature.lat, 0.2); // Example positioning logic
+                        scene.add(featureMarker);
+                    });
+                });
+
+                console.log("Loaded features:", featureData);
+            } catch (error) {
+                console.error("Error loading features:", error);
+            }
+        }
+
+        // Initial map location (latitude and longitude)
+        const initialLat = 40.7128; // Example latitude
+        const initialLon = -74.0060; // Example longitude
+
+        // Load map and features for initial location
+        loadMapData(initialLat, initialLon);
+
+        // Update camera position
+        camera.position.z = 10;
+
+        // Render loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // For interactive control
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Help & Support</h3>
+                    <a href="#">Help</a>
+                    <a href="#">Other</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Customer service</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <a href="#">Sitemap</a>
+                    <a href="#">How to guides</a>
+                    <a href="#">Subscriptions</a>
+                    <a href="#">Contact us</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Make sure to keep your pet alive!</p>
+        </div>
+    </footer>
 </body>
 </html>
