@@ -73,7 +73,7 @@ class Pet(models.Model):
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    owner: Profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         """
@@ -81,4 +81,4 @@ class Pet(models.Model):
 
         :return: A string representation of this pet
         """
-        return f'{self.owner.name}\'s {self.name} ({self.type.name})'
+        return f'{self.owner.user.username}\'s {self.name} ({self.type.name})'
