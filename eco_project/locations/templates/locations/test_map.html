@@ -1,11 +1,9 @@
+{% extends 'layout.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoPet - Map</title>
 
+{% block title %}EcoPet Map{% endblock %}
+
+{% block extrahead %}
     <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'locations/map.css' %}">
 
@@ -18,58 +16,18 @@
           }
         }
     </script>
-</head>
-<body>
-<nav>
-    <div class="navbar">
-        <a href="/"><img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="logo"></a>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/map">Map</a></li>
-            <li><a href="/features">Pet Challenges</a></li>
-            <li><a href="/leaderboard">Leaderboard</a></li>
-            <li><a href="/about">About</a></li>
-        </ul>
-    </div>
-</nav>
+{% endblock %}
 
-<div class="container">
+
+{% block content %}
     <h1>Explore the Map</h1>
     <p>Find locations and challenges for your pet.</p>
     <div id="map" style="width: 100%; height: 500px;"></div>
-</div>
-
-<script type="module">
-    import {UniversityMap} from "{% static 'locations/map.js' %}";
-
-    new UniversityMap("map");
-</script>
-
-<footer>
-    <div class="footer-content">
-        <div class="footer-logo">
-            <img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="footer-logo-img">
-        </div>
-        <div class="footer-links">
-            <div class="footer-column">
-                <h3>Help & Support</h3>
-                <a href="#">Help</a>
-                <a href="#">Other</a>
-                <a href="#">FAQ</a>
-                <a href="#">Customer service</a>
-            </div>
-            <div class="footer-column">
-                <h3>Resources</h3>
-                <a href="#">Sitemap</a>
-                <a href="#">How to guides</a>
-                <a href="#">Subscriptions</a>
-                <a href="#">Contact us</a>
-            </div>
-        </div>
     </div>
-    <div class="footer-bottom">
-        <p>Make sure to keep your pet alive!</p>
-    </div>
-</footer>
-</body>
-</html>
+
+    <script type="module">
+        import {UniversityMap} from "{% static 'locations/map.js' %}";
+
+        new UniversityMap("map");
+    </script>
+{% endblock %}

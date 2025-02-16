@@ -1,62 +1,18 @@
+{% extends 'layout.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoPet</title>
+
+{% block title %}Home{% endblock %}
+
+{% block extrahead %}
     <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
-</head>
-<body>
-    <div class="top-bar">
-        <p>Hello [user name]! It's time to get [pet name] moving!</p>
-    </div>
+{% endblock %}
 
-    <nav>
-        <div class="navbar">
-            <a href="#"><img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="logo"></a>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/locations/map">Map</a></li>
-                <li><a href="/locations/features">Pet Challenges</a></li>
-                <li><a href="/leaderboard">Leaderboard</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="container">
-        <h1>Location Home Page</h1>
-        <p>Welcome to EcoPet! Explore locations and complete challenges with your pet.</p>
-        <button onclick="window.location.href='/locations/map/'">Explore Map</button>
-        <button onclick="window.location.href='/locations/education/'">View Features</button>
-    </div>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="footer-logo-img">
-            </div>
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h3>Help & Support</h3>
-                    <a href="#">Help</a>
-                    <a href="#">Other</a>
-                    <a href="#">FAQ</a>
-                    <a href="#">Customer service</a>
-                </div>
-                <div class="footer-column">
-                    <h3>Resources</h3>
-                    <a href="#">Sitemap</a>
-                    <a href="#">How to guides</a>
-                    <a href="#">Subscriptions</a>
-                    <a href="#">Contact us</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>Make sure to keep your pet alive!</p>
-        </div>
-    </footer>
-</body>
-</html>
+{% block content %}
+    <h1>Location Home Page</h1>
+    <p>Welcome to EcoPet! Explore locations and complete challenges with your pet.</p>
+    <button onclick="window.location.href='{% url 'locations:map' %}'">Explore Map</button>
+    <button onclick="window.location.href='{% url 'locations:generic-feature-list' %}'">View
+        Features
+    </button>
+{% endblock %}
