@@ -138,6 +138,38 @@ body {
     cursor: pointer;
 }
 
+.feature-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+    gap: 20px;
+    padding: 20px;
+}
+
+.feature-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+}
+
+.feature-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.feature-item a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.feature-item a:hover {
+    color: #007bff;
+}
+
 footer {
     background-color: #f5f5f5;
     padding: 40px 20px 20px 20px;
