@@ -3,7 +3,7 @@ This module contains the views for the locations app.
 """
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings,QuestionFeature
+from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings, QuestionFeature
 
 
 def base_locations(request) -> HttpResponse:
@@ -13,7 +13,10 @@ def base_locations(request) -> HttpResponse:
     :param request: The request object that gets passed to the view.
     :return: An HTTP webpage to render to the user.
     """
-    return render(request, 'locations/location_home.html')
+    generic_features = FeatureType.objects.all()
+    context = {'feature_type_list': generic_features}
+    print (context)
+    return render(request, 'locations/location_home.html', context=context)
 
 
 def test_map(request) -> HttpResponse:
