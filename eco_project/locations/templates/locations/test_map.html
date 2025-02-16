@@ -19,20 +19,17 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Use bootstrap to create responsive map section -->
 <div class="container my-4">
-  <div class="row mb-3">
-    <div class="col text-center">
+  <div class="row my-4">
+    <div class="col-12 text-center">
       <h1>Explore the Map</h1>
       <p>Find locations and challenges for your pet.</p>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col">
-      <div id="map" class="w-100 map-container"></div>
-    </div>
-  </div>
+<div class="container-fluid p-0">
+  <div id="map" class="map-container"></div>
 </div>
 
 <script type="module">

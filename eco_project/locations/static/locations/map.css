@@ -1,18 +1,22 @@
-/* Default height for medium screens */
 .map-container {
-  height: 500px;
+    width: 100%;
+    aspect-ratio: 16 / 10;
 }
 
-/* For large screens: use a percentage of the viewport height */
-@media (min-width: 1200px) {
-  .map-container {
-    height: 70vh;
-  }
-}
-
-/* For small screens: reduce the height */
 @media (max-width: 576px) {
-  .map-container {
-    height: 300px;
-  }
+    .map-container {
+        aspect-ratio: 1 / 1; /* A square container – adjust as desired */
+    }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+    .map-container {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+@media (min-width: 992px) {
+    .map-container {
+        aspect-ratio: 16 / 10;
+    }
 }
