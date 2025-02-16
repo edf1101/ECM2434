@@ -100,7 +100,7 @@ class UserGroupAdmin(admin.ModelAdmin):
     """
     model = UserGroup
     readonly_fields = ('users_in_group',)
-    list_display = ('code', 'users_in_group')
+    list_display = ('code', 'users_in_group', 'group_admin')
     search_fields = ['code']
     form = UserGroupForm
 
