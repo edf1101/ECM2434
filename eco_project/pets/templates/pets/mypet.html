@@ -1,12 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{pet.name}}</title>
-</head>
-<body>
-    <h1>{{pet.name}}</h1>
-    <p>{{pet.owner.user.username}}'s {{pet.type}}</p>
-    <p>Health: {{pet.health}} / 100</p>
-</body>
-</html>
+<h1>{{ pet.name }}</h1>
+
+<p><strong>Type:</strong> {{ pet.type.name }}</p>
+<p><strong>Owner:</strong> {{ pet.owner.user.username }}</p>
+
+<h2>Cosmetics:</h2>
+{% if pet.cosmetics.all %}
+    <ul>
+        {% for cosmetic in pet.cosmetics.all %}
+            <li>{{ cosmetic.name }} ({{ cosmetic.type.name }})</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>This pet has no cosmetics.</p>
+{% endif %}
+
+<h2>Image</h2>
+<img src="{{ pet.type.base_image.url }}" alt="{{ pet.type.name }} Image" width="200">
