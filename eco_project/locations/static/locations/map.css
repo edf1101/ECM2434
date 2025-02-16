@@ -1,20 +1,18 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -applesystem, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+/* Default height for medium screens */
+.map-container {
+  height: 500px;
 }
 
-html,
-body {
-    height: 100vh;
-    overflow: hidden;
-    width: 100vw;
+/* For large screens: use a percentage of the viewport height */
+@media (min-width: 1200px) {
+  .map-container {
+    height: 70vh;
+  }
 }
 
-#threejs-container {
-    position: block;
-    width: 50%;
-    height: 100%;
+/* For small screens: reduce the height */
+@media (max-width: 576px) {
+  .map-container {
+    height: 300px;
+  }
 }

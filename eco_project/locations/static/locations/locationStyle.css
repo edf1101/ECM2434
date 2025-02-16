@@ -233,3 +233,14 @@ footer .footer-bottom p {
     font-size: 14px;
     color: #555;
 }
+
+.custom-btn-primary {
+    background-color: #80CD27; /* Your primary button color */
+    color: #fff;
+    border: 1px solid #80CD27;
+}
+
+.custom-btn-primary:hover {
+    background-color: #28963D; /* Darker shade for hover */
+    border-color: #28963D;
+}

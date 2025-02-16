@@ -4,30 +4,39 @@
 {% block title %}EcoPet Map{% endblock %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'locations/map.css' %}">
+  <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
+  <link rel="stylesheet" href="{% static 'locations/map.css' %}">
 
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
-          }
-        }
-    </script>
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
+      }
+    }
+  </script>
 {% endblock %}
 
-
 {% block content %}
-    <h1>Explore the Map</h1>
-    <p>Find locations and challenges for your pet.</p>
-    <div id="map" style="width: 100%; height: 500px;"></div>
+    <!-- Use bootstrap to create responsive map section -->
+<div class="container my-4">
+  <div class="row mb-3">
+    <div class="col text-center">
+      <h1>Explore the Map</h1>
+      <p>Find locations and challenges for your pet.</p>
     </div>
+  </div>
 
-    <script type="module">
-        import {UniversityMap} from "{% static 'locations/map.js' %}";
+  <div class="row">
+    <div class="col">
+      <div id="map" class="w-100 map-container"></div>
+    </div>
+  </div>
+</div>
 
-        new UniversityMap("map");
-    </script>
+<script type="module">
+  import { UniversityMap } from "{% static 'locations/map.js' %}";
+  new UniversityMap("map");
+</script>
 {% endblock %}

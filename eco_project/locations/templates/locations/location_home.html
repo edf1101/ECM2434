@@ -7,12 +7,26 @@
     <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
 {% endblock %}
 
-
 {% block content %}
-    <h1>Location Home Page</h1>
-    <p>Welcome to EcoPet! Explore locations and complete challenges with your pet.</p>
-    <button onclick="window.location.href='{% url 'locations:map' %}'">Explore Map</button>
-    <button onclick="window.location.href='{% url 'locations:generic-feature-list' %}'">View
-        Features
-    </button>
+    <div class="container my-5">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-8">
+                <h1 class="mb-4">Location Home Page</h1>
+                <p class="lead mb-4">
+                    Welcome to EcoPet! Explore locations and complete challenges with your pet.
+                </p>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                    <button type="button" class="btn custom-btn-primary"
+                            onclick="window.location.href='{% url 'locations:map' %}'">
+                        Explore Map
+                    </button>
+                    <button type="button" class="btn custom-btn-primary"
+                            onclick="window.location.href='{% url 'locations:generic-feature-list' %}'">
+                        View Features
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
