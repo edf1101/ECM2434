@@ -3,7 +3,6 @@ Admin panel configuration for Streak and StreakSettings models.
 """
 
 from django.contrib import admin
-
 from .models import Streak, ChallengeSettings
 
 

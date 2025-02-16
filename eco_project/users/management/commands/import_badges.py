@@ -1,5 +1,4 @@
 import os
-
 from django.core.management.base import BaseCommand
 from users.models import Badge  # Adjust the import if your Badge model is in a different module
 

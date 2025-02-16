@@ -1,12 +1,10 @@
 """
 Models for the Challenges app.
 """
-from datetime import timedelta
-
-from django.contrib.auth.models import User
 from django.db import models
+from datetime import timedelta
+from django.contrib.auth.models import User
 from django.utils import timezone
-
 from .streaks import get_current_window  # make sure this helper works as expected
 
 

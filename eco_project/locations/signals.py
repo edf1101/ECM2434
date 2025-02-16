@@ -4,12 +4,11 @@ Signals are an action that gets triggered when a certain event occurs.
 These signals are used to update the min and max values of the lat/lon and world x/y/z of the
 LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved or deleted.
 """
-from django.db.models import Min, Max
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, post_init
 from django.dispatch import receiver
-
-from .models import LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
+from .models import Map3DChunk, LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
     Map3DChunk
+from django.db.models import Min, Max
 
 
 @receiver(post_save, sender=FeatureInstance)

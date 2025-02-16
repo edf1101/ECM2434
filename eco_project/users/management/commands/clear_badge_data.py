@@ -3,6 +3,7 @@ This module is a Django management command that clears the Badge from the databa
 """
 from django.core.management.base import BaseCommand
 from users.models import Badge
+from typing import Any
 
 
 class Command(BaseCommand):

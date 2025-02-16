@@ -1,9 +1,11 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
-from .chunk_handling import get_nearby_tiles
-from .models import FeatureInstance, Map3DChunk, LocationsAppSettings, \
+from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings, \
     FeatureInstanceTileMap, QuestionFeature
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .chunk_handling import get_nearby_tiles
+from random import uniform
+import math
 
 
 @api_view(['GET'])

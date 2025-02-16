@@ -4,14 +4,13 @@ It would be a long manual process to import all ~400 chunks into the database so
 automates it. There must be the console_out.txt file from blender in the same directory as this
 script and the exports folder with all the .glb files in the same directory as this script.
 """
-import os
-from random import choice
-from typing import Any
-
-from django.core.files import File
-from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand
 from locations.models import Map3DChunk, LocationsAppSettings
+from django.core.files import File
+import os
+from typing import Any
+from django.core.files.storage import default_storage
+from random import choice
 
 
 def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
