@@ -63,9 +63,9 @@ class FeatureInstance(models.Model):
         :param skip_signal: Whether to skip the signal that triggers this method.
         """
         # Find the absolute path of the static image
-        logo_path = finders.find("locations/ecopetLogoWhiteBG.png")
+        logo_path = finders.find("locations/media/ecopetLogoWhiteBG.png")
         if not logo_path:
-            raise FileNotFoundError("Static file 'locations/ecopetLogoWhiteBG.png' not found.")
+            raise FileNotFoundError("Static file 'locations/media/ecopetLogoWhiteBG.png' not found.")
 
         qr = QRCode(error_correction=constants.ERROR_CORRECT_H)
         qr.add_data(f'{LocationsAppSettings.get_instance().qr_prefix}{self.slug}')

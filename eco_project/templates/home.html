@@ -1,15 +1,50 @@
+{% extends 'layout.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home page</title>
-    <script type="module" src="{% static 'locationUpdater.js' %}"></script>
-    <script type="module" src="{% static 'updateChallenges.js' %}"></script>
 
-</head>
-<body>
-Placeholder homepage content
+{% block title %}EcoPet{% endblock %}
 
-</body>
-</html>
+{% block extrahead %}
+    <link rel="stylesheet" href=" {% static 'styleAll.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <header class="welcome-section">
+            <div class="map-container">
+                <a href="#"><img src="{% static 'media/mapImage.jpg' %}" alt="Map Image" class="map-image"></a>
+            </div>
+            <div class="welcome-text">
+                <h1>Welcome to EcoPet</h1>
+                <p>Adopt a pet, take care of them by completing tasks, and living sustainably.</p>
+                <p>Earn points to buy accessories for [Pet Name].</p>
+            </div>
+        </header>
+
+        <section class="clickable-sections">
+            <div class="section">
+                <a href="#">
+                    <img src="{% static 'media/mapPointsIcon.png' %}" alt="Map Points Icon" class="section-icon">
+                    <h2>Map Points</h2>
+                </a>
+            </div>
+            <div class="section">
+                <a href="#">
+                    <img src="{% static 'media/petIcon.png' %}" alt="Pet Icon" class="section-icon">
+                    <h2>Pet</h2>
+                </a>
+            </div>
+            <div class="section">
+                <a href="#">
+                    <img src="{% static 'media/challengesIcon.png' %}" alt="Challenges Icon" class="section-icon">
+                    <h2>Challenges</h2>
+                </a>
+            </div>
+        </section>
+
+        <section class="pet-info">
+            <h2>[pet_name]</h2>
+            <p>[pet]</p>
+            <a href="#"><img src="{% static 'media/petImagePlaceholder.png' %}" alt="Pet Image" class="pet-image"></a>
+        </section>
+    </div>
+{% endblock %}
