@@ -1,17 +1,18 @@
-import { getCookie } from "./cookieFetcher.js";
+import {getCookie} from "./cookieFetcher.js";
 
-fetch("challenges/update_streak/", {
+const absoluteStreakURL = window.location.origin + streakURL;
+fetch(absoluteStreakURL, {
     method: "POST",
     credentials: "include", // Include cookies for session auth
     headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken") // CSRF token for Django
+        "X-CSRFToken": csrfToken // CSRF token for Django
     }
 })
-.then(response => response.json())
-.then(data => {
-    console.log(data);
-})
-.catch(error => {
-    console.error("Error calling the API:", error);
-});
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error("Error calling the API:", error);
+    });
