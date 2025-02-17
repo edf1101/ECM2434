@@ -4,34 +4,39 @@ This file deals with displaying user app related models in the admin panel.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, Badge, BadgeInstance
-from .forms import BadgeAdminForm
+from .models import Profile, Badge, BadgeInstance, UserGroup
+from .forms import BadgeAdminForm, UserGroupForm
 
 
 class BadgeInstanceInline(admin.TabularInline):
+    """
+    Inline for the BadgeInstance model to appear in the user admin.
+    """
     model = BadgeInstance
-    extra = 0  # You can adjust this to allow extra blank forms if needed
+    extra = 0  # No extra blank forms
 
 
 class ProfileInline(admin.StackedInline):
     """
-    This is the inline class for the Profile model, it goes inside the user admin view.
+    Inline for the Profile model to appear in the user admin.
     """
     model = Profile
     can_delete = False
-    verbose_name_plural = 'Profile'
+    extra = 0
+    max_num = 1
 
-    # The fields that will be displayed in the inline
-    fieldsets = (
-        ('Profile', {'fields': ('bio',)}),
-        ('Scoring', {'fields': ('points',)}),
-        ('Location', {'fields': ('latitude', 'longitude')}),
-    )
+    def has_add_permission(self, request, obj):
+        """
+        Prevent adding a new profile if one already exists.
+        """
+        if obj and hasattr(obj, 'profile'):
+            return False
+        return True
 
 
 class CustomUserAdmin(BaseUserAdmin):
     """
-    This is the custom user admin class page that has been modified to only show the fields we want.
+    Custom user admin that displays additional fields.
     """
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -43,37 +48,45 @@ class CustomUserAdmin(BaseUserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'password1', 'password2', 'first_name', 'last_name'),
-
         }),
     )
 
     list_display = (
         'username', 'first_name', 'last_name', 'is_staff',
-        'profile_points', 'badge_count')  # Only these fields will be displayed
+        'profile_points', 'badge_count'
+    )
 
     inlines = (ProfileInline, BadgeInstanceInline)
 
+    def get_inline_instances(self, request, obj=None):
+        """
+        When adding a new user, do not display inlines.
+        This prevents duplicate profile creation.
+        """
+        if not obj:
+            return []
+        return super().get_inline_instances(request, obj)
+
     def profile_points(self, obj):
         """
-        This function is used to display the points of the user in the admin panel.
+        Display the user's points from their profile.
         """
-
         return obj.profile.points if hasattr(obj, 'profile') else 'N/A'
+
+    profile_points.short_description = 'Points'
 
     def badge_count(self, obj):
         """
-        This function is used to display the points of the user in the admin panel.
+        Display the number of badge instances associated with the user.
         """
-
         return obj.badgeinstance_set.count() if hasattr(obj, 'badgeinstance_set') else 'N/A'
 
     badge_count.short_description = 'Badges'
-    profile_points.short_description = 'Points'
 
 
 class BadgeAdmin(admin.ModelAdmin):
     """
-    This class is used to display the Badge model in the admin panel.
+    Admin for the Badge model.
     """
     model = Badge
     list_display = ('title', 'hover_text', 'rarity')
@@ -81,8 +94,21 @@ class BadgeAdmin(admin.ModelAdmin):
     search_fields = ['title', 'rarity']
 
 
-admin.site.register(Badge, BadgeAdmin)
+class UserGroupAdmin(admin.ModelAdmin):
+    """
+    Admin for the UserGroup model.
+    """
+    model = UserGroup
+    readonly_fields = ('users_in_group',)
+    list_display = ('code', 'users_in_group', 'group_admin')
+    search_fields = ['code']
+    form = UserGroupForm
 
-# deregister the default model and replace with our own.
+
+# Register Badge admin.
+admin.site.register(Badge, BadgeAdmin)
+admin.site.register(UserGroup, UserGroupAdmin)
+
+# Replace the default User admin with our custom admin.
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)

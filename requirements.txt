@@ -1,4 +1,8 @@
-Django~=5.1.6
+Django
 pillow
 djangorestframework
 thefuzz
+qrcode
+pylint
+pylint-django
+APScheduler

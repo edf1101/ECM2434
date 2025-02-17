@@ -33,6 +33,7 @@ class FeatureInstanceAdmin(admin.ModelAdmin):
         ("Location", {"fields": ["longitude", "latitude"]}),
         ("Display information", {"fields": ["specific_img"]}),
         ("Challenge Info", {"fields": ["has_challenge", "has_question"]}),
+        ("QR Code", {"fields": ["qr_code"]}),
     ]
     list_display = ["slug", "feature", "longitude", "latitude", "has_challenge"]
     search_fields = ["feature"]
@@ -84,6 +85,7 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
                      "min_world_z", "max_world_z"]}),
         ("Camera Z Map", {"fields": ["camera_z_map"]}),
         ("Map Render Settings", {"fields": ["world_colour", "render_dist"]}),
+        ("QR Code Settings", {"fields": ["qr_prefix"]}),
         ("Default Position", {"fields": ["default_lat", "default_lon"]}),
     ]
 

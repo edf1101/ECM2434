@@ -1,11 +1,13 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet Map{% endblock %}
+{% block title %}EcoPet - Map & Features{% endblock %}
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
+    <!-- New CSS for map responsiveness and styling -->
     <link rel="stylesheet" href="{% static 'locations/map.css' %}">
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -21,12 +23,11 @@
 {% endblock %}
 
 {% block content %}
-
     <!-- Header for Map Section -->
     <div class="container my-4">
         <div class="row my-4">
             <div class="col-12 text-center">
-                <h1>Map</h1>
+                <h1>Locations</h1>
                 <p>Find locations and challenges around the campus for your pet!</p>
             </div>
         </div>
@@ -66,6 +67,36 @@
             </div>
         </div>
     </div>
+
+    <!-- Feature Cards Section -->
+    <!-- Feature Cards Section (Horizontal Scroll) -->
+    <div class="container my-4">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2>Feature List</h2>
+                <p>Scroll to explore various sustainability locations available in EcoPet.</p>
+            </div>
+        </div>
+        <div class="feature-carousel">
+            {% for feature in feature_type_list %}
+                <div class="feature-card">
+                    <div class="card h-100">
+                        {% if feature.generic_img %}
+                            <img src="{{ feature.generic_img.url }}" alt="{{ feature.name }}"
+                                 class="card-img-top feature-img">
+                        {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{% url 'locations:generic-feature' id_arg=feature.id %}">{{ feature.name }}</a>
+                            </h4>
+                            <p class="card-text">{{ feature.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
 
     <script type="module">
         import {UniversityMap} from "{% static 'locations/map.js' %}";

@@ -34,7 +34,8 @@ export class GeoHelper {
             if (data.lat && data.lon) {
                 return [data.lat, data.lon];
             } else {
-                console.error("Error fetching location data");
+                console.error("Error fetching location data",data);
+                console.log(data);
                 return [0, 0];
             }
         } catch (error) {

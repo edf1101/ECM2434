@@ -1,22 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Feature List</title>
-</head>
-<body>
+{% extends 'layout.html' %}
+{% load static %}
 
-<h1>Feature List</h1>
+{% block title %}EcoPet - Feature List{% endblock %}
 
-    {% for feature in feature_type_list %}
-        <article>
-            <h4>
-                <a href="{%  url 'locations:generic-feature' id_arg=feature.id %}">
-                    {{ feature.name }}
-                </a>
-            </h4>
-        </article>
-    {% endfor %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container my-4">
+        <!-- Top desc part of page  -->
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h1>Feature List</h1>
+                <p>Explore various sustainability features available in EcoPet.</p>
+            </div>
+        </div>
+
+        <!-- Grid of Cards describing features-->
+        <div class="row">
+            {% for feature in feature_type_list %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        {% if feature.generic_img %}
+                            <!-- If there is a generic image, display it -->
+                            <img src="{{ feature.generic_img.url }}" alt="{{ feature.name }}"
+                                 class="card-img-top feature-img">
+                        {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{% url 'locations:generic-feature' id_arg=feature.id %}">{{ feature.name }}</a>
+                            </h4>
+                            <p class="card-text">{{ feature.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

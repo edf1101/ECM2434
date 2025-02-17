@@ -1,30 +1,24 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {GeoHelper} from './geolocation.js';
+import {GeoHelper} from '../geolocation.js';
 import {GltfLoader} from './gltfLoader.js';
 
 /**
  * Main application class that sets up a Three.js scene with chunked map tiles,
  *  a camera that follows an API fetched user location, and custom feature markers.
  */
-class UniversityMap {
+export class UniversityMap {
     /**
      * Initialises the UniversityMap application. By setting up the Three.js app,
      * getting basic map settings and starting API calls.
      */
-    constructor() {
-        this._initLocationAndMapData(); // Immediately initialize location and map data from the API.
-
-        this._initThreeJS(); // Initialize the Three.js scene, renderer, camera, and controls.
-
-        // Set up window resize events and begin the render loop.
+    constructor(containerId = "map") {
+        this.containerId = containerId;
+        this._initLocationAndMapData(); // Initialize map data and location.
+        this._initThreeJS();            // Set up the Three.js scene.
         window.addEventListener('resize', () => this._onWindowResize());
         this._animate();
-
-        // Initialize the GLTF loader.
         this.gltfLoader = new GltfLoader();
-
-        // Start periodic location updates.
         setInterval(() => this._checkNeedUpdateLocation(), 5000);
     }
 
@@ -75,33 +69,47 @@ class UniversityMap {
      * @private
      */
     _initThreeJS() {
-        // Set up the renderer
+        // Get the container element using the passed containerId.
+        const container = document.getElementById(this.containerId);
+        if (!container) {
+            console.error(`Container with id "${this.containerId}" not found.`);
+            return;
+        }
+
+        // Set up the renderer.
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
         this.renderer.setClearColor(0x5ac598);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        document.body.appendChild(this.renderer.domElement);
+        // Append the renderer to the container.
+        container.appendChild(this.renderer.domElement);
         this.scene = new THREE.Scene();
 
-        // Override the default fog vertex shader chunk otherwise weird fog behaviour
+        // Override default fog vertex shader chunk.
         THREE.ShaderChunk.fog_vertex = `
       #ifdef USE_FOG
         vFogDepth = length( mvPosition );
       #endif
     `;
-        // Set up lighting
+
+        // Set up lighting.
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(10, 100, 200); // adjust position as needed
+        directionalLight.position.set(10, 100, 200);
         directionalLight.castShadow = true;
         this.scene.add(directionalLight);
         this.scene.add(ambientLight);
 
-        // Set up camera
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 300);
+        // Set up camera.
+        this.camera = new THREE.PerspectiveCamera(
+            45,
+            container.clientWidth / container.clientHeight,
+            1,
+            300
+        );
 
         // Set up orbit controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -538,15 +546,21 @@ class UniversityMap {
      * Adjusts camera and renderer settings on window resize.
      */
     _onWindowResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
+        this.camera.aspect = container.clientWidth / container.clientHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
     /**
      * The main animation loop that updates controls and renders the scene.
      */
     _animate() {
+
+        if (!this.renderer || !this.scene || !this.camera || !this.controls) {
+            return;
+        }
         requestAnimationFrame(() => this._animate());
 
         // Rotate each marker in our rotatingMarkers array.
@@ -607,6 +621,3 @@ class UniversityMap {
         });
     }
 }
-
-// Start the Three.js application.
-new UniversityMap();

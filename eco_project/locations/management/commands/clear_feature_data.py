@@ -67,6 +67,15 @@ class Command(BaseCommand):
             for file in os.listdir(folder):
                 os.remove(os.path.join(folder, file))
 
+        # clear the media qr_code folder
+        folder = os.path.join(MEDIA_ROOT, 'locations/qr_codes')
+
+        # Check if the folder exists
+        if os.path.exists(folder):
+            # Remove everything in the folder
+            for file in os.listdir(folder):
+                os.remove(os.path.join(folder, file))
+
         FeatureInstance.objects.all().delete()
 
     def clear_question_data(self) -> None:
