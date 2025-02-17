@@ -4,3 +4,7 @@
 #
 Water fountain at the forum, Water Fountain, water-fountain-forum, 50.73527917001181, -3.533943183902057, drinking_at_fountain.jpeg
 Recycling bin at the INTO building, Recycling Bin, recycling-bin-into, 50.73619362331741, -3.5337695314801616, green bin.jpg
+Water fountain at the Innovation Centre, Water Fountain, water-fountain-innovation-centre, 50.73841331331237, -3.5312891745392787, innovation_water.JPG
+Recycling bin at the Innovation Centre, Recycling Bin, recycling-bin-innovation-centre, 50.73846381672933, -3.5310357508436594, innovation_recycling.JPG
+Innovation Center POI, Place of Interest, innovation-center-poi, 50.737928734114504, -3.5298086452480932, ww2_tree.jpg
+Recycling bin by Lafrowda, Recycling Bin, recycling-bin-lafrowda, 50.73355689693671, -3.5275522013319005, laf_bins.jpg
