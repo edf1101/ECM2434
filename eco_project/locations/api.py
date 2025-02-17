@@ -195,7 +195,7 @@ def submit_answer_api(request) -> Response:
 
     valid = question.is_valid_answer(answer_text)
 
-    if not signed_in:  # handle non signed in testers so they can still learn but just not get points
+    if not signed_in:  # handle non signed in users so they can still learn but just not get points
         print(
             f'Question: "{question.question_text}", Answer: "{answer_text}", User: not signed in"'
             f'{" - Correct" if valid else " - Incorrect"}')
@@ -203,7 +203,7 @@ def submit_answer_api(request) -> Response:
             'message': f'The answer is {"correct" if valid else "incorrect"} but you are not signed in',
         })
 
-    # handle signed in testers
+    # handle signed in users
     print(f'Question: "{question.question_text}", Answer: "{answer_text}", User: "{request.user}"'
           f'{" - Correct" if valid else " - Incorrect"}')
 
