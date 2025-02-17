@@ -1,5 +1,6 @@
 pip install -r requirements.txt
 cd eco_project || exit
+rm db.sqlite3
 python manage.py flush --no-input
 python manage.py makemigrations
 python manage.py migrate

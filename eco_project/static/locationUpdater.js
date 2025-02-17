@@ -13,11 +13,13 @@ function sendLocation(lat, lon) {
     const currentTime = Date.now();
 
     if (currentTime - lastSentTime >= 5000) {  // Ensure updates every 5 seconds
-        fetch('users/api/update_location/', {
+        const absoluteLocURL = window.location.origin + updateLocURL;
+
+        fetch(absoluteLocURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': getCookie('csrftoken'),
+                'X-CSRFToken': csrfToken,
             },
             credentials: 'include',
             body: new URLSearchParams({lat: lat, lon: lon})
