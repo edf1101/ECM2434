@@ -5,8 +5,8 @@ from django.db import models
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.utils import timezone
-from .streaks import get_current_window  # make sure this helper works as expected
-
+from .challenge_helpers import get_current_window  # make sure this helper works as expected
+from locations.models import FeatureInstance
 
 class ChallengeSettings(models.Model):
     """
@@ -14,9 +14,13 @@ class ChallengeSettings(models.Model):
     """
 
     interval = models.DurationField(default=timedelta(days=1))  # adjustable interval
+    question_feature_points: models.IntegerField = models.IntegerField(
+        default=2)  # points per correct answer
+    reached_feature_points: models.IntegerField = models.IntegerField(
+        default=1)  # points per reached normal feature
 
     def __str__(self):
-        return f"Interval: {self.interval}"
+        return f"Challenge Settings"
 
     def save(self, *args, **kwargs):
         """
@@ -86,3 +90,12 @@ class Streak(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Streak: {self.effective_streak}"
+
+
+class UserFeatureReach(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feature_instance = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
+    reached_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
