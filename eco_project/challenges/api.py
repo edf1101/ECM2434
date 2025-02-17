@@ -95,7 +95,7 @@ def submit_answer_api(request) -> Response:
             'message': 'You are not in range of the feature',
         })
 
-    if user_already_reached_in_window(request.user, question.feature):
+    if user_already_reached_in_window(request.user, question.feature,extra="question"):
         return Response({
             'message': 'You have already reached this feature in this window',
         })
@@ -104,8 +104,7 @@ def submit_answer_api(request) -> Response:
         # get how many point per question feature from challenge settings
 
         points_per_q = ChallengeSettings.get_solo().question_feature_points
-        points_for_feature = ChallengeSettings.get_solo().reached_feature_points
-        request.user.profile.points += points_per_q + points_for_feature
+        request.user.profile.points += points_per_q
         request.user.profile.save()
 
     # Return response with required info

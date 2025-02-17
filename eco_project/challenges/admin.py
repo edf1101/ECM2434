@@ -21,8 +21,10 @@ class ChallengeSettingsAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Streak Settings', {'fields': ('interval',)}),
-        ('Points Settings', {'fields': ('question_feature_points','reached_feature_points')}),
+        ('Points Settings', {'fields': ('question_feature_points', 'reached_feature_points')}),
     )
 
+
+admin.site.register(UserFeatureReach)
 admin.site.register(Streak, StreakAdmin)
 admin.site.register(ChallengeSettings, ChallengeSettingsAdmin)

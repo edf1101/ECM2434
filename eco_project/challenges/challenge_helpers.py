@@ -64,7 +64,7 @@ def user_in_range_of_feature(user: User, feature_inst: FeatureInstance, range: i
     return dist <= range
 
 
-def user_already_reached_in_window(user: User, feature_inst: FeatureInstance) -> bool:
+def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, extra="") -> bool:
     """
     Check if a user has already reached the feature in the current window.
 
@@ -84,12 +84,13 @@ def user_already_reached_in_window(user: User, feature_inst: FeatureInstance) ->
         user=user,
         feature_instance=feature_inst,
         reached_at__gte=window_start,
-        reached_at__lt=window_end
+        reached_at__lt=window_end,
+        extra=extra
     ).exists()
 
     if not already_reached:
         # add record and return true
-        UserFeatureReach.objects.create(user=user, feature_instance=feature_inst)
+        UserFeatureReach.objects.create(user=user, feature_instance=feature_inst, extra=extra)
         return False
 
     return True

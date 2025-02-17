@@ -96,6 +96,7 @@ class UserFeatureReach(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     feature_instance = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
     reached_at = models.DateTimeField(auto_now_add=True)
+    extra = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"

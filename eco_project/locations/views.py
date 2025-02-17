@@ -49,15 +49,15 @@ def individual_feature_page(request, slug) -> HttpResponse:
         if question.feature == feature_instance.feature:
             question = question.question
 
+    # if user signed in update points for reaching feature
+    if request.user.is_authenticated:
+        user_reached_feature(request.user,
+                             feature_instance)
+
     if feature_instance.has_question:
         context['question'] = question
         return render(request, 'locations/feature_instance_with_q.html', context)
     else:
-        # if user signed in update points for reaching feature
-        # If there is a question this depends on the user answering correctly
-        if request.user.is_authenticated:
-            user_reached_feature(request.user,
-                                 feature_instance)
         context['question'] = None
         return render(request, 'locations/feature_instance.html', context)
 
