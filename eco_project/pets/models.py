@@ -30,8 +30,8 @@ class CosmeticType(models.Model):
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
-    x = models.FloatField(name="X Position")
-    y = models.FloatField(name="Y Position")
+    x = models.FloatField()
+    y = models.FloatField()
 
     def __str__(self):
         """

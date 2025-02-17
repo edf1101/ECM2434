@@ -7,7 +7,7 @@
 {% if pet.cosmetics.all %}
     <ul>
         {% for cosmetic in pet.cosmetics.all %}
-            <li>{{ cosmetic.name }} ({{ cosmetic.type.name }})</li>
+            <li>{{ cosmetic.name }} ({{ cosmetic.type.name }} at X: {{ cosmetic.type.x}}, Y: {{cosmetic.type.y}})</li>
         {% endfor %}
     </ul>
 {% else %}
