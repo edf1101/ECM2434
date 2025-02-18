@@ -5,10 +5,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+
+from pets.models import Pet, PetType
 from .models import Profile, Badge, UserGroup
 from django.forms import ModelForm
 from django.forms.widgets import TextInput
-
 
 class UserCreationFormWithNames(UserCreationForm):
     """
@@ -59,6 +60,92 @@ class UserCreationFormWithNames(UserCreationForm):
             return False
 
         return True
+
+class PetCreationForm(forms.ModelForm):
+    name = forms.CharField(max_length=30, required=True,
+                           help_text="Required. Enter the name of your pet."
+                           )
+
+    type = forms.ModelChoiceField(
+        queryset=PetType.objects.all(),
+        empty_label="Select a Pet Type",
+    )
+
+    class Meta:
+        """
+        This class is used to define the fields that will be included in the form.
+        """
+        model = Pet
+        fields = ("name", "type")
+
+    def save(self, commit=True):
+        """
+        Saves the pet instance to the database.
+
+        :param commit: Whether to commit the changes to the database.
+        :return: The saved Pet instance.
+        """
+        pet = super().save(commit=False)
+        if commit:
+            pet.save()
+        return pet
+
+
+    def is_valid(self) -> bool:
+        """
+        This method is used to check if the form is valid.
+
+        @return: True if the form is valid, False otherwise.
+        """
+        valid = super().is_valid()
+        if not valid:
+            return False
+
+        # if name is empty then its invalid
+        if not self.cleaned_data.get("name"):
+            self.add_error("name", "This field is required.")
+            return False
+
+        # if type is empty then its invalid
+        if not self.cleaned_data.get("type"):
+            self.add_error("type", "This field is required.")
+            return False
+
+        return True
+
+
+class RegistrationForm(forms.Form):
+    """
+    A form to register a new user along with their pet.
+    """
+    user_form = UserCreationFormWithNames()
+    pet_form = PetCreationForm()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user_form = UserCreationFormWithNames(*args, **kwargs)
+        self.pet_form = PetCreationForm(*args, **kwargs)
+
+    def is_valid(self) -> bool:
+        """
+        Checks if both the user form and the pet form are valid.
+
+        :return: True if both forms are valid, False otherwise.
+        """
+        return self.user_form.is_valid() and self.pet_form.is_valid()
+
+    def save(self, commit=True):
+        """
+        Saves the user and their pet to the database.
+        """
+        user = self.user_form.save(commit)
+
+        # We have to assign the pet's owner before it can be saved
+        pet = self.pet_form.save(commit=False)
+        pet.owner = user.profile
+        pet = self.pet_form.save(commit)
+
+        return user, pet
 
 
 class ModifyUserForm(forms.ModelForm):

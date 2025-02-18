@@ -1,36 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Registration Page</title>
-</head>
-<body>
+{% extends 'layout.html' %}
+{% load static %}
 
- <h1>Register a New User</h1>
-   <form class="form-with-validation" action="{% url 'users:registration' %}" method="post">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                {{ field.label_tag }}<br>
-                {{ field }}<br>
+{% block title %}Register - EcoPet{% endblock %}
 
-                <!-- Display field-specific errors -->
-                {% if field.errors %}
-                    <div class="error">
+{% block extrahead %}
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'styleAll.css' %}">
+    <!-- JavaScript Variables for use in scripts -->
+    <script>
+        const streakURL = "{% url 'challenges:update_streak' %}";
+        const updateLocURL = "{% url 'users:update_location' %}";
+        const csrfToken = "{{ csrf_token }}";
+    </script>
+    <!-- External JavaScript Modules -->
+    <script type="module" src="{% static 'locationUpdater.js' %}"></script>
+    <script type="module" src="{% static 'updateChallenges.js' %}"></script>
+    <style>
+        .form-submit {
+            margin-top: 20px;
+            background-color: #8fbc8f;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+        .form-submit:hover {
+            background-color: #66cdaa; /* Lighter green on hover */
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+    <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
+        <h1 style="text-align: center; color: white;">Register a New User</h1>
+        <form class="form-with-validation" action="{% url 'users:registration' %}" method="post">
+            {% csrf_token %}
+            <!-- Pets and Users must be created at the same time because of their 1:1 relationship -->
+
+            <!-- User Form -->
+            <h2>Create your Account</h2>
+            {% for field in form.user_form %}
+                <div class="form-group">
+                    <label style="color: white;">{{ field.label_tag }}</label><br>
+                    {{ field }}<br>
+
+                    {% if field.errors %}
                         {% for error in field.errors %}
-                            <p>{{ error }}</p>
+                            <p class="error" style="color: red;">{{ error }}</p>
                         {% endfor %}
-                    </div>
-                {% endif %}
+                    {% endif %}
 
-                <!-- Optionally display help text -->
-                {% if field.help_text %}
-                    <small>{{ field.help_text }}</small>
-                {% endif %}
-            </div>
-            <br>
-        {% endfor %}
-        <button class="form-submit" type="submit">Submit</button>
-    </form>
-</body>
-</html>
+                    {% if field.help_text %}
+                        <small style="color: white;">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <!-- Pet Form -->
+            <h2>Choose your Pet</h2>
+            {% for field in form.pet_form %}
+                <div class="form-group">
+                    <label style="color: white;">{{ field.label_tag }}</label><br>
+                    {{ field }}<br>
+
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="error" style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small style="color: white;">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button class="form-submit" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

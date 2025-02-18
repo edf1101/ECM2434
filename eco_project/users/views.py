@@ -1,10 +1,11 @@
 """
 This module contains the views for the users app.
 """
+from django.db.transaction import commit
 from django.shortcuts import redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
-from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm
+from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm, RegistrationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, get_object_or_404
@@ -22,18 +23,21 @@ def registration_view(request) -> HttpResponse:
     @param request: The request object.
     @return: The response object.
     """
+
     # if the user is already logged in, redirect them to the homepage
     if request.user.is_authenticated:
         return redirect("homepage")
 
     if request.method == "POST":
-        form = UserCreationFormWithNames(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            login(request, form.save())
+            user, _ = form.save()
+            login(request, user)
             return redirect("homepage")
     else:
-        form = UserCreationFormWithNames()
-    return render(request, "users/registration.html", {"form": form})
+        form = RegistrationForm()
+
+    return render(request, "users/registration.html", { "form": form })
 
 
 def login_view(request) -> HttpResponse:
