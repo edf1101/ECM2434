@@ -23,7 +23,9 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<!-- Top Bar to welcome users -->
+<!-- Top Bar to welcome users, as a block so it can be overridden out -->
+{% block topBar %}
+
 <div class="top-bar py-2">
     <div class="container">
         {% if user.is_authenticated %}
@@ -39,7 +41,7 @@
         {% endif %}
     </div>
 </div>
-
+{% endblock %}
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">

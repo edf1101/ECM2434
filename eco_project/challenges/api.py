@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from datetime import timedelta
 from django.conf import settings
+from django.http import JsonResponse
 
 # Import your models and helper
 from .models import Streak, ChallengeSettings  # adjust import as needed
@@ -95,7 +96,7 @@ def submit_answer_api(request) -> Response:
             'message': 'You are not in range of the feature',
         })
 
-    if user_already_reached_in_window(request.user, question.feature,extra="question"):
+    if user_already_reached_in_window(request.user, question.feature, extra="question"):
         return Response({
             'message': 'You have already reached this feature in this window',
         })
@@ -111,3 +112,23 @@ def submit_answer_api(request) -> Response:
     return Response({
         'message': f'The answer is {"correct" if valid else "incorrect"}',
     })
+
+
+def nearest_challenges_api(request):
+    """
+    Returns up to 10 nearest challenges as JSON, sorted by distance.
+    In production, you’d query your database based on user location.
+    """
+    challenges = [
+        {"description": "Water fountain at the forum", "directions": '100m NW'},
+        {"description": "Recycling bin at the forum", "directions": '150m W'},
+        {"description": "Glass bin at the INTO building", "directions": '174m NE'},
+        {"description": "Bike rack at the Forum", "directions": '180m NW'},
+        {"description": "Sustainable Statue", "directions": '180m NW'},
+        {"description": "Compost bin at the INTO building", "directions": '200m E'},
+        {"description": "Eco waste lecuture.", "directions": '200m E'},
+        {"description": "Sustainable cafe", "directions": '220m N'},
+        {"description": "The market place", "directions": '250m NW'},
+        {"description": "Other idea", "directions": '380m NW'},
+    ]
+    return JsonResponse({"challenges": challenges})
