@@ -9,5 +9,5 @@ app_name = 'challenges'
 
 urlpatterns = [
     path('update_streak/', api.collect_streak, name="update_streak"),
-
+    path('submit_answer/', api.submit_answer_api, name='submit_answer_api'),
 ]

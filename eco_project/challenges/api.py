@@ -6,7 +6,9 @@ from django.conf import settings
 
 # Import your models and helper
 from .models import Streak, ChallengeSettings  # adjust import as needed
-from .streaks import get_current_window  # helper to bucket time into windows
+from .challenge_helpers import get_current_window, streak_to_points, user_in_range_of_feature, \
+    user_already_reached_in_window
+from locations.models import QuestionFeature
 
 
 @api_view(['POST'])
@@ -45,6 +47,11 @@ def collect_streak(request):
         # Otherwise, the streak is broken; start over.
         streak.raw_count = 1
 
+    # add points to the user
+    points_awarded = streak_to_points(streak.raw_count)
+    user.profile.points += points_awarded
+    user.profile.save()
+
     # Update the last_window to the start of the current window.
     streak.last_window = current_window_start
     streak.save()
@@ -52,4 +59,55 @@ def collect_streak(request):
     return Response({
         "message": "Streak updated!",
         "streak": streak.effective_streak
+    })
+
+
+@api_view(['POST'])
+def submit_answer_api(request) -> Response:
+    """
+    This function handles the submission of answers to questions.
+
+    :param request: The POST request object. Need a JSON object with 'answer'
+    and 'question_id' keys.
+    :return: A JSON response with a message to the front end
+    """
+
+    signed_in = request.user and request.user.is_authenticated
+
+    answer_text = request.data.get('answer')
+    question_id = request.data.get('question_id')
+
+    try:
+        question = QuestionFeature.objects.get(id=question_id)
+    except QuestionFeature.DoesNotExist:
+        return Response({'error': 'Question not found'}, status=404)
+
+    valid = question.is_valid_answer(answer_text)
+
+    if not signed_in:  # handle non signed in users so they can still learn but just not get points
+        return Response({
+            'message': f'The answer is {"correct" if valid else "incorrect"} but you are not signed in',
+        })
+
+    # check if in range
+    if not user_in_range_of_feature(request.user, question.feature):
+        return Response({
+            'message': 'You are not in range of the feature',
+        })
+
+    if user_already_reached_in_window(request.user, question.feature,extra="question"):
+        return Response({
+            'message': 'You have already reached this feature in this window',
+        })
+
+    if valid:
+        # get how many point per question feature from challenge settings
+
+        points_per_q = ChallengeSettings.get_solo().question_feature_points
+        request.user.profile.points += points_per_q
+        request.user.profile.save()
+
+    # Return response with required info
+    return Response({
+        'message': f'The answer is {"correct" if valid else "incorrect"}',
     })

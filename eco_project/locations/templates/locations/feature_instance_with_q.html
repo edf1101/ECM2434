@@ -37,7 +37,7 @@
             const csrftoken = getCookie('csrftoken'); // django needs this for user authentication
 
             // Create the POST request
-            const response = await fetch('/locations/api/submit_answer/', {
+            const response = await fetch('/challenges/submit_answer/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
