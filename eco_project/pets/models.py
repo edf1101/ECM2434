@@ -13,6 +13,7 @@ class PetType(models.Model):
 
     base_image = models.ImageField(
         upload_to='pets/base_imgs/',
+        name="Base Image",
         blank=False)
 
     def __str__(self):
@@ -30,8 +31,8 @@ class CosmeticType(models.Model):
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
-    x = models.FloatField()
-    y = models.FloatField()
+    x = models.FloatField(name="X Position")
+    y = models.FloatField(name="Y Position")
 
     def __str__(self):
         """
@@ -72,7 +73,7 @@ class Pet(models.Model):
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
-    owner: Profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         """
@@ -80,4 +81,4 @@ class Pet(models.Model):
 
         :return: A string representation of this pet
         """
-        return f'{self.owner.user.username}\'s {self.name} ({self.type.name})'
+        return f'{self.owner.name}\'s {self.name} ({self.type.name})'

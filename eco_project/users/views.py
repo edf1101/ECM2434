@@ -10,9 +10,6 @@ from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
-from .models import UserGroup
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 
 
 def registration_view(request) -> HttpResponse:
@@ -93,7 +90,6 @@ def profile_view(request, username) -> HttpResponse:
     return render(request, "users/profile.html", context=context)
 
 
-@login_required
 def edit_profile(request) -> HttpResponse:
     """
     Users who are logged in can edit their profile.
@@ -101,6 +97,9 @@ def edit_profile(request) -> HttpResponse:
     @param request: The request object.
     @return: The response object.
     """
+
+    if not request.user.is_authenticated:  # handle non signed in users
+        return redirect("users:login")
 
     user = request.user  # get the current user
 
@@ -125,7 +124,6 @@ def edit_profile(request) -> HttpResponse:
     return render(request, 'users/edit_profile.html', context)
 
 
-@login_required
 def change_password(request) -> HttpResponse:
     """
     Allow a logged-in user to change their password.
@@ -148,43 +146,3 @@ def change_password(request) -> HttpResponse:
         form = PasswordChangeForm(user=request.user)
 
     return render(request, 'users/change_password.html', {'form': form})
-
-
-@login_required
-def groups_home(request) -> HttpResponse:
-    """
-    This view is used to display the groups home page.
-    It has a list of all the groups the user is a member of as a link to the group page.
-    It also has a button to create a new group.
-
-    @param request: The request object.
-    @return: The response object.
-    """
-
-    user = request.user
-
-    # get the UserGroups the user is a part of by their code
-    user_groups = UserGroup.objects.all().filter(users=user)
-    context = {'user_groups': user_groups}
-
-    return render(request, "users/groups_home.html", context=context)
-
-
-@login_required
-def group_detail(request, code):
-    """
-    Display the details of a group including its list of users.
-
-    @param request: The HTTP request object.
-    @param  code: The unique code of the group.
-    @return: HttpResponse with the rendered group detail page.
-    """
-
-    # Retrieve the group by its unique code, or throw 404 if not found.
-    group = get_object_or_404(UserGroup, code=code)
-
-    if request.user not in group.users.all():  # Check that the user is a member of group
-        return redirect("groups_home")
-
-    context = {"group": group}
-    return render(request, "users/group_detail.html", context=context)

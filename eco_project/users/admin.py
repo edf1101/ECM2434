@@ -4,8 +4,8 @@ This file deals with displaying user app related models in the admin panel.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Profile, Badge, BadgeInstance, UserGroup
-from .forms import BadgeAdminForm, UserGroupForm
+from .models import Profile, Badge, BadgeInstance
+from .forms import BadgeAdminForm
 
 
 class BadgeInstanceInline(admin.TabularInline):
@@ -72,7 +72,6 @@ class CustomUserAdmin(BaseUserAdmin):
         Display the user's points from their profile.
         """
         return obj.profile.points if hasattr(obj, 'profile') else 'N/A'
-
     profile_points.short_description = 'Points'
 
     def badge_count(self, obj):
@@ -80,7 +79,6 @@ class CustomUserAdmin(BaseUserAdmin):
         Display the number of badge instances associated with the user.
         """
         return obj.badgeinstance_set.count() if hasattr(obj, 'badgeinstance_set') else 'N/A'
-
     badge_count.short_description = 'Badges'
 
 
@@ -94,20 +92,8 @@ class BadgeAdmin(admin.ModelAdmin):
     search_fields = ['title', 'rarity']
 
 
-class UserGroupAdmin(admin.ModelAdmin):
-    """
-    Admin for the UserGroup model.
-    """
-    model = UserGroup
-    readonly_fields = ('users_in_group',)
-    list_display = ('code', 'users_in_group', 'group_admin')
-    search_fields = ['code']
-    form = UserGroupForm
-
-
 # Register Badge admin.
 admin.site.register(Badge, BadgeAdmin)
-admin.site.register(UserGroup, UserGroupAdmin)
 
 # Replace the default User admin with our custom admin.
 admin.site.unregister(User)
