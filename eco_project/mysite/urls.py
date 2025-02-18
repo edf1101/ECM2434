@@ -27,5 +27,6 @@ urlpatterns = [
     path('locations/', include('locations.urls')),
     path('users/', include('users.urls')),
     path('challenges/', include('challenges.urls')),
+    path('pets/', include('pets.urls')),
     path('', views.homepage, name='homepage'),
 ]
