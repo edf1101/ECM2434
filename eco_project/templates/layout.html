@@ -80,7 +80,7 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
                 <li class="nav-item dropdown ms-3">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -121,19 +121,13 @@
         </div>
         <div class="footer-links">
             <div class="footer-column">
-                <h3>Help & Support</h3>
-                <a href="#">Help</a>
-                <a href="#">Other</a>
-                <a href="#">FAQ</a>
-                <a href="#">Customer service</a>
+                <h3>Resources & Support</h3>
+                <a href="{% url 'faq' %}">Help & FAQ</a>
+                <a href="{% url 'contact' %}">Contact us</a>
+                <a href="{% url 'about' %}">About us</a>
+
             </div>
-            <div class="footer-column">
-                <h3>Resources</h3>
-                <a href="#">Sitemap</a>
-                <a href="#">How to guides</a>
-                <a href="#">Subscriptions</a>
-                <a href="#">Contact us</a>
-            </div>
+
         </div>
     </div>
     <div class="footer-bottom">
