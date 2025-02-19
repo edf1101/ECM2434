@@ -29,4 +29,5 @@ urlpatterns = [
     path('challenges/', include('challenges.urls')),
     path('pets/', include('pets.urls')),
     path('', views.homepage, name='homepage'),
+    path('leaderboard/', include('leaderboard.urls')),
 ]

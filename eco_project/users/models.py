@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from random import choices
+from django.db.models import Sum
 from django.core.exceptions import ValidationError
 
 
@@ -19,6 +20,17 @@ class Profile(models.Model):
 
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
+
+    def update_points(self):
+        """
+        Updates the points field with the sum of all owned pets' points
+        """
+        total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
+        self.points = total_points
+        self.save()
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
