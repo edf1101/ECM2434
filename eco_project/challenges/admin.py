@@ -3,7 +3,7 @@ Admin panel configuration for Streak and StreakSettings models.
 """
 
 from django.contrib import admin
-from .models import Streak, ChallengeSettings
+from .models import Streak, ChallengeSettings, UserFeatureReach
 
 
 class StreakAdmin(admin.ModelAdmin):
@@ -18,11 +18,13 @@ class ChallengeSettingsAdmin(admin.ModelAdmin):
     """
     Admin panel configuration for Challenge settings model.
     """
-    list_display = ('interval',)
+
     fieldsets = (
         ('Streak Settings', {'fields': ('interval',)}),
+        ('Points Settings', {'fields': ('question_feature_points', 'reached_feature_points')}),
     )
 
 
+admin.site.register(UserFeatureReach)
 admin.site.register(Streak, StreakAdmin)
 admin.site.register(ChallengeSettings, ChallengeSettingsAdmin)

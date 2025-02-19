@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.urls import reverse
 
 
 def registration_view(request) -> HttpResponse:
@@ -38,24 +38,31 @@ def registration_view(request) -> HttpResponse:
 
 def login_view(request) -> HttpResponse:
     """
-    This view is used to log in a user.
-
-    @param request: The request object.
-    @return: The response object.
+    Logs in a user. If the POST request comes from the homepage (via the hidden "next" field)
+    and the login form is invalid, re-render the home_non_auth template so errors appear inline.
+    Otherwise, render the standard login page.
     """
-
-    # if the user is already logged in, redirect them to the homepage
     if request.user.is_authenticated:
         return redirect("homepage")
 
+    # find out next url if there is one
+    next_url = request.POST.get("next") or request.GET.get("next", "")
+    homepage_url = reverse('homepage')
+
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect("homepage")
+            return redirect(next_url or homepage_url)
+        else:
+            # If the login was tried from the homepage go to the homepage
+            if next_url == homepage_url:
+                return render(request, 'home.html', {'form': form})
+            else:
+                return render(request, "users/login.html", {'form': form, 'next': next_url})
     else:
-        form = AuthenticationForm()
-    return render(request, "users/login.html", {"form": form})
+        form = AuthenticationForm(request)
+        return render(request, "users/login.html", {'form': form, 'next': next_url})
 
 
 def logout_view(request) -> HttpResponse:

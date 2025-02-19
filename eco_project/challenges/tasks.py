@@ -3,7 +3,7 @@ This module contains tasks that are called by the scheduler.
 """
 from django.utils import timezone
 from datetime import timedelta
-from .models import Streak, get_current_window, ChallengeSettings
+from .models import Streak, get_current_window, ChallengeSettings, UserFeatureReach
 
 
 def update_challenges() -> None:
@@ -11,6 +11,7 @@ def update_challenges() -> None:
     Gets called every 1m by the scheduler to update any time dependent challenges.
     """
     reset_missed_streaks()
+    cleanup_user_feature_reaches()
 
 
 def reset_missed_streaks() -> None:
@@ -36,4 +37,19 @@ def reset_missed_streaks() -> None:
             streak.save(update_fields=['raw_count'])
             count_reset += 1
 
-    print(f"Reset {count_reset} streak(s).")
+
+def cleanup_user_feature_reaches() -> None:
+    """
+    Deletes any UserFeatureReach record that is in a past window.
+    """
+    now_time = timezone.now()
+    try:
+        settings_obj = ChallengeSettings.objects.first()
+        interval = settings_obj.interval if settings_obj else timedelta(days=1)
+    except Exception:
+        interval = timedelta(days=1)
+
+    current_window_start, _ = get_current_window(now_time, interval)
+
+    # Delete all records where reached_at is before the start of the current window.
+    deleted_count, _ = UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()

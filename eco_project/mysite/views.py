@@ -1,11 +1,14 @@
-"""
-This module contains the basic low level views for the mysite app.
-"""
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
+from django.http import HttpResponse, HttpRequest
 
 
-def homepage(request):
+def homepage(request:HttpRequest) -> HttpResponse:
     """
-    Render a basic homepage.
+    Renders the homepage with a login form in case the user is not authenticated.
+
+    :param request: HttpRequest object
+    :return: HttpResponse object
     """
-    return render(request, 'home.html')
+    form = AuthenticationForm(request)
+    return render(request, 'home.html', {'form': form})

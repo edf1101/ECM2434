@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {GeoHelper} from '../geolocation.js';
-import {GltfLoader} from './gltfLoader.js';
+import {GeoHelper} from '/static/js/geolocation.js';
+import {GltfLoader} from '/static/locations/js/gltfLoader.js';
 
 /**
  * Main application class that sets up a Three.js scene with chunked map tiles,
