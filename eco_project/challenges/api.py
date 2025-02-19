@@ -9,7 +9,8 @@ from django.http import JsonResponse
 from .models import Streak, ChallengeSettings  # adjust import as needed
 from .challenge_helpers import get_current_window, streak_to_points, user_in_range_of_feature, \
     user_already_reached_in_window
-from locations.models import QuestionFeature
+from locations.models import QuestionFeature, FeatureInstance
+from locations.chunk_handling import haversine
 
 
 @api_view(['POST'])
@@ -119,16 +120,28 @@ def nearest_challenges_api(request):
     Returns up to 10 nearest challenges as JSON, sorted by distance.
     In production, you’d query your database based on user location.
     """
-    challenges = [
-        {"description": "Water fountain at the forum", "directions": '100m NW'},
-        {"description": "Recycling bin at the forum", "directions": '150m W'},
-        {"description": "Glass bin at the INTO building", "directions": '174m NE'},
-        {"description": "Bike rack at the Forum", "directions": '180m NW'},
-        {"description": "Sustainable Statue", "directions": '180m NW'},
-        {"description": "Compost bin at the INTO building", "directions": '200m E'},
-        {"description": "Eco waste lecuture.", "directions": '200m E'},
-        {"description": "Sustainable cafe", "directions": '220m N'},
-        {"description": "The market place", "directions": '250m NW'},
-        {"description": "Other idea", "directions": '380m NW'},
-    ]
+    challenges = []
+    if not request.user.is_authenticated:  # if user is not authenticated, return empty list
+        return JsonResponse({"challenges": challenges})
+
+    # Find all the challenges that the user has not yet reached
+    # and are within a certain distance of the user
+    current_user_lat = request.user.profile.latitude
+    current_user_long = request.user.profile.longitude
+    challenge_data: dict[FeatureInstance, str] = {}
+    for feature in FeatureInstance.objects.all():
+        if not user_already_reached_in_window(request.user, feature,update=False):
+            dist = haversine(current_user_lat, current_user_long, feature.latitude,
+                             feature.longitude)
+            dist_str = f'{dist/1000.0:.2f}km away' if dist > 1 else f'{int(dist)}m away'
+            challenge_data[feature] = dist_str
+
+    # Sort the challenges by distance and get the 10 closest
+    sorted_challenges = sorted(challenge_data.items(), key=lambda x: x[1])
+    for feature, dist in sorted_challenges[:10]:
+        challenges.append({
+            "directions": dist,
+            "description": feature.name,
+        })
+    print(challenges)
     return JsonResponse({"challenges": challenges})

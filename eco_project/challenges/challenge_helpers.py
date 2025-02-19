@@ -64,12 +64,14 @@ def user_in_range_of_feature(user: User, feature_inst: FeatureInstance, range: i
     return dist <= range
 
 
-def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, extra="") -> bool:
+def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, extra="",update=True) -> bool:
     """
     Check if a user has already reached the feature in the current window.
 
     :param user: The user to check.
     :param feature_inst: The feature instance to check.
+    :param extra: An extra field to check.
+    :param update: If True, will add a record if the user has not already reached the feature.
     :return: True if the user has reached the feature in the current window, False otherwise.
     """
     from .models import UserFeatureReach, ChallengeSettings  # avoid circular import
@@ -90,7 +92,8 @@ def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, ex
 
     if not already_reached:
         # add record and return true
-        UserFeatureReach.objects.create(user=user, feature_instance=feature_inst, extra=extra)
+        if update:
+            UserFeatureReach.objects.create(user=user, feature_instance=feature_inst, extra=extra)
         return False
 
     return True

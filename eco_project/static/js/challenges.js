@@ -10,13 +10,20 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(getNearbyChallengesURL)
             .then(response => response.json())
             .then(data => {
+                // 1) Clear old alerts once, right after fetching
+                alertsContainer.innerHTML = '';
+
+                // 2) Reset the challenge queue
                 challengeQueue = data.challenges || [];
+
+                // 3) Now display up to 3 from the new queue
                 displayAlerts();
             })
             .catch(error => {
                 console.error('Error fetching challenges:', error);
             });
     }
+
 
     /**
      * Make sure 3 alerts are displayed at all times, unless out of challenges in queue
@@ -31,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
     /**
      * Create an alert element for a challenge
      *
@@ -38,33 +46,34 @@ document.addEventListener('DOMContentLoaded', function () {
      * @returns {HTMLDivElement} The alert element to display
      */
     function createAlertElement(challenge) {
-
-        // create obj using bootstrap classes
         const alertDiv = document.createElement('div');
         alertDiv.className = 'alert alert-custom-green alert-dismissible fade show';
         alertDiv.setAttribute('role', 'alert');
 
-        // set content and distance
-        alertDiv.innerHTML = `<strong>${challenge.directions}</strong>: ${challenge.description})
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+        // set the alert content
+        alertDiv.innerHTML = `
+      <strong>${challenge.directions}</strong>: ${challenge.description}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
 
-        // Listen for the alert's close event and remove it
+        // On Bootstrap's closed event
         alertDiv.addEventListener('closed.bs.alert', function () {
-            displayAlerts(); // try to add more
+            displayAlerts(); // try to add more from the queue
 
-            // If queue is empty, fetch new challenges
+            // If no alerts are left and the queue is empty, fetch new data
             if (alertsContainer.querySelectorAll('.alert').length === 0 && challengeQueue.length === 0) {
                 fetchChallenges();
             }
         });
 
-        // catch any missed things
+        // in case it doesn't load properly
         alertDiv.querySelector('.btn-close').addEventListener('click', function () {
             setTimeout(displayAlerts, 300);
         });
 
         return alertDiv;
     }
+
 
     fetchChallenges(); // fetch challenges on page load
 });
