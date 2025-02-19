@@ -6,3 +6,7 @@ qrcode
 pylint
 pylint-django
 APScheduler
+asgiref
+sqlparse
+gunicorn
+psycopg2-binary

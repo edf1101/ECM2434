@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  ecm2434:
+    image: ecm2434
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
