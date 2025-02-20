@@ -3,9 +3,9 @@
 # All fields are required except img path which can be left blank though please still add the end comma
 #
 Water fountain at the Innovation Centre, Water Fountain, water-fountain-innovation-centre, 50.73841331331237, -3.5312891745392787, innovation_water.JPG
-Recycling bin at the Innovation Centre, Recycling Bin, recycling-bin-innovation-centre, 50.73846381672933, -3.5310357508436594, innovation_recycling.JPG
+Recycling bins at the Innovation Centre, Recycling Bin, recycling-bin-innovation-centre, 50.73846381672933, -3.5310357508436594, innovation_recycling.JPG
 Innovation Center POI, Place of Interest, innovation-center-poi, 50.737928734114504, -3.5298086452480932, ww2_tree.jpg
-Recycling bin by Lafrowda, Recycling Bin, recycling-bin-lafrowda, 50.73355689693671, -3.5275522013319005, laf_bins.jpg
+Recycling bins by Lafrowda, Recycling Bin, recycling-bin-lafrowda, 50.73355689693671, -3.5275522013319005, laf_bins.jpg
 Amory Recyling Bins, Recycling Bin, amory-recycling-bins, 50.73669261597638, -3.5312938664245777, amory bins.jpg
 Amory Electric Car Charger, Electric Vehicle Charging Point, amory-electric-car-charger, 50.73669969917289, -3.531532251421048, amory charger.jpg
 Birks Grange Village Bike rack, Bike Rack, birks-bike-rack, 50.73662354127609, -3.542945306795316, birks bike rack1.jpg
@@ -22,3 +22,24 @@ Laver Bike Rack, Bike Rack, laver-bike-rack,50.737172430069954, -3.5333908403118
 Moberly, Sustainable Building, moberly, 50.738756187080725, -3.5441932433829333, moberly.jpg
 Moberly Electric Vehicle Charger, Electric Vehicle Charging Point, moberly-electric-vehicle-charger, 50.738930252411755, -3.5443823783231085, moberly charger.jpg
 Newman Pond, Ecological Area, newman-pond, 50.73651397747276, -3.5355754008192792, newman pond.jpg
+Birks Marketplace Bins,Recycling Bin, birks-marketplace-bins, 50.735925249709815, -3.5431284223649633, birks market bins.jpg
+Birks Pull Up Bars,Place of Interest, birks-pull-up-bars, 50.736025390819236, -3.5435022081018634, birks pull up.jpg
+East Park Pond, Ecological Area, east-park-pond, 50.73636812055309, -3.528398003041383, east park pond.jpg
+Forum Bins, Recycling Bin, forum-bins, 50.73484603463171, -3.533715335694581, forum bins.jpg
+Forum Pond, Ecological Area, forum-pond, 50.734780342907875, -3.533493077142282, forum pond.jpg
+Grass Roofed Building, Sustainable Building, grass-roofed-building, 50.73341727279004, -3.536251569887727, grass roof.jpg
+Great Hall Bins, Recycling Bin, great-hall-bins, 50.7356104583446, -3.5344678175802957, great hall bins.jpg
+Recycling Bins at the INTO Building, Recycling Bin, recycling-bins-into-building,50.736017076303995, -3.5341254066649337, into bins.jpg
+Celebration Gardens, Place of Interest, celebration-gardens, 50.736099943915164, -3.5379126671907564, jubilee gardens.jpg
+Nash Grove Bike Rack, Bike Rack, nash-grove-bike-rack, 50.73606819615725, -3.539844184022426, nash bike.jpg
+Parker Moot Room Recycling Bin, Recycling Bin, parker-moot-room-recycling-bins, 50.736318558537256, -3.531596109814656, parker moot bins.jpg
+Pond by the Laver Building, Ecological Area, pond-laver-building, 50.736949149873176, -3.534119231038494, pond1.jpg
+Solar Panels near the Ram Bar, Solar Panels, solar-panels-ram-bar, 50.73479328086125, -3.5352640499297383, solar panels.jpg
+Statue by the Multi faith Center, Place of Interest, statue-multi-faith-center, 50.73457348169885, -3.53398402809925, statue.jpg
+Recycling Bins by the Northcott Theatre, Recycling Bin, recycling-bins-northcott-theatre, 50.736059426575224, -3.535415311536798, theatre bins.jpg
+Tree by the Business School, Place of Interest, tree-business-school, 50.73598024331606, -3.5291999993672976, tree business.jpg
+Tree Seat, Place of Interest, tree-seat, 50.73574956176035, -3.536277293618677, tree seat.jpg
+Wellbeing Center, Sustainable Building, wellbeing-center, 50.73675297586967, -3.5378461050280676, wellbeing image.jpg
+
+
+

@@ -11,3 +11,4 @@ Donation Point for Clothes, Donation points for clothes are a great way to reduc
 Sustainable Building, These buildings were built with sustainability in mind., #00FF00, moberly.jpg,
 Ecological Area, Ecological areas are areas that are home to a variety of wildlife., #00FF00, newman pond.jpg,
 Bus Stop, Bus stops are a great way to encourage the use of public transport., #FF0000, bus 1.jpg,
+Solar Panels, Solar panels are a great way to generate renewable energy., #FFD700, solar panels.jpg,
