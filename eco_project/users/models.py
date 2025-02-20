@@ -23,14 +23,11 @@ class Profile(models.Model):
 
     def update_points(self):
         """
-        Updates the points field with the sum of all owned pets' points
+        Recalculates and updates the user's points based on all owned pets.
         """
         total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
         self.points = total_points
         self.save()
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
