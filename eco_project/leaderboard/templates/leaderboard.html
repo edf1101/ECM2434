@@ -25,13 +25,21 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid white;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
         }
         th {
             font-size: 20px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        td {
+            font-size: 16px;
         }
         tr:nth-child(even) {
             background: rgba(0, 0, 0, 0.2);
@@ -45,6 +53,41 @@
             background: white;
             color: #1E4421;
             border: none;
+        }
+        .current-user {
+            background-color: rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .leaderboard-container {
+            background: rgba(30, 68, 33, 0.6);
+            max-width: 90%;
+            width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 600px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
         }
     </style>
 {% endblock %}
@@ -71,8 +114,8 @@
                     <td>{{ user.profile.points }}</td>
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
-                            <span title="{{ badge_instance.badge.hover_text }}"
-                                style="color: {{ badge_instance.badge.colour }}">
+                            <span class="badge" title="{{ badge_instance.badge.hover_text }}"
+                                  style="background-color: {{ badge_instance.badge.colour }}; color: white;">
                                 {{ badge_instance.badge.title }}
                             </span>
                         {% endfor %}
@@ -113,7 +156,7 @@
                         </thead>
                         <tbody>
                             {% for user in group_users %}
-                            <tr {% if user == current_user %}style="background-color: rgba(255, 255, 255, 0.2);"{% endif %}>
+                            <tr {% if user == current_user %}class="current-user"{% endif %}>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.profile.points }}</td>
