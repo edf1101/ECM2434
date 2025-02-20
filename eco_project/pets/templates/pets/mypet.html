@@ -1,18 +1,118 @@
-<h1>{{ pet.name }}</h1>
+{% extends "layout.html" %}
+{% load static %}
 
-<p><strong>Type:</strong> {{ pet.type.name }}</p>
-<p><strong>Owner:</strong> {{ pet.owner.user.username }}</p>
+{% block title %}My Pet - EcoPet{% endblock %}
 
-<h2>Cosmetics:</h2>
-{% if pet.cosmetics.all %}
-    <ul>
-        {% for cosmetic in pet.cosmetics.all %}
-            <li>{{ cosmetic.name }} ({{ cosmetic.type.name }} at X: {{ cosmetic.type.x}}, Y: {{cosmetic.type.y}})</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>This pet has no cosmetics.</p>
-{% endif %}
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
 
-<h2>Image</h2>
-<img src="{{ pet.type.base_image.url }}" alt="{{ pet.type.name }} Image" width="200">
+  /* Main Container */
+  .pet-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #99D887, #7ED08F);
+    border: 3px solid #28963D;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(16, 106, 26, 0.5);
+    font-family: 'Bungee', cursive;
+    color: #106A1A;
+    text-align: center;
+  }
+  
+  .pet-header {
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 15px;
+    background: #106A1A;
+    color: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px #28963D;
+  }
+  
+  .pet-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .pet-image {
+    flex: 1;
+    min-width: 250px;
+    text-align: center;
+  }
+  
+  .pet-image img {
+    max-width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
+    transition: transform 0.3s ease;
+  }
+  
+  .pet-image img:hover {
+    transform: scale(1.1);
+  }
+  
+  .pet-details {
+    flex: 1;
+    min-width: 250px;
+    text-align: left;
+    font-size: 1.2rem;
+    color: #28963D;
+  }
+  
+  .pet-details p {
+    margin: 10px 0;
+  }
+  
+  .gamify-info {
+    margin-top: 20px;
+    font-size: 1rem;
+  }
+  
+  .accessorise-btn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 15px 30px;
+    background: #98DABA;
+    color: #106A1A;
+    border: 2px solid #28963D;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
+  }
+  
+  .accessorise-btn:hover {
+    background: #8FD8B7;
+    transform: scale(1.05);
+  }
+</style>
+
+<div class="pet-container">
+  <div class="pet-header">
+    {{ pet.name }} My Pet
+  </div>
+  <div class="pet-content">
+    <div class="pet-image">
+      <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet Image">
+    </div>
+    <div class="pet-details">
+      <p><strong>Type:</strong> {{ pet.type.name }}</p>
+      <p><strong>Owner:</strong> {{ pet.owner.username }}</p>
+      <p><strong>Points:</strong> {{ pet.points }}</p>
+      <div class="gamify-info">
+        <p>Level: 1</p>
+        <p>XP: 0 / 100</p>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="accessorise-btn">Accessorise Here</a>
+</div>
+{% endblock %}
