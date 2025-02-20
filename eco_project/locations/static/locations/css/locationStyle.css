@@ -145,6 +145,17 @@ body {
     padding: 20px;
 }
 
+.feature-img {
+    width: 100%; 
+    height: 200px;
+    object-fit: cover; 
+    object-position: top;
+}
+
+.card-body {
+    text-align: center;
+}
+
 .feature-item {
     border: 1px solid #ccc;
     padding: 10px;
@@ -244,3 +255,4 @@ footer .footer-bottom p {
     background-color: #28963D; /* Darker shade for hover */
     border-color: #28963D;
 }
+
