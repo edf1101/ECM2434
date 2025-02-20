@@ -6,7 +6,7 @@ from django.db.models import Q
 from .models import Map3DChunk
 
 
-def haversine(lat1, lon1, lat2, lon2):
+def haversine(lat1, lon1, lat2, lon2) -> float:
     """
     The haversine formula is used for calculating the distance between two points on the Earth's
     surface in meters given their latitudes and longitudes.

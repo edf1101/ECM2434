@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "leaderboard",
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = '/users/login/'
+
+LOGIN_REDIRECT_URL = '/pets/mypet/'
+
+
+
+CHECK_USER_CHALLENGE_RANGE = False

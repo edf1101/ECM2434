@@ -4,8 +4,8 @@
 {% block title %}EcoPet Map{% endblock %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
-    <link rel="stylesheet" href="{% static 'locations/map.css' %}">
+    <link rel="stylesheet" href="{% static 'locations/css/locationStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'locations/css/map.css' %}">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -68,7 +68,7 @@
     </div>
 
     <script type="module">
-        import {UniversityMap} from "{% static 'locations/map.js' %}";
+        import {UniversityMap} from "{% static 'locations/js/map.js' %}";
 
         // Clear the inline map container before initializing
         const inlineContainer = document.getElementById("map");

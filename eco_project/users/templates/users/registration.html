@@ -41,39 +41,35 @@
             <!-- User Form -->
             <h2>Create your Account</h2>
             {% for field in form.user_form %}
-                <div class="form-group">
-                    <label style="color: white;">{{ field.label_tag }}</label><br>
-                    {{ field }}<br>
-
-                    {% if field.errors %}
-                        {% for error in field.errors %}
-                            <p class="error" style="color: red;">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if field.help_text %}
-                        <small style="color: white;">{{ field.help_text }}</small>
-                    {% endif %}
-                </div>
+              <div class="form-group">
+                  <label style="color: white;">{{ field.label_tag }}</label><br>
+                  {{ field }}<br>
+                  {% if field.errors %}
+                  {% for error in field.errors %}
+                  <p class="error" style="color: red;">{{ error }}</p>
+                  {% endfor %}
+                  {% endif %}
+                  {% if field.help_text %}
+                  <small style="color: white;">{{ field.help_text }}</small>
+                  {% endif %}
+              </div>
             {% endfor %}
 
             <!-- Pet Form -->
             <h2>Choose your Pet</h2>
             {% for field in form.pet_form %}
-                <div class="form-group">
-                    <label style="color: white;">{{ field.label_tag }}</label><br>
-                    {{ field }}<br>
-
-                    {% if field.errors %}
-                        {% for error in field.errors %}
-                            <p class="error" style="color: red;">{{ error }}</p>
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if field.help_text %}
-                        <small style="color: white;">{{ field.help_text }}</small>
-                    {% endif %}
-                </div>
+              <div class="form-group">
+                  <label style="color: white;">{{ field.label_tag }}</label><br>
+                  {{ field }}<br>
+                  {% if field.errors %}
+                  {% for error in field.errors %}
+                  <p class="error" style="color: red;">{{ error }}</p>
+                  {% endfor %}
+                  {% endif %}
+                  {% if field.help_text %}
+                  <small style="color: white;">{{ field.help_text }}</small>
+                  {% endif %}
+              </div>
             {% endfor %}
             <button class="form-submit" type="submit">Submit</button>
         </form>

@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from random import choices
+from django.db.models import Sum
 from django.core.exceptions import ValidationError
 
 
@@ -19,6 +20,14 @@ class Profile(models.Model):
 
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
+
+    def update_points(self):
+        """
+        Recalculates and updates the user's points based on all owned pets.
+        """
+        total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
+        self.points = total_points
+        self.save()
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -80,6 +89,10 @@ class UserGroup(models.Model):
         primary_key=True,
         default=generate_unique_code
     )
+    name = models.CharField(
+        max_length=100,
+        help_text="The display name for the group"
+    )
     users = models.ManyToManyField(User, blank=True)
     group_admin = models.ForeignKey(
         User,
@@ -89,6 +102,9 @@ class UserGroup(models.Model):
         related_name='administered_groups',
         help_text="The admin for the group. Must be a member of the group."
     )
+
+    def __str__(self):
+        return self.name
 
     @property
     def users_in_group(self) -> str:
