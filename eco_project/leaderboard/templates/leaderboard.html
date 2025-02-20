@@ -1,7 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Leaderboard</title>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - Leaderboard{% endblock %}
+
+{% block extrahead %}
     <link rel="stylesheet" href="styleAll.css">
     <style>
         body {
@@ -45,13 +47,9 @@
             border: none;
         }
     </style>
-</head>
-<body>
-    <div class="navbar">
-        <img src="/ecopetLogo.png" alt="Ecopet Logo" style="height:30px; position:absolute; left:15px;">
-        <a href="home.html">Home</a>
-        <a href="leaderboard.html">Leaderboard</a>
-    </div>
+{% endblock %}
+
+{% block content %}
     <div class="leaderboard-container">
         <h1>Leaderboard</h1>
 
@@ -74,7 +72,7 @@
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
                             <span title="{{ badge_instance.badge.hover_text }}"
-                                  style="color: {{ badge_instance.badge.colour }}">
+                                style="color: {{ badge_instance.badge.colour }}">
                                 {{ badge_instance.badge.title }}
                             </span>
                         {% endfor %}
@@ -122,7 +120,7 @@
                                 <td>
                                     {% for badge_instance in user.badgeinstance_set.all %}
                                         <span title="{{ badge_instance.badge.hover_text }}"
-                                              style="color: {{ badge_instance.badge.colour }}">
+                                            style="color: {{ badge_instance.badge.colour }}">
                                             {{ badge_instance.badge.title }}
                                         </span>
                                     {% endfor %}
@@ -167,10 +165,5 @@
             </tbody>
         </table>
     </div>
-    <footer>
-        <div class="footer">
-            <p>&copy; Copyright 2025. All rights reserved.</p>
-        </div>
-    </footer>
-</body>
-</html>
+
+{% endblock %}
