@@ -92,6 +92,10 @@ class UserGroup(models.Model):
         primary_key=True,
         default=generate_unique_code
     )
+    name = models.CharField(
+        max_length=100,
+        help_text="The display name for the group"
+    )
     users = models.ManyToManyField(User, blank=True)
     group_admin = models.ForeignKey(
         User,
@@ -101,6 +105,9 @@ class UserGroup(models.Model):
         related_name='administered_groups',
         help_text="The admin for the group. Must be a member of the group."
     )
+
+    def __str__(self):
+        return self.name
 
     @property
     def users_in_group(self) -> str:

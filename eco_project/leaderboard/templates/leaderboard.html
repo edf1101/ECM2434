@@ -95,7 +95,7 @@
                         <select name="group" onchange="this.form.submit()">
                             {% for group in user_groups %}
                                 <option value="{{ group.code }}" {% if selected_group.code == group.code %}selected{% endif %}>
-                                    Group {{ group.code }}
+                                    {{ group.name }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -103,7 +103,7 @@
                 </div>
 
                 {% if selected_group %}
-                    <h2>Group Leaderboard - {{ selected_group.code }}</h2>
+                    <h2>Group Leaderboard - {{ selected_group.name }}</h2>
                     <table>
                         <thead>
                             <tr>
