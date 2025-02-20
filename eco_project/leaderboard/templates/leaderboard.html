@@ -1,59 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Leaderboard</title>
-    <link rel="stylesheet" href="styleAll.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #99D887;
-            color: white;
-            text-align: center;
-        }
-        .leaderboard-container {
-            background: rgba(30, 68, 33, 0.6);
-            max-width: 800px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid white;
-        }
-        th {
-            font-size: 20px;
-        }
-        tr:nth-child(even) {
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .group-selector {
-            margin: 20px 0;
-        }
-        .group-selector select {
-            padding: 8px;
-            border-radius: 5px;
-            background: white;
-            color: #1E4421;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="navbar">
-        <img src="/ecopetLogo.png" alt="Ecopet Logo" style="height:30px; position:absolute; left:15px;">
-        <a href="home.html">Home</a>
-        <a href="leaderboard.html">Leaderboard</a>
-    </div>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - Leaderboard{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'leaderboard/css/leaderboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Leaderboard</h1>
     <div class="leaderboard-container">
-        <h1>Leaderboard</h1>
 
         <h2>Global Top Users</h2>
         <table>
@@ -73,8 +29,8 @@
                     <td>{{ user.profile.points }}</td>
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
-                            <span title="{{ badge_instance.badge.hover_text }}"
-                                  style="color: {{ badge_instance.badge.colour }}">
+                            <span class="badge" title="{{ badge_instance.badge.hover_text }}"
+                                  style="background-color: {{ badge_instance.badge.colour }}; color: white;">
                                 {{ badge_instance.badge.title }}
                             </span>
                         {% endfor %}
@@ -87,7 +43,8 @@
                 {% endfor %}
             </tbody>
         </table>
-
+    </div>
+    <div class="leaderboard-container">    
         {% if user.is_authenticated %}
             {% if user_groups %}
                 <div class="group-selector">
@@ -95,7 +52,7 @@
                         <select name="group" onchange="this.form.submit()">
                             {% for group in user_groups %}
                                 <option value="{{ group.code }}" {% if selected_group.code == group.code %}selected{% endif %}>
-                                    Group {{ group.code }}
+                                    Group {{ group.name }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -103,7 +60,7 @@
                 </div>
 
                 {% if selected_group %}
-                    <h2>Group Leaderboard - {{ selected_group.code }}</h2>
+                    <h2>Group Leaderboard - {{ selected_group.name }}</h2>
                     <table>
                         <thead>
                             <tr>
@@ -115,14 +72,14 @@
                         </thead>
                         <tbody>
                             {% for user in group_users %}
-                            <tr {% if user == current_user %}style="background-color: rgba(255, 255, 255, 0.2);"{% endif %}>
+                            <tr {% if user == current_user %}class="current-user"{% endif %}>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user.username }}</td>
                                 <td>{{ user.profile.points }}</td>
                                 <td>
                                     {% for badge_instance in user.badgeinstance_set.all %}
                                         <span title="{{ badge_instance.badge.hover_text }}"
-                                              style="color: {{ badge_instance.badge.colour }}">
+                                            style="color: {{ badge_instance.badge.colour }}">
                                             {{ badge_instance.badge.title }}
                                         </span>
                                     {% endfor %}
@@ -167,10 +124,7 @@
             </tbody>
         </table>
     </div>
-    <footer>
-        <div class="footer">
-            <p>&copy; Copyright 2025. All rights reserved.</p>
-        </div>
-    </footer>
-</body>
-</html>
+
+
+{% endblock %}
+
