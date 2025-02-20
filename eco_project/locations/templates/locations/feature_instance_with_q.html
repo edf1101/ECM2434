@@ -1,6 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - Feature Instance with !{% endblock %}
+
+{% block extrahead %}
     <meta charset="UTF-8">
     <title>✨{{ feature_instance.feature.name }}✨</title>
     <script>
@@ -53,27 +56,27 @@
             alert(data.message); // show the message. Front end ppl can handle this better
         }
     </script>
-</head>
-<body>
-<h1>✨You have reached the {{ feature_instance.name }}✨</h1>
-<h3>
-    Lat: {{ feature_instance.latitude }},
-    Lon: {{ feature_instance.longitude }},
-    Code: {{ feature_instance.slug }}
-</h3>
-<br>
-<img src="{{ feature_instance.image.url }}" alt="Image of {{ feature_instance.name }}">
+{% endblock %}
 
-<h2>About this Feature</h2>
-<h3>{{ feature_instance.feature.name }}</h3>
-<p>{{ feature_instance.feature.description }}</p>
+{% block content %}
+    <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
+    <h3>
+        Lat: {{ feature_instance.latitude }},
+        Lon: {{ feature_instance.longitude }},
+        Code: {{ feature_instance.slug }}
+    </h3>
+    <br>
+    <img src="{{ feature_instance.image.url }}" alt="Image of {{ feature_instance.name }}">
 
-<h2>Question:</h2>
-<p>{{ question.question_text }}</p>
-<input type="hidden" id="question-id" value="{{ question.id }}">
+    <h2>About this Feature</h2>
+    <h3>{{ feature_instance.feature.name }}</h3>
+    <p>{{ feature_instance.feature.description }}</p>
 
-<input type="text" id="answer" placeholder="Your answer here">
-<button type="button" onclick="submitAnswer()">Submit Answer</button>
+    <h2>Question:</h2>
+    <p>{{ question.question_text }}</p>
+    <input type="hidden" id="question-id" value="{{ question.id }}">
 
-</body>
-</html>
+    <input type="text" id="answer" placeholder="Your answer here">
+    <button type="button" onclick="submitAnswer()">Submit Answer</button>
+
+{% endblock %}
