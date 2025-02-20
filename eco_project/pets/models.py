@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-
+from django.contrib.auth.models import User
 from users.models import Profile
 
 class PetType(models.Model):
@@ -13,7 +13,6 @@ class PetType(models.Model):
 
     base_image = models.ImageField(
         upload_to='pets/base_imgs/',
-        name="Base Image",
         blank=False)
 
     def __str__(self):
@@ -31,8 +30,8 @@ class CosmeticType(models.Model):
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
-    x = models.FloatField(name="X Position")
-    y = models.FloatField(name="Y Position")
+    x = models.FloatField()
+    y = models.FloatField()
 
     def __str__(self):
         """
@@ -70,10 +69,11 @@ class Pet(models.Model):
     name = models.CharField(max_length=200)
     type = models.ForeignKey(PetType, on_delete=models.PROTECT) # Do not allow a PetType to be deleted if pets still exist of that type
 
+    points = models.IntegerField(default=0)
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets')
 
     def __str__(self):
         """
@@ -81,4 +81,5 @@ class Pet(models.Model):
 
         :return: A string representation of this pet
         """
-        return f'{self.owner.name}\'s {self.name} ({self.type.name})'
+        return f'{self.owner.username}\'s {self.name} ({self.type.name})'
+    

@@ -18,5 +18,4 @@ urlpatterns = [
     path('api/get_location/', api.get_current_location, name='get-location'),
     path('api/get_feature_instances/', api.get_feature_instances, name='get-feature-instances'),
     path('api/get_features_for_tile/', api.get_features_for_tiles, name='get-feature-for-tiles'),
-    path('api/submit_answer/', api.submit_answer_api, name='submit_answer_api'),
 ]
