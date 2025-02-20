@@ -6,15 +6,7 @@
 {% block extrahead %}
     <meta charset="UTF-8">
     <title>{{ feature_type.name }}</title>
-    <style>
-        .center-content {
-            text-align: center;
-        }
-        .center-content img {
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'locations/css/features.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -24,6 +16,7 @@
         <img
                 src="{{ feature_type.generic_img.url }}"
                 alt="Image of {{ feature_type.name }}"
+                style="width: 50vw; height: auto;"
         />
 
         <p>{{ generic_feature.description }}</p>
