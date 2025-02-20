@@ -54,5 +54,16 @@ class Pet(models.Model):
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets')
 
+    def save(self, *args, **kwargs):
+        """
+        Override save method to update the user's points whenever a pet's points are updated.
+        """
+        # Save the pet first
+        super().save(*args, **kwargs)
+
+        # After saving, update the user's profile points
+        if self.owner.profile:
+            self.owner.profile.update_points()  # This will update the user's points based on their pets
+
     def __str__(self):
         return f"{self.owner.username}'s {self.name} ({self.type.name})"
