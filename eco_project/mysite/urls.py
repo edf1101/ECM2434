@@ -30,4 +30,5 @@ urlpatterns = [
     path('pets/', include('pets.urls')),
     path('', views.homepage, name='homepage'),
     path('leaderboard/', include('leaderboard.urls')),
+    
 ]
