@@ -396,9 +396,16 @@ export class UniversityMap {
         // Position the custom mesh relative to the cylinder so that it sits on top.
         object.position.set(0, 4, 0);
         cylinder.add(object);
-        object.userData.parentTile = parent;
+        Object.defineProperty(object, 'parentTile', {
+            value: parent,
+            writable: true,
+            configurable: true,
+            enumerable: false, // This prevents the property from being enumerated in JSON.stringify.
+        });
+        // object.userData.parentTile = parent;
         this.activeMarkers.push(object); // Add the custom mesh to the list of rotating markers.
     }
+
 
     /**
      * This function takes in a list of tiles and retrieves the feature instances that are within

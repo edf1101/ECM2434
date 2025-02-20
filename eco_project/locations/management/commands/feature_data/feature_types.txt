@@ -4,3 +4,11 @@
 #
 Water Fountain, Water fountains are a great way to stay hydrated and additionally it cuts down the usage of plastic bottles., #0011FF, general_water_fountain.jpg, raindrop.glb
 Recycling Bin, Recycling bins are a great way to reduce waste and help the environment., #00FF00, green bin.jpg, recycle_logo2.glb
+Place of Interest, Places of interest are locations that are of interest to the public... You could learn a new sustainability fact!, #AAAAAA, poi_marker.png,
+Bike Rack, Bike racks are a great way to encourage cycling and reduce carbon emissions., #AAAAAA, business bike rack.jpg,
+Electric Vehicle Charging Point, Electric vehicle charging points are a great way to encourage the use of electric vehicles., #1155FF, charger nash.jpg,
+Donation Point for Clothes, Donation points for clothes are a great way to reduce waste and help those in need., #FF0000, birks donation3.jpg,
+Sustainable Building, These buildings were built with sustainability in mind., #00FF00, moberly.jpg,
+Ecological Area, Ecological areas are areas that are home to a variety of wildlife., #00FF00, newman pond.jpg,
+Bus Stop, Bus stops are a great way to encourage the use of public transport., #FF0000, bus 1.jpg,
+Solar Panels, Solar panels are a great way to generate renewable energy., #FFD700, solar panels.jpg,
