@@ -142,7 +142,7 @@ class RegistrationForm(forms.Form):
 
         # We have to assign the pet's owner before it can be saved
         pet = self.pet_form.save(commit=False)
-        pet.owner = user.profile
+        pet.owner = user
         pet = self.pet_form.save(commit)
 
         return user, pet
