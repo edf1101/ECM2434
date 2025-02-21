@@ -45,6 +45,14 @@
         });
     });
     </script>
+    <script>
+        var currentUsername = "{{ user.username|default:'' }}";
+        {% if user.is_authenticated %}
+            var baseApiUrlPet = "{% url 'pets:get_pet_data' user.username%}";
+        {% else %}
+            var baseApiUrlPet = "";
+        {% endif %}
+    </script>
     <script src="{% static 'js/home.js' %}"></script> {# Import carousel logic #}
 {% endblock %}
 
@@ -172,40 +180,40 @@
                 <div class="feature-box d-flex flex-column p-0">
 
                     <div class="pet-header d-flex align-items-center"> {# Header for the widget #}
-                        <span class="map-header-text">Take care of your pet</span>
+                        {% if user.is_authenticated %}
+                            <span class="map-header-text">Take care of your pet</span>
+                        {% else %}
+                            <span class="map-header-text">Not signed in, Look at an example pet!</span>
+                        {% endif %}
                     </div>
 
-                    <div class="pet-content"> {# Content for the widget, left=img, right=text #}
-
-                        <div class="w-50 d-flex align-items-center justify-content-center p-2">
-                            <img src="{% static 'media/demoPet.png' %}"
+                    <div class="pet-content">
+                        {# Name and image on the left #}
+                        <div class="w-50 d-flex flex-column align-items-center justify-content-center p-2">
+                            <h4 id="petName">Ellie the Elephant</h4>
+                            <img id="petImage" src="{% static 'media/demoPet.png' %}"
                                  alt="Demo Pet"
                                  class="img-fluid rounded"
                                  style="max-width: 100%; height: auto;">
                         </div>
 
                         <div class="vertical-divider"></div>
-                        {# Vertical divider #}
 
+                        {# Pet stats on the right #}
                         <div class="w-50 d-flex align-items-center p-2">
                             <div class="text-start">
-
-                                {# List the pets scores, add money here later #}
                                 <h5>Your Score</h5>
                                 <p class="mt-3">Your score is: <span id="petPoints">0</span></p>
                                 <br>
-                                <h5>Pet Health</h5> {# List pet health #}
-                                <div class="progress w-100 mb-2"> {# bootstrap progress bar #}
+                                <h5>Pet Health</h5>
+                                <div class="progress w-100 mb-2">
                                     <div id="petHealthBar" class="progress-bar" role="progressbar"
-                                         style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
+                                         style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
                                          aria-valuemax="100">
-                                        50%
+                                        100%
                                     </div>
                                 </div>
-
-                                <small id="petHealthText"> </small>
-
-
+                                <small id="petHealthText">She's thriving!</small>
                             </div>
                         </div>
                     </div>

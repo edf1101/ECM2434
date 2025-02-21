@@ -20,6 +20,6 @@ class Command(BaseCommand):
         :param kwargs: None expected
         :return: None
         """
-
         Badge.objects.all().delete()
         self.stdout.write(self.style.SUCCESS(f"Cleared the Badge data"))
+
