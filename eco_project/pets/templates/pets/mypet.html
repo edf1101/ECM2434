@@ -4,115 +4,52 @@
 {% block title %}My Pet - EcoPet{% endblock %}
 
 {% block content %}
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+    <link rel="stylesheet" href ="{% static 'pets/css/mypet.css' %}">
 
-  /* Main Container */
-  .pet-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: linear-gradient(135deg, #99D887, #7ED08F);
-    border: 3px solid #28963D;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(16, 106, 26, 0.5);
-    font-family: 'Bungee', cursive;
-    color: #106A1A;
-    text-align: center;
-  }
-  
-  .pet-header {
-    font-size: 2.5rem;
-    font-weight: bold;
-    padding: 15px;
-    background: #106A1A;
-    color: #fff;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 2px #28963D;
-  }
-  
-  .pet-content {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .pet-image {
-    flex: 1;
-    min-width: 250px;
-    text-align: center;
-  }
-  
-  .pet-image img {
-    max-width: 250px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
-    transition: transform 0.3s ease;
-  }
-  
-  .pet-image img:hover {
-    transform: scale(1.1);
-  }
-  
-  .pet-details {
-    flex: 1;
-    min-width: 250px;
-    text-align: left;
-    font-size: 1.2rem;
-    color: #28963D;
-  }
-  
-  .pet-details p {
-    margin: 10px 0;
-  }
-  
-  .gamify-info {
-    margin-top: 20px;
-    font-size: 1rem;
-  }
-  
-  .accessorise-btn {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 30px;
-    background: #98DABA;
-    color: #106A1A;
-    border: 2px solid #28963D;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
-  }
-  
-  .accessorise-btn:hover {
-    background: #8FD8B7;
-    transform: scale(1.05);
-  }
-</style>
-
-<div class="pet-container">
-  <div class="pet-header">
-    {{ pet.name }} My Pet
-  </div>
-  <div class="pet-content">
-    <div class="pet-image">
-      <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet Image">
+    <div class="pet-container">
+        <div class="pet-header">
+            {% if pet %}
+                {{ pet.name }}
+            {% else %}
+                Default Pet
+            {% endif %}
+        </div>
+        <div class="pet-content">
+            <div class="pet-image">
+                {% if pet and pet.type.base_image %}
+                    <img src="{{ pet.type.base_image.url }}" alt="{{ pet.name }}">
+                {% else %}
+                    <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet Image">
+                {% endif %}
+            </div>
+            <div class="pet-details">
+                <p><strong>Type:</strong>
+                    {% if pet %}
+                        {{ pet.type.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+                <p><strong>Owner:</strong>
+                    {% if pet %}
+                        {{ pet.owner.username }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+                <p><strong>Points:</strong>
+                    {% if user.profile %}
+                        {{ user.profile.points }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+                {#      <div class="gamify-info">#}
+                {#        <p>Level: 1</p>#}
+                {#        <p>XP: 0 / 100</p>#}
+                {#      </div>#}
+            </div>
+        </div>
+        <a href="#" class="accessorise-btn">Accessorise Here</a>
     </div>
-    <div class="pet-details">
-      <p><strong>Type:</strong> {{ pet.type.name }}</p>
-      <p><strong>Owner:</strong> {{ pet.owner.username }}</p>
-      <p><strong>Points:</strong> {{ pet.points }}</p>
-      <div class="gamify-info">
-        <p>Level: 1</p>
-        <p>XP: 0 / 100</p>
-      </div>
-    </div>
-  </div>
-  <a href="#" class="accessorise-btn">Accessorise Here</a>
-</div>
 {% endblock %}

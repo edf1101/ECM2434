@@ -47,8 +47,80 @@
         <div class="hero-bg"></div>
         <div class="hero-content d-flex flex-column justify-content-center align-items-left text-left text-white">
             <div class="container">
-                <h1 class="display-5">{{ user.first_name }}'s Pet</h1>
-                <p class="lead">Example text.</p>
+                <div class="pet-content d-flex flex-wrap align-items-center">
+                    {# Left side of the hero has pet name and photo #}
+                    <div class="w-50 d-flex flex-column align-items-center justify-content-center p-2">
+                        {% if pet %}
+                            <h4 id="petName">{{ pet.name }}</h4>
+                            {% if pet.type.base_image %}
+                                <img id="petImage" src="{{ pet.type.base_image.url }}"
+                                     alt="{{ pet.name }}"
+                                     class="img-fluid rounded"
+                                     style="max-width: 100%; height: auto;">
+                            {% else %}
+                                <img id="petImage" src="{% static 'media/demoPet.png' %}"
+                                     alt="Demo Pet"
+                                     class="img-fluid rounded"
+                                     style="max-width: 100%; height: auto;">
+                            {% endif %}
+                        {% else %}
+                            <h4 id="petName">Default Pet Name</h4>
+                            <img id="petImage" src="{% static 'media/demoPet.png' %}"
+                                 alt="Demo Pet"
+                                 class="img-fluid rounded"
+                                 style="max-width: 100%; height: auto;">
+                        {% endif %}
+                    </div>
+                    <div class="vertical-divider"></div>
+                    {# Pet stats on the right side of the screen #}
+                    <div class="w-50 d-flex align-items-center p-2">
+                        <div class="text-start">
+                            <h5>Scores</h5>
+                            <p class="mt-3">
+                                {{ pet.name }}'s score is:
+                                <span id="petPoints">{{ user.profile.points }}</span>
+
+                            </p>
+                            <br>
+                            <h5>Health</h5>
+                            <div class="progress w-100 mb-2">
+                                {% if pet %}
+                                    {% with health=pet.health %}
+                                        <div id="petHealthBar" class="progress-bar"
+                                             role="progressbar"
+                                             style="width: {{ health }}%;"
+                                             aria-valuenow="{{ health }}"
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            {{ health }}%
+                                        </div>
+                                    {% endwith %}
+                                {% else %}
+                                    <div id="petHealthBar" class="progress-bar" role="progressbar"
+                                         style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        50%
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <small id="petHealthText">
+                                {% if pet %}
+                                    {% if pet.health > 80 %}
+                                        {{ pet.name }}'s happy! Go find challenges to
+                                        keep it that way!
+                                    {% elif pet.health > 30 %}
+                                        {{ pet.name }}'s surviving, but not thriving.
+                                        Find challenges to improve its health!
+                                    {% else %}
+                                        {{ pet.name }}'s feeling sad, it doesn't want
+                                        to go extinct! Find challenges to save it!
+                                    {% endif %}
+                                {% else %}
+                                    The default pet is feeling fine, but it's not real!
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -58,10 +130,12 @@
         <h1 class="display-5">Recently Completed Challenges</h1>
         {% for challenge in challenges %}
             <div class="alert alert-success" role="alert">
-                They reached the {{ challenge.feature_instance.name }} at {{ challenge.reached_at|date:"F j, Y, g:i a" }}!
+                They reached the {{ challenge.feature_instance.name }} at
+                {{ challenge.reached_at|date:"F j, Y, g:i a" }}!
             </div>
             {% empty %}
-            <p class="text-muted">No challenges completed recently, encourage them to get back going!</p>
+            <p class="text-muted">No challenges completed recently, encourage them to get back
+                going!</p>
         {% endfor %}
     </div>
 {% endblock %}

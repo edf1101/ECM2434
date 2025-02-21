@@ -20,7 +20,6 @@ from challenges.models import UserFeatureReach, ChallengeSettings
 from challenges.challenge_helpers import get_current_window
 
 
-
 def registration_view(request) -> HttpResponse:
     """
     This view is used to register a new user.
@@ -117,7 +116,16 @@ def profile_view(request, username) -> HttpResponse:
     )
     # only take most recent 10
     user_feature_reaches = user_feature_reaches.order_by('-reached_at')[:10]
-    context = {'user': user, 'badges': badges, 'challenges': user_feature_reaches}
+
+    pet = user.pets.first() # assumes user only has one pet for sprint 1
+    # if there is no pet fill this in with a default pet
+    if not pet:
+        pet = {
+            'name': 'Ellie the Elephant',
+            'health': 100,
+        }
+
+    context = {'user': user, 'badges': badges, 'challenges': user_feature_reaches, 'pet': pet}
     return render(request, "users/profile.html", context=context)
 
 

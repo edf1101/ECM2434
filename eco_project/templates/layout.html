@@ -30,14 +30,20 @@
 
 <!-- Top Bar to welcome users, as a block so it can be overridden out -->
 {% block topBar %}
-
     <div class="top-bar py-2">
         <div class="container">
             {% if user.is_authenticated %}
-                <p class="mb-0 text-center">
-                    Hello {{ user.first_name|default:user.username }}! It's time to get [pet name]
-                    moving!
-                </p>
+                {% with pet=user.pets.all|first %}
+                    <p class="mb-0 text-center">
+                        Hello {{ user.first_name|default:user.username }}, It's time to get
+                        {% if pet %}
+                            {{ pet.name }}
+                        {% else %}
+                            your pet
+                        {% endif %}
+                        moving!
+                    </p>
+                {% endwith %}
             {% else %}
                 <p class="mb-0 text-center">
                     Hello Guest, Please <a href="{% url 'users:login' %}">log in</a> or <a
@@ -89,15 +95,21 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                         {% if user.is_authenticated %}
-                            <li><a class="dropdown-item" href="{% url 'users:user_profile' user.username %}">Profile </a></li>
-                            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Sign Out</a></li>
-                            <li><a class="dropdown-item" href="{% url 'users:password_change' %}">Change Password</a></li>
+                            <li><a class="dropdown-item"
+                                   href="{% url 'users:user_profile' user.username %}">Profile </a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Sign
+                                Out</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:password_change' %}">Change
+                                Password</a></li>
                             {% if user.is_staff %}
                                 <li><a class="dropdown-item" href="/admin">Admin</a></li>
                             {% endif %}
                         {% else %}
-                            <li><a class="dropdown-item" href="{% url 'users:login' %}">Log in</a></li>
-                            <li><a class="dropdown-item" href="{% url 'users:registration' %}">Register</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:login' %}">Log in</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'users:registration' %}">Register</a>
+                            </li>
                         {% endif %}
                     </ul>
                 </li>
