@@ -4,18 +4,21 @@
 {% block title %}Login - EcoPet{% endblock %}
 
 {% block extrahead %}
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'styleAll.css' %}">
-    <!-- JavaScript Variables for use in scripts -->
+
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
         const csrfToken = "{{ csrf_token }}";
     </script>
-    <!-- External JavaScript Modules -->
+
     <script type="module" src="{% static 'locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'updateChallenges.js' %}"></script>
     <style>
+
+        body {
+            background-color: #99D887;
+        }
         .form-submit {
             margin-top: 20px;
             background-color: #8fbc8f;
@@ -33,7 +36,6 @@
 
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px;">
-    <!-- Inner card with the same fixed top margin of 70px -->
     <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; margin-top: 70px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
         <h1 style="text-align: center; color: white;">Login</h1>
         <form class="form-with-validation" action="{% url 'users:login' %}" method="post">
@@ -44,7 +46,7 @@
                 {{ field }}<br>
                 {% if field.errors %}
                     {% for error in field.errors %}
-                    <p class="error" style="color: red;">{{ error }}</p>
+                        <p class="error" style="color: red;">{{ error }}</p>
                     {% endfor %}
                 {% endif %}
                 {% if field.help_text %}
