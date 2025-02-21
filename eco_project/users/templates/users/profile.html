@@ -1,31 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ user.username }}</title>
-</head>
-<body>
-<h1>{{ user.first_name }} {{ user.last_name }}'s Profile</h1>
-<i>Username: {{ user.username }}</i>
+{% extends 'layout.html' %}
+{% load static %}
 
-<div class="badges" style="margin: 10px 0;">
-    {% for badge in badges %}
-        <span style="
-                background-color: {{ badge.colour }};
-                padding: 4px 8px;
-                margin-right: 4px;
-                border-radius: 3px;
-                color: #fff;
-                display: inline-block;">
-                {{ badge.title }}
-            </span>
-    {% endfor %}
-</div>
+{% block title %}Ecopet - @{{ user.username }}{% endblock %}
 
-{% if user.profile %}
-    <p>Points: {{ user.profile.points }}</p>
-    <p>Bio: {{ user.profile.bio }}</p>
-{% endif %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container mt-4">
+
+        <div class="mb-4">
+            <h1 class="d-inline">
+                <h1 class="d-inline display-1"><u>   {{ user.first_name }} {{ user.last_name }}'s
+                    Profile</u></h1>
+                {% if user == request.user %}
+                    <a href="{% url 'users:edit' %}" class="ms-2 text-decoration-none"
+                       title="Edit Profile">
+                        <i class="bi bi-pencil-square fs-3 align-middle"></i>
+                    </a>
+                {% endif %}
+            </h1>
+            <p class="text-muted">{{ user.profile.bio }}</p>
+        </div>
+
+        {# Have points and streak badges on top #}
+        <div class="mb-3">
+            <span class="badge"
+                  style="background-color: #EFBF04; font-size: 1.2em;">✨Points: {{ user.profile.points }}✨</span>
+            <span class="badge"
+                  style="background-color: #f4573d; font-size: 1.2em;">🔥Streak: {{ user.streak.effective_streak }}🔥</span>
+        </div>
+        {# Then have normal badges here #}
+        <div class="mb-3">
+
+            {% for badge in badges %}
+                <span class="badge"
+                      style="background-color: {{ badge.colour }};">{{ badge.title }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Pet info section for the user #}
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-content d-flex flex-column justify-content-center align-items-left text-left text-white">
+            <div class="container">
+                <h1 class="display-5">{{ user.first_name }}'s Pet</h1>
+                <p class="lead">Example text.</p>
+            </div>
+        </div>
+    </section>
+    <br><br><br>
+    {# Recent Challenges Section #}
+    <div class="mb-4">
+        <h1 class="display-5">Recently Completed Challenges</h1>
+        {% for challenge in challenges %}
+            <div class="alert alert-success" role="alert">
+                They reached the {{ challenge.feature_instance.name }} at {{ challenge.reached_at|date:"F j, Y, g:i a" }}!
+            </div>
+            {% empty %}
+            <p class="text-muted">No challenges completed recently, encourage them to get back going!</p>
+        {% endfor %}
+    </div>
+{% endblock %}

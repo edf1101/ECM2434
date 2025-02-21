@@ -5,6 +5,8 @@ from django.db.transaction import commit
 from django.shortcuts import redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.utils import timezone
+
 from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm, RegistrationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -14,6 +16,9 @@ from django.http import HttpResponse
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from challenges.models import UserFeatureReach, ChallengeSettings
+from challenges.challenge_helpers import get_current_window
+
 
 
 def registration_view(request) -> HttpResponse:
@@ -37,7 +42,7 @@ def registration_view(request) -> HttpResponse:
     else:
         form = RegistrationForm()
 
-    return render(request, "users/registration.html", { "form": form })
+    return render(request, "users/registration.html", {"form": form})
 
 
 def login_view(request) -> HttpResponse:
@@ -100,7 +105,19 @@ def profile_view(request, username) -> HttpResponse:
     # only show the first 5 badges
     badges = badges[:5]
 
-    context = {'user': user, 'badges': badges}
+    # Get the user's challenges completed in the current window
+    now_time = timezone.now()
+    interval = ChallengeSettings.get_solo().interval
+    window_start, window_end = get_current_window(now_time, interval)
+    user_feature_reaches = UserFeatureReach.objects.filter(
+        user=user,
+        reached_at__gte=window_start,
+        reached_at__lt=window_end,
+        extra=""
+    )
+    # only take most recent 10
+    user_feature_reaches = user_feature_reaches.order_by('-reached_at')[:10]
+    context = {'user': user, 'badges': badges, 'challenges': user_feature_reaches}
     return render(request, "users/profile.html", context=context)
 
 
