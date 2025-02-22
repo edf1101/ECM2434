@@ -98,6 +98,9 @@
                             <li><a class="dropdown-item"
                                    href="{% url 'users:user_profile' user.username %}">Profile </a>
                             </li>
+                             <li><a class="dropdown-item"
+                                   href="{% url 'users:group_home' %}">Groups </a>
+                            </li>
                             <li><a class="dropdown-item" href="{% url 'users:logout' %}">Sign
                                 Out</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:password_change' %}">Change
