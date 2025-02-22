@@ -39,7 +39,7 @@ class LeaderboardViewTest(TestCase):
         Test that an unauthenticated user is redirected to the login page
         when trying to access the leaderboard.
         """
-        response = self.client.get(reverse('leaderboard'))
+        response = self.client.get(reverse('leaderboard:leaderboard'))
         self.assertEqual(response.status_code, 302)
 
     def test_leaderboard_view_logged_in(self):
@@ -49,7 +49,7 @@ class LeaderboardViewTest(TestCase):
         contains the expected 'users' and 'pets' data sorted by points.
         """
         self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard'))
+        response = self.client.get(reverse('leaderboard:leaderboard'))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'leaderboard.html')
@@ -69,7 +69,7 @@ class LeaderboardViewTest(TestCase):
         from the selected group are displayed and sorted by points.
         """
         self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard'), {'group': 'G1'})
+        response = self.client.get(reverse('leaderboard:leaderboard'), {'group': 'G1'})
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['selected_group'], self.group)
@@ -89,7 +89,7 @@ class LeaderboardViewTest(TestCase):
         in the context.
         """
         self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard'))
+        response = self.client.get(reverse('leaderboard:leaderboard'))
 
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(response.context['selected_group'])
