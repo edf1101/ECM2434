@@ -13,8 +13,6 @@ chmod 755 install.sh
 .\install.bat
 ```
 
-
-
 ## How to run After Installation
 From the base ECM2434 folder go to the eco_project folder 
 ```shell
@@ -29,4 +27,12 @@ python manage.py runserver
 To run pylint on the project:
 ```shell
 pylint .
+```
+
+To generate a test coverage report:
+```shell
+pip install coverage
+cd eco_project
+coverage run --source='.' manage.py test mysite
+coverage report
 ```
