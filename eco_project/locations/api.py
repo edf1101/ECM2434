@@ -6,6 +6,11 @@ from rest_framework.response import Response
 from .chunk_handling import get_nearby_tiles
 from challenges.models import ChallengeSettings
 from challenges.challenge_helpers import user_in_range_of_feature
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
+import json
+from django.urls import reverse
 
 
 @api_view(['GET'])
@@ -171,3 +176,28 @@ def get_feature_instances(request) -> Response:
     ]
 
     return Response(response_data, status=200)
+
+
+@require_POST
+def validate_qr(request):
+    """
+    This function validates a qr link to a feature and if it is valid redirects to that page.
+    """
+    try:  # Check JSON daat has the qr_code in it
+        data = json.loads(request.body)
+        qr_code = data.get('qr_code', '')
+    except json.JSONDecodeError:  # else return an error
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    # get the slug (end bit) from the qr code
+    strip_qr = list(filter(None, qr_code.split('/')))[-1]
+
+    # Find if any featureInstance has this slug and get it
+    try:
+        feature_instance = FeatureInstance.objects.get(slug=strip_qr)
+    except FeatureInstance.DoesNotExist:  # invalid slug, don't do anything
+        return JsonResponse({'error': 'INVALID_QR'}, status=400)
+
+    # If valid go to to the page using reverse
+    target_url = reverse('locations:individual-feature', kwargs={'slug': strip_qr})
+    return redirect(target_url)
