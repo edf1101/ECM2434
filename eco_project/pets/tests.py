@@ -6,11 +6,13 @@ and that the methods of each model run correctly.
 
 import os
 
-from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 
 from .models import PetType, CosmeticType, Cosmetic, Pet
+
+User = get_user_model()
 
 
 class PetTypeTestCase(TestCase):
@@ -20,30 +22,37 @@ class PetTypeTestCase(TestCase):
     methods run appropriately.
     """
 
-    def PetSetUp(self):
+    def pet_set_up(self):
         """
         Creation of PetType instance including name, description, and image.
         """
 
-        PetType.objects.create(name="Axolotl",
-                               description="Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-                               base_image=SimpleUploadedFile("axolotl.jpg", b"file content",
-                                                             content_type="image/jpeg"),
-                               # dummy image (axolotl.jpg) needed
-                               )
+        PetType.objects.create(
+            name="Axolotl",
+            description="Critically endangered aquatic species native only to the freshwater of"
+                        " Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+            base_image=SimpleUploadedFile(
+                "axolotl.jpg", b"file content", content_type="image/jpeg"
+            ),
+            # dummy image (axolotl.jpg) needed
+        )
         axolotl = PetType.objects.get(name="Axolotl")
         self.assertEqual(axolotl.name, "Axolotl")
-        self.assertEqual(axolotl.description,
-                         "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.")
+        self.assertEqual(
+            axolotl.description,
+            "Critically endangered aquatic species native only to the freshwater"
+            " of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+        )
         self.assertTrue(axolotl.base_image)
 
     def tearDown(self):
-        # Loop through all PetType instances and delete the file on disk if it exists.
+        # Loop through all PetType instances and delete the file on disk if it
+        # exists.
         for pet in PetType.objects.all():
             if pet.base_image and os.path.exists(pet.base_image.path):
                 try:
                     os.remove(pet.base_image.path)
-                except Exception:
+                except OSError:
                     pass
         super().tearDown()
 
@@ -52,31 +61,31 @@ class PetTypeTestCase(TestCase):
         Tests the __str__ method of PetType, ensuring that the correct name of the
         PetType is returned as str.
         """
-        PetType.objects.create(name="Axolotl",
-                               description="Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-                               base_image=SimpleUploadedFile("axolotl.jpg", b"file content",
-                                                             content_type="image/jpeg"),
-                               # dummy image (axolotl.jpg) needed
-                               )
+        PetType.objects.create(
+            name="Axolotl",
+            description="Critically endangered aquatic species native only to the freshwater "
+                        "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+            base_image=SimpleUploadedFile(
+                "axolotl.jpg", b"file content", content_type="image/jpeg"
+            ),
+            # dummy image (axolotl.jpg) needed
+        )
         axolotl = PetType.objects.get(name="Axolotl")
         self.assertEqual(str(axolotl), "Axolotl")
 
 
 class CosmeticTypeTestCase(TestCase):
     """
-    Test Suite for CosmeticType model, similar to PetType where its appropraite attirbutes
+    Test Suite for CosmeticType model, similar to PetType where its appropriate attributes
     and methods are made and run.
     """
 
-    def cosmeticSetUp(self):
+    def cosmetic_set_up(self):
         """
         Creation of cosmetic object for Pet inscluding cosmetic type name and position on
         pet image / canvas.
         """
-        CosmeticType.objects.create(name="Hat",
-                                    x=5,
-                                    y=20
-                                    )
+        CosmeticType.objects.create(name="Hat", x=5, y=20)
         hat = CosmeticType.objects.get(name="Hat")
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.x, 5)
@@ -86,10 +95,7 @@ class CosmeticTypeTestCase(TestCase):
         """
         Tests the __str__ method of CosmeticType
         """
-        CosmeticType.objects.create(name="Hat",
-                                    x=5,
-                                    y=20
-                                    )
+        CosmeticType.objects.create(name="Hat", x=5, y=20)
         hat = CosmeticType.objects.get(name="Hat")
         self.assertEqual(str(hat), "Hat")
 
@@ -103,17 +109,16 @@ class CosmeticModelTestCase(TestCase):
         """
         Set up with necessary data for PetType and CosmeticType objects.
         """
-        self.pet_type = PetType.objects.create(name="Axolotl",
-                                               description="Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-                                               base_image=SimpleUploadedFile("axolotl.jpg",
-                                                                             b"file content",
-                                                                             content_type="image/jpeg"),
-                                               # dummy image (axolotl.jpg) needed
-                                               )
-        self.cosmetic_type = CosmeticType.objects.create(name="Hat",
-                                                         x=5,
-                                                         y=20
-                                                         )
+        self.pet_type = PetType.objects.create(
+            name="Axolotl",
+            description="Critically endangered aquatic species native only to the freshwater "
+                        "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+            base_image=SimpleUploadedFile(
+                "axolotl.jpg", b"file content", content_type="image/jpeg"
+            ),
+            # dummy image (axolotl.jpg) needed
+        )
+        self.cosmetic_type = CosmeticType.objects.create(name="Hat", x=5, y=20)
 
     def tearDown(self):
         # Clean up any PetType image files created in setUp.
@@ -121,16 +126,17 @@ class CosmeticModelTestCase(TestCase):
             if pet.base_image and os.path.exists(pet.base_image.path):
                 try:
                     os.remove(pet.base_image.path)
-                except Exception:
+                except OSError:
                     pass
         super().tearDown()
 
-    def test_cosmetic_setUp(self):
+    def test_cosmetic_set_up(self):
         """
         Creation of cosmetic object for Pet and addition to pet.
         """
-        hat = Cosmetic.objects.create(name="Hat",
-                                      description="Red stylish hat", type=self.cosmetic_type)
+        hat = Cosmetic.objects.create(
+            name="Hat", description="Red stylish hat", type=self.cosmetic_type
+        )
         hat.fits.add(self.pet_type)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
@@ -141,8 +147,9 @@ class CosmeticModelTestCase(TestCase):
         """
         Tests the __str__ method of accessory.
         """
-        hat = Cosmetic.objects.create(name="Hat", description="Red stylish hat",
-                                      type=self.cosmetic_type)
+        hat = Cosmetic.objects.create(
+            name="Hat", description="Red stylish hat", type=self.cosmetic_type
+        )
         self.assertEqual(str(hat.description), "Red stylish hat")
 
 
@@ -156,23 +163,24 @@ class PetModelTestCase(TestCase):
         """
         Necessary setup for test: pet and proile (user).
         """
-        self.user = User.objects.create_user(username="testuser", password="password")
-        self.pet_type = PetType.objects.create(name="Axolotl",
-                                               description="Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-                                               base_image=SimpleUploadedFile("axolotl.jpg",
-                                                                             b"file content",
-                                                                             content_type="image/jpeg")
-                                               )
+        self.user = User.objects.create_user(
+            username="testuser", password="password")
+        self.pet_type = PetType.objects.create(
+            name="Axolotl",
+            description="Critically endangered aquatic species native only to the freshwater "
+                        "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+            base_image=SimpleUploadedFile(
+                "axolotl.jpg",
+                b"file content",
+                content_type="image/jpeg"),
+        )
 
     def test_pet_setup(self):
         """
         Test for setting up pet and its attributes.
         """
         axolotl = Pet.objects.create(
-            name="Axo",
-            type=self.pet_type,
-            owner=self.user
-        )
+            name="Axo", type=self.pet_type, owner=self.user)
         self.assertEqual(axolotl.name, "Axo")
         self.assertEqual(axolotl.type, self.pet_type)
         self.assertEqual(axolotl.owner, self.user)
@@ -184,7 +192,7 @@ class PetModelTestCase(TestCase):
             if pet.base_image and os.path.exists(pet.base_image.path):
                 try:
                     os.remove(pet.base_image.path)
-                except Exception:
+                except OSError:
                     pass
         super().tearDown()
 
@@ -193,8 +201,5 @@ class PetModelTestCase(TestCase):
         Test for __str__ method of pet
         """
         axolotl = Pet.objects.create(
-            name="Axo",
-            type=self.pet_type,
-            owner=self.user
-        )
+            name="Axo", type=self.pet_type, owner=self.user)
         self.assertEqual(str(axolotl), "testuser's Axo (Axolotl)")

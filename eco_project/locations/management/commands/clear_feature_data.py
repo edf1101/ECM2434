@@ -13,6 +13,7 @@ class Command(BaseCommand):
     """
     This class is a Django management command that clears the Feature data from the database
     """
+
     help = "Clear the feature data from the database"
 
     def handle(self, *args, **kwargs) -> None:
@@ -34,7 +35,7 @@ class Command(BaseCommand):
         Clear the feature types data
         """
         # clear the media feature_type_img folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/feature_type_img')
+        folder = os.path.join(MEDIA_ROOT, "locations/feature_type_img")
 
         # Check if the folder exists
         if os.path.exists(folder):
@@ -43,7 +44,7 @@ class Command(BaseCommand):
                 os.remove(os.path.join(folder, file))
 
         # clear the media feature_mesh folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/feature_mesh')
+        folder = os.path.join(MEDIA_ROOT, "locations/feature_mesh")
 
         # Check if the folder exists
         if os.path.exists(folder):
@@ -59,7 +60,7 @@ class Command(BaseCommand):
         """
 
         # clear the media feature_type_img folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/feature_instance_img')
+        folder = os.path.join(MEDIA_ROOT, "locations/feature_instance_img")
 
         # Check if the folder exists
         if os.path.exists(folder):
@@ -68,7 +69,7 @@ class Command(BaseCommand):
                 os.remove(os.path.join(folder, file))
 
         # clear the media qr_code folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/qr_codes')
+        folder = os.path.join(MEDIA_ROOT, "locations/qr_codes")
 
         # Check if the folder exists
         if os.path.exists(folder):

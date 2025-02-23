@@ -5,10 +5,12 @@ from datetime import timedelta
 from math import log2
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from locations.chunk_handling import haversine
 from locations.models import FeatureInstance
+
+User = get_user_model()
 
 
 def get_current_window(now_time, interval):
@@ -39,13 +41,15 @@ def streak_to_points(streak_count: int) -> int:
     return int(log2(streak_count) + 1)
 
 
-def user_in_range_of_feature(user: User, feature_inst: FeatureInstance, range: int = 100) -> bool:
+def user_in_range_of_feature(
+        user: User, feature_inst: FeatureInstance, dist: int = 100
+) -> bool:
     """
     Checks if a user is within the range of a feature.
 
     :param user: The user to check.
     :param feature_inst: The feature to check.
-    :param range: The range to check in meters.
+    :param dist: The range to check in meters.
     :return: True if the user is in range, False otherwise.
     """
 
@@ -62,10 +66,12 @@ def user_in_range_of_feature(user: User, feature_inst: FeatureInstance, range: i
 
     # Calculate the distance between the user and the feature
     dist = haversine(feature_lat, feature_lon, user_lat, user_lon)
-    return dist <= range
+    return dist <= dist
 
 
-def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, extra="",update=True) -> bool:
+def user_already_reached_in_window(
+        user: User, feature_inst: FeatureInstance, extra="", update=True
+) -> bool:
     """
     Check if a user has already reached the feature in the current window.
 
@@ -75,7 +81,9 @@ def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, ex
     :param update: If True, will add a record if the user has not already reached the feature.
     :return: True if the user has reached the feature in the current window, False otherwise.
     """
+    #pylint: disable=import-outside-toplevel
     from .models import UserFeatureReach, ChallengeSettings  # avoid circular import
+
     # Get the current challenge settings for the interval
     settings_obj = ChallengeSettings.get_solo()
     interval = settings_obj.interval
@@ -88,13 +96,15 @@ def user_already_reached_in_window(user: User, feature_inst: FeatureInstance, ex
         feature_instance=feature_inst,
         reached_at__gte=window_start,
         reached_at__lt=window_end,
-        extra=extra
+        extra=extra,
     ).exists()
 
     if not already_reached:
         # add record and return true
         if update:
-            UserFeatureReach.objects.create(user=user, feature_instance=feature_inst, extra=extra)
+            UserFeatureReach.objects.create(
+                user=user, feature_instance=feature_inst, extra=extra
+            )
         return False
 
     return True
@@ -109,14 +119,17 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     """
 
     if not user_in_range_of_feature(user, feature_inst):
-        print('User not in range of feature')
+        print("User not in range of feature")
         return
 
     if user_already_reached_in_window(user, feature_inst):
-        print('User already reached feature in window')
+        print("User already reached feature in window")
         return
 
+    # needed to avoid circular import
+    #pylint: disable=import-outside-toplevel
     from .models import ChallengeSettings
+
     points_for_feature = ChallengeSettings.get_solo().reached_feature_points
 
     user.profile.points += points_for_feature

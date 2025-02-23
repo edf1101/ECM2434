@@ -13,6 +13,7 @@ class Command(BaseCommand):
     """
     This class is a Django management command that clears the 3D map chunk data from the database
     """
+
     help = "Clear 3D map chunk data from the database"
 
     def handle(self, *args, **kwargs) -> None:
@@ -25,7 +26,7 @@ class Command(BaseCommand):
         """
 
         # clear the media 3d_map_chunks folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/3d_map_chunks')
+        folder = os.path.join(MEDIA_ROOT, "locations/3d_map_chunks")
 
         # Check if the folder exists
         if os.path.exists(folder):
@@ -37,7 +38,7 @@ class Command(BaseCommand):
 
         # empty the camera z map folder
         # clear the media 3d_map_chunks folder
-        folder = os.path.join(MEDIA_ROOT, 'locations/camera_z_map')
+        folder = os.path.join(MEDIA_ROOT, "locations/camera_z_map")
 
         # Check if the folder exists
         if os.path.exists(folder):

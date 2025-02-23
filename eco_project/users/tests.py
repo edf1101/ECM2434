@@ -20,11 +20,12 @@ class ProfileModelTests(TestCase):
         @return: None
         """
         # Create a user
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        # profile should be automatically created but if not it will be created here
+        self.user = User.objects.create_user(
+            username="testuser", password="testpass")
+        # profile should be automatically created but if not it will be created
+        # here
         self.profile, created = Profile.objects.get_or_create(
-            user=self.user,
-            defaults={'bio': "Test bio"}
+            user=self.user, defaults={"bio": "Test bio"}
         )
         if not created:
             self.profile.bio = "Test bio"
@@ -54,10 +55,10 @@ class BadgeModelTests(TestCase):
             title="Test Badge",
             hover_text="test hover text",
             colour="#FFD700",
-            rarity=5
-        )
+            rarity=5)
 
-        self.assertEqual(str(badge), "Test Badge")  # assert __str__ returns correctly
+        # assert __str__ returns correctly
+        self.assertEqual(str(badge), "Test Badge")
 
 
 class BadgeInstanceModelTests(TestCase):
@@ -72,13 +73,14 @@ class BadgeInstanceModelTests(TestCase):
         @return: None
         """
 
-        self.user = User.objects.create_user(username="testuser", password="testpassword")
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
         self.badge = Badge.objects.create(
             title="Test Badge",
             hover_text="test hover text",
             colour="#FFD700",
-            rarity=5
-        )
+            rarity=5)
 
     def test_badge_instance_str(self) -> None:
         """
@@ -88,7 +90,8 @@ class BadgeInstanceModelTests(TestCase):
         """
 
         # create an instance of the Badge type made in the setUp method
-        badge_instance = BadgeInstance.objects.create(badge=self.badge, user=self.user)
+        badge_instance = BadgeInstance.objects.create(
+            badge=self.badge, user=self.user)
 
         # check it returns the expected string
         self.assertEqual(str(badge_instance), "testuser - Test Badge")
@@ -99,7 +102,9 @@ class BadgeInstanceModelTests(TestCase):
 
         @return: None
         """
-        BadgeInstance.objects.create(badge=self.badge, user=self.user)  # create the first one
+        BadgeInstance.objects.create(
+            badge=self.badge, user=self.user
+        )  # create the first one
 
         # Check that creating the same pairing raises an exception
         with self.assertRaises(Exception):
@@ -118,11 +123,18 @@ class UserGroupModelTests(TestCase):
         """
 
         # create the objects
-        self.admin_user = User.objects.create_user(username="admin", password="adminpassword")
-        self.member_user = User.objects.create_user(username="member", password="memberpassword")
-        self.group = UserGroup.objects.create(name="Test Group", group_admin=self.admin_user)
+        self.admin_user = User.objects.create_user(
+            username="admin", password="adminpassword"
+        )
+        self.member_user = User.objects.create_user(
+            username="member", password="memberpassword"
+        )
+        self.group = UserGroup.objects.create(
+            name="Test Group", group_admin=self.admin_user
+        )
 
-        self.group.users.add(self.admin_user)  # Add the admin to the group's users
+        # Add the admin to the group's users
+        self.group.users.add(self.admin_user)
 
     def test_group_str(self) -> None:
         """
@@ -173,6 +185,7 @@ class GenerateUniqueCodeTests(TestCase):
     This class just tests that the generate_unique_code function works as expected.
     It should return a string of 6 uppercase letters.
     """
+
     def test_generate_unique_code(self) -> None:
         """
         Test that the generate_unique_code function returns a string of 6 uppercase letters.

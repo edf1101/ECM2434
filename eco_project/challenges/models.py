@@ -3,12 +3,16 @@ Models for the Challenges app.
 """
 from datetime import timedelta
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from locations.models import FeatureInstance
 
-from .challenge_helpers import get_current_window  # make sure this helper works as expected
+from .challenge_helpers import (
+    get_current_window,
+)  # make sure this helper works as expected
+
+User = get_user_model()
 
 
 class ChallengeSettings(models.Model):
@@ -16,14 +20,18 @@ class ChallengeSettings(models.Model):
     Singleton model to store the Challenge app settings
     """
 
-    interval = models.DurationField(default=timedelta(days=1))  # adjustable interval
+    interval = models.DurationField(
+        default=timedelta(
+            days=1))  # adjustable interval
     question_feature_points: models.IntegerField = models.IntegerField(
-        default=2)  # points per correct answer
+        default=2
+    )  # points per correct answer
     reached_feature_points: models.IntegerField = models.IntegerField(
-        default=1)  # points per reached normal feature
+        default=1
+    )  # points per reached normal feature
 
     def __str__(self):
-        return f"Challenge Settings"
+        return "Challenge Settings"
 
     def save(self, *args, **kwargs):
         """
@@ -38,13 +46,16 @@ class ChallengeSettings(models.Model):
         Returns the single StreakSettings instance, creating it if there isnt one already.
         """
 
-        obj, created = cls.objects.get_or_create(pk=1, defaults={'interval': timedelta(days=1)})
+        obj, _ = cls.objects.get_or_create(
+            pk=1, defaults={"interval": timedelta(days=1)}
+        )
         return obj
 
     class Meta:
         """
         Override the verbose name for this model.
         """
+
         verbose_name_plural = "Challenge Settings"
 
 
@@ -96,10 +107,16 @@ class Streak(models.Model):
 
 
 class UserFeatureReach(models.Model):
+    """
+    This model holds the unique relationship of features that a user has reached.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    feature_instance = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
+    feature_instance = models.ForeignKey(
+        FeatureInstance, on_delete=models.CASCADE)
     reached_at = models.DateTimeField(auto_now_add=True)
     extra = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
+        return (
+            f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
+        )

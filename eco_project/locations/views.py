@@ -16,8 +16,8 @@ def base_locations(request) -> HttpResponse:
     :return: An HTTP webpage to render to the user.
     """
     generic_features = FeatureType.objects.all()
-    context = {'feature_type_list': generic_features}
-    return render(request, 'locations/location_home.html', context=context)
+    context = {"feature_type_list": generic_features}
+    return render(request, "locations/location_home.html", context=context)
 
 
 def test_map(request) -> HttpResponse:
@@ -29,7 +29,7 @@ def test_map(request) -> HttpResponse:
     """
 
     # no context required as the tile data is loaded with GET requests
-    return render(request, 'locations/test_map.html')
+    return render(request, "locations/test_map.html")
 
 
 def individual_feature_page(request, slug) -> HttpResponse:
@@ -41,7 +41,7 @@ def individual_feature_page(request, slug) -> HttpResponse:
     :return: An HTTP webpage to render to the user.
     """
     feature_instance: FeatureInstance = FeatureInstance.objects.get(slug=slug)
-    context = {'feature_instance': feature_instance}
+    context = {"feature_instance": feature_instance}
 
     # get if feature has a question or not then return correct template
     # get question from feature
@@ -52,15 +52,17 @@ def individual_feature_page(request, slug) -> HttpResponse:
 
     # if user signed in update points for reaching feature
     if request.user.is_authenticated:
-        user_reached_feature(request.user,
-                             feature_instance)
+        user_reached_feature(request.user, feature_instance)
 
     if feature_instance.has_question:
-        context['question'] = question
-        return render(request, 'locations/feature_instance_with_q.html', context)
+        context["question"] = question
+        return render(
+            request,
+            "locations/feature_instance_with_q.html",
+            context)
     else:
-        context['question'] = None
-        return render(request, 'locations/feature_instance.html', context)
+        context["question"] = None
+        return render(request, "locations/feature_instance.html", context)
 
 
 def generic_feature_page(request, id_arg) -> HttpResponse:
@@ -73,8 +75,8 @@ def generic_feature_page(request, id_arg) -> HttpResponse:
     :return: The HTTP webpage to render to the user.
     """
     feature_type: FeatureType = FeatureType.objects.get(id=id_arg)
-    context = {'feature_type': feature_type}
-    return render(request, 'locations/feature_type.html', context)
+    context = {"feature_type": feature_type}
+    return render(request, "locations/feature_type.html", context)
 
 
 def generic_feature_list(request) -> HttpResponse:
@@ -85,5 +87,5 @@ def generic_feature_list(request) -> HttpResponse:
     :return: An HTTP webpage to render to the user.
     """
     generic_features = FeatureType.objects.all()
-    context = {'feature_type_list': generic_features}
-    return render(request, 'locations/feature_type_list.html', context)
+    context = {"feature_type_list": generic_features}
+    return render(request, "locations/feature_type_list.html", context)

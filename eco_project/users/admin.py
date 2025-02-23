@@ -13,6 +13,7 @@ class BadgeInstanceInline(admin.TabularInline):
     """
     Inline for the BadgeInstance model to appear in the user admin.
     """
+
     model = BadgeInstance
     extra = 0  # No extra blank forms
 
@@ -21,6 +22,7 @@ class ProfileInline(admin.StackedInline):
     """
     Inline for the Profile model to appear in the user admin.
     """
+
     model = Profile
     can_delete = False
     extra = 0
@@ -30,7 +32,7 @@ class ProfileInline(admin.StackedInline):
         """
         Prevent adding a new profile if one already exists.
         """
-        if obj and hasattr(obj, 'profile'):
+        if obj and hasattr(obj, "profile"):
             return False
         return True
 
@@ -39,22 +41,36 @@ class CustomUserAdmin(BaseUserAdmin):
     """
     Custom user admin that displays additional fields.
     """
+
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+        (None, {"fields": ("username", "password")}),
+        ("Personal info", {"fields": ("first_name", "last_name")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
     )
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name'),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "username",
+                    "password1",
+                    "password2",
+                    "first_name",
+                    "last_name",
+                ),
+            },
+        ),
     )
 
     list_display = (
-        'username', 'first_name', 'last_name', 'is_staff',
-        'profile_points', 'badge_count'
+        "username",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "profile_points",
+        "badge_count",
     )
 
     inlines = (ProfileInline, BadgeInstanceInline)
@@ -72,37 +88,43 @@ class CustomUserAdmin(BaseUserAdmin):
         """
         Display the user's points from their profile.
         """
-        return obj.profile.points if hasattr(obj, 'profile') else 'N/A'
+        return obj.profile.points if hasattr(obj, "profile") else "N/A"
 
-    profile_points.short_description = 'Points'
+    profile_points.short_description = "Points"
 
     def badge_count(self, obj):
         """
         Display the number of badge instances associated with the user.
         """
-        return obj.badgeinstance_set.count() if hasattr(obj, 'badgeinstance_set') else 'N/A'
+        return (
+            obj.badgeinstance_set.count()
+            if hasattr(obj, "badgeinstance_set")
+            else "N/A"
+        )
 
-    badge_count.short_description = 'Badges'
+    badge_count.short_description = "Badges"
 
 
 class BadgeAdmin(admin.ModelAdmin):
     """
     Admin for the Badge model.
     """
+
     model = Badge
-    list_display = ('title', 'hover_text', 'rarity')
+    list_display = ("title", "hover_text", "rarity")
     form = BadgeAdminForm
-    search_fields = ['title', 'rarity']
+    search_fields = ["title", "rarity"]
 
 
 class UserGroupAdmin(admin.ModelAdmin):
     """
     Admin for the UserGroup model.
     """
+
     model = UserGroup
-    readonly_fields = ('users_in_group',)
-    list_display = ('code', 'users_in_group', 'group_admin')
-    search_fields = ['code']
+    readonly_fields = ("users_in_group",)
+    list_display = ("code", "users_in_group", "group_admin")
+    search_fields = ["code"]
     form = UserGroupForm
 
 

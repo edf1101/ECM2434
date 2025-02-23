@@ -11,8 +11,15 @@ class StreakAdmin(admin.ModelAdmin):
     """
     Admin panel configuration for Streak model.
     """
-    list_display = ('user', 'raw_count', 'last_window', 'effective_streak', 'running_out')
-    readonly_fields = ('effective_streak', 'running_out')
+
+    list_display = (
+        "user",
+        "raw_count",
+        "last_window",
+        "effective_streak",
+        "running_out",
+    )
+    readonly_fields = ("effective_streak", "running_out")
 
 
 class ChallengeSettingsAdmin(admin.ModelAdmin):
@@ -21,8 +28,11 @@ class ChallengeSettingsAdmin(admin.ModelAdmin):
     """
 
     fieldsets = (
-        ('Streak Settings', {'fields': ('interval',)}),
-        ('Points Settings', {'fields': ('question_feature_points', 'reached_feature_points')}),
+        ("Streak Settings", {"fields": ("interval",)}),
+        (
+            "Points Settings",
+            {"fields": ("question_feature_points", "reached_feature_points")},
+        ),
     )
 
 

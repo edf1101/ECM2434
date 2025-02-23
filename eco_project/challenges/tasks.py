@@ -26,7 +26,7 @@ def reset_missed_streaks() -> None:
     try:
         settings_obj = ChallengeSettings.objects.first()
         interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except Exception:
+    except ChallengeSettings.DoesNotExist:
         interval = timedelta(days=1)
 
     current_window_start, _ = get_current_window(now_time, interval)
@@ -34,9 +34,11 @@ def reset_missed_streaks() -> None:
 
     count_reset = 0
     for streak in Streak.objects.all():
-        if streak.last_window not in [previous_window_start, current_window_start]:
+        if streak.last_window not in [
+            previous_window_start,
+            current_window_start]:
             streak.raw_count = 0
-            streak.save(update_fields=['raw_count'])
+            streak.save(update_fields=["raw_count"])
             count_reset += 1
 
 
@@ -48,10 +50,10 @@ def cleanup_user_feature_reaches() -> None:
     try:
         settings_obj = ChallengeSettings.objects.first()
         interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except Exception:
+    except ChallengeSettings.DoesNotExist:
         interval = timedelta(days=1)
 
     current_window_start, _ = get_current_window(now_time, interval)
 
-    # Delete all records where reached_at is before the start of the current window.
-    deleted_count, _ = UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()
+    # Delete all records where reached_at is before the start of the current
+    UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()

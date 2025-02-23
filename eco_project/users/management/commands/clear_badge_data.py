@@ -9,6 +9,7 @@ class Command(BaseCommand):
     """
     This class is a Django management command that clears the Feature data from the database
     """
+
     help = "Clear the Badge data from the database"
 
     def handle(self, *args, **kwargs) -> None:
@@ -21,4 +22,3 @@ class Command(BaseCommand):
         """
         Badge.objects.all().delete()
         self.stdout.write(self.style.SUCCESS(f"Cleared the Badge data"))
-

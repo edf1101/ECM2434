@@ -17,19 +17,28 @@ class UserCreationFormWithNames(UserCreationForm):
     This form is used to register a new user, it includes required fields for first name
      and last name.
     """
-    first_name = forms.CharField(max_length=30, required=True,
-                                 help_text="Required. Enter your first name."
-                                 )
-    last_name = forms.CharField(max_length=30, required=True,
-                                help_text="Required. Enter your last name."
-                                )
+
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        help_text="Required. Enter your first name.")
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        help_text="Required. Enter your last name.")
 
     class Meta(UserCreationForm.Meta):
         """
         This class is used to define the fields that will be included in the form.
         """
+
         model = User
-        fields = ("username", "first_name", "last_name", "password1", "password2")
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "password1",
+            "password2")
 
     def save(self, commit=True):
         """
@@ -62,10 +71,12 @@ class UserCreationFormWithNames(UserCreationForm):
 
         return True
 
+
 class PetCreationForm(forms.ModelForm):
-    name = forms.CharField(max_length=30, required=True,
-                           help_text="Required. Enter the name of your pet."
-                           )
+    name = forms.CharField(
+        max_length=30,
+        required=True,
+        help_text="Required. Enter the name of your pet.")
 
     type = forms.ModelChoiceField(
         queryset=PetType.objects.all(),
@@ -76,6 +87,7 @@ class PetCreationForm(forms.ModelForm):
         """
         This class is used to define the fields that will be included in the form.
         """
+
         model = Pet
         fields = ("name", "type")
 
@@ -90,7 +102,6 @@ class PetCreationForm(forms.ModelForm):
         if commit:
             pet.save()
         return pet
-
 
     def is_valid(self) -> bool:
         """
@@ -119,6 +130,7 @@ class RegistrationForm(forms.Form):
     """
     A form to register a new user along with their pet.
     """
+
     user_form = UserCreationFormWithNames()
     pet_form = PetCreationForm()
 
@@ -159,11 +171,12 @@ class ModifyUserForm(forms.ModelForm):
         """
         This class is used to define the fields that will be included in the form
         """
+
         model = get_user_model()
-        fields = ['first_name', 'last_name']
+        fields = ["first_name", "last_name"]
         labels = {
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
+            "first_name": "First Name",
+            "last_name": "Last Name",
         }
 
     def is_valid(self) -> bool:
@@ -194,10 +207,11 @@ class ModifyProfileForm(forms.ModelForm):
         """
         This class is used to define the fields that will be included in the form.
         """
+
         model = Profile
-        fields = ['bio']
+        fields = ["bio"]
         labels = {
-            'bio': 'Bio',
+            "bio": "Bio",
         }
 
 
@@ -211,10 +225,11 @@ class BadgeAdminForm(ModelForm):
         """
         This class is used to define the model and fields that the form will use.
         """
-        fields = '__all__'
+
+        fields = "__all__"
         model = Badge
         widgets = {
-            'colour': TextInput(attrs={'type': 'color'}),
+            "colour": TextInput(attrs={"type": "color"}),
         }
 
 
@@ -227,19 +242,25 @@ class UserGroupForm(forms.ModelForm):
         """
         This class is used to define the model and fields that the form will use.
         """
+
         model = UserGroup
-        fields = '__all__'
+        fields = "__all__"
 
     def clean(self) -> dict:
         """
         This method is used to validate the form data.
         """
         cleaned_data = super().clean()
-        group_admin = cleaned_data.get('group_admin')
-        users = cleaned_data.get('users')
+        group_admin = cleaned_data.get("group_admin")
+        users = cleaned_data.get("users")
         if group_admin and users:  # check of group_admin and users are not None
-            if group_admin not in users:  # check if group_admin is among the selected users
-                raise forms.ValidationError("Group admin must be a member of the group.")
+            if (
+                group_admin not in users
+            ):  # check if group_admin is among the selected users
+                raise forms.ValidationError(
+                    "Group admin must be a member of the group."
+                )
         else:
-            raise forms.ValidationError("There are either no users or no group admin.")
+            raise forms.ValidationError(
+                "There are either no users or no group admin.")
         return cleaned_data

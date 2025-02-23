@@ -1,8 +1,13 @@
-from django.contrib.auth.models import User
+"""
+This module contains the test suite for the leaderboard app.
+"""
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 from pets.models import Pet, PetType
 from users.models import Profile, UserGroup
+
+User = get_user_model()
 
 
 class LeaderboardViewTest(TestCase):
@@ -20,18 +25,29 @@ class LeaderboardViewTest(TestCase):
         """
         self.client = Client()
 
-        self.user1 = User.objects.create_user(username='user1', password='testpass')
-        self.user2 = User.objects.create_user(username='user2', password='testpass')
+        self.user1 = User.objects.create_user(
+            username="user1", password="testpass")
+        self.user2 = User.objects.create_user(
+            username="user2", password="testpass")
 
-        self.profile1, _ = Profile.objects.get_or_create(user=self.user1, defaults={'points': 50})
-        self.profile2, _ = Profile.objects.get_or_create(user=self.user2, defaults={'points': 100})
+        self.profile1, _ = Profile.objects.get_or_create(
+            user=self.user1, defaults={"points": 50}
+        )
+        self.profile2, _ = Profile.objects.get_or_create(
+            user=self.user2, defaults={"points": 100}
+        )
 
-        self.pet_type = PetType.objects.create(name='Dog', description='Test Dog')
+        self.pet_type = PetType.objects.create(
+            name="Dog", description="Test Dog")
 
-        self.pet1 = Pet.objects.create(name='Pet1', type=self.pet_type, points=75, owner=self.user1)
-        self.pet2 = Pet.objects.create(name='Pet2', type=self.pet_type, points=100, owner=self.user2)
+        self.pet1 = Pet.objects.create(
+            name="Pet1", type=self.pet_type, points=75, owner=self.user1
+        )
+        self.pet2 = Pet.objects.create(
+            name="Pet2", type=self.pet_type, points=100, owner=self.user2
+        )
 
-        self.group = UserGroup.objects.create(name='Group1', code='G1')
+        self.group = UserGroup.objects.create(name="Group1", code="G1")
         self.group.users.add(self.user1, self.user2)
 
     def test_redirect_if_not_logged_in(self):
@@ -39,7 +55,7 @@ class LeaderboardViewTest(TestCase):
         Test that an unauthenticated user is redirected to the login page
         when trying to access the leaderboard.
         """
-        response = self.client.get(reverse('leaderboard:leaderboard'))
+        response = self.client.get(reverse("leaderboard:leaderboard"))
         self.assertEqual(response.status_code, 302)
 
     def test_leaderboard_view_logged_in(self):
@@ -48,19 +64,21 @@ class LeaderboardViewTest(TestCase):
         including rendering the correct template and ensuring that the context
         contains the expected 'users' and 'pets' data sorted by points.
         """
-        self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard:leaderboard'))
+        self.client.login(username="user1", password="testpass")
+        response = self.client.get(reverse("leaderboard:leaderboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'leaderboard.html')
-        self.assertIn('users', response.context)
-        self.assertIn('pets', response.context)
+        self.assertTemplateUsed(response, "leaderboard.html")
+        self.assertIn("users", response.context)
+        self.assertIn("pets", response.context)
 
-        sorted_users = User.objects.select_related('profile').order_by('-profile__points')
-        self.assertEqual(list(response.context['users']), list(sorted_users))
+        sorted_users = User.objects.select_related("profile").order_by(
+            "-profile__points"
+        )
+        self.assertEqual(list(response.context["users"]), list(sorted_users))
 
-        sorted_pets = Pet.objects.order_by('-points')
-        self.assertEqual(list(response.context['pets']), list(sorted_pets))
+        sorted_pets = Pet.objects.order_by("-points")
+        self.assertEqual(list(response.context["pets"]), list(sorted_pets))
 
     def test_leaderboard_with_group_selection(self):
         """
@@ -68,19 +86,26 @@ class LeaderboardViewTest(TestCase):
         is selected from the group dropdown. Verifies that the correct users
         from the selected group are displayed and sorted by points.
         """
-        self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard:leaderboard'), {'group': 'G1'})
+        self.client.login(username="user1", password="testpass")
+        response = self.client.get(
+            reverse("leaderboard:leaderboard"), {
+                "group": "G1"})
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['selected_group'], self.group)
+        self.assertEqual(response.context["selected_group"], self.group)
 
         group_users = list(self.group.users.all())
 
         self.assertIn(self.user1, group_users)
         self.assertIn(self.user2, group_users)
 
-        sorted_group_users = sorted(group_users, key=lambda u: u.profile.points, reverse=True)
-        self.assertEqual(list(response.context['group_users']), sorted_group_users)
+        sorted_group_users = sorted(
+            group_users, key=lambda u: u.profile.points, reverse=True
+        )
+        self.assertEqual(
+            list(
+                response.context["group_users"]),
+            sorted_group_users)
 
     def test_leaderboard_without_group_selection(self):
         """
@@ -88,9 +113,9 @@ class LeaderboardViewTest(TestCase):
         Verifies that 'selected_group' is None and no group users are included
         in the context.
         """
-        self.client.login(username='user1', password='testpass')
-        response = self.client.get(reverse('leaderboard:leaderboard'))
+        self.client.login(username="user1", password="testpass")
+        response = self.client.get(reverse("leaderboard:leaderboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIsNone(response.context['selected_group'])
-        self.assertEqual(list(response.context['group_users']), [])
+        self.assertIsNone(response.context["selected_group"])
+        self.assertEqual(list(response.context["group_users"]), [])

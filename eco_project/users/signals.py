@@ -10,6 +10,7 @@ from django.dispatch import receiver
 from .models import Profile
 
 
+# pylint: disable=unused-argument
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     """

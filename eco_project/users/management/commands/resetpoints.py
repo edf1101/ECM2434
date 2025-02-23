@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'Updates all user profile points based on their pets'
+    help = "Updates all user profile points based on their pets"
 
     def handle(self, *args, **kwargs):
         users = User.objects.all()
@@ -11,4 +11,4 @@ class Command(BaseCommand):
         for user in users:
             user.profile.update_points()
             updated += 1
-        self.stdout.write(f'Updated points for {updated} profiles')
+        self.stdout.write(f"Updated points for {updated} profiles")

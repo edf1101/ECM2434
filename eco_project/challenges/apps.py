@@ -9,11 +9,14 @@ from django.apps import AppConfig
 
 from .scheduler import scheduler
 
+# pylint errors are wrong here, the import is needed in the ready method
+# pylint: disable=unused-import, import-outside-toplevel,W0108
 
 class ChallengesConfig(AppConfig):
     """
     Configuration class for the challenges app.
     """
+
     default_auto_field = "django.db.models.BigAutoField"
     name = "challenges"
 
@@ -23,7 +26,7 @@ class ChallengesConfig(AppConfig):
         """
 
         # Skip scheduling if its just a reload of the server.
-        if os.environ.get('RUN_MAIN') != 'true':
+        if os.environ.get("RUN_MAIN") != "true":
             return
 
         from .tasks import update_challenges
@@ -31,10 +34,10 @@ class ChallengesConfig(AppConfig):
         # Schedule the job for a 1m interval
         scheduler.add_job(
             update_challenges,
-            'interval',
+            "interval",
             seconds=60,
-            id='update_challenges_job',
-            replace_existing=True
+            id="update_challenges_job",
+            replace_existing=True,
         )
         scheduler.start()
         atexit.register(lambda: scheduler.shutdown())

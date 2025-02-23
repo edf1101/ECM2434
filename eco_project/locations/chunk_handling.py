@@ -25,8 +25,10 @@ def haversine(lat1, lon1, lat2, lon2) -> float:
 
     delta_lat = lat2 - lat1
     delta_lon = lon2 - lon1
-    a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(
-        delta_lon / 2) ** 2
+    a = (
+        math.sin(delta_lat / 2) ** 2
+        + math.cos(lat1) * math.cos(lat2) * math.sin(delta_lon / 2) ** 2
+    )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     return earth_rad * c  # Distance in meters
@@ -51,14 +53,19 @@ def get_nearby_tiles(lat, lon, max_distance_meters=100):
     # Filter using Q objects to get the chunks within bounds this is hopefully
     # lots faster than using a loop
     bounded_chunks = Map3DChunk.objects.filter(
-        Q(center_lat__gte=lat - lat_offset) & Q(center_lat__lte=lat + lat_offset) &
-        Q(center_lon__gte=lon - lon_offset) & Q(center_lon__lte=lon + lon_offset)
+        Q(center_lat__gte=lat - lat_offset)
+        & Q(center_lat__lte=lat + lat_offset)
+        & Q(center_lon__gte=lon - lon_offset)
+        & Q(center_lon__lte=lon + lon_offset)
     )
 
-    # Actually check the bounded chunks to see if they are within the max distance
+    # Actually check the bounded chunks to see if they are within the max
+    # distance
     nearby_chunks = [
-        chunk for chunk in bounded_chunks
-        if haversine(lat, lon, chunk.center_lat, chunk.center_lon) <= max_distance_meters
+        chunk
+        for chunk in bounded_chunks
+        if haversine(lat, lon, chunk.center_lat, chunk.center_lon)
+        <= max_distance_meters
     ]
 
     return nearby_chunks

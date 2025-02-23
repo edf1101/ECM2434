@@ -8,11 +8,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .chunk_handling import get_nearby_tiles
-from .models import FeatureInstance, Map3DChunk, LocationsAppSettings, \
-    FeatureInstanceTileMap
+from .models import (
+    FeatureInstance,
+    Map3DChunk,
+    LocationsAppSettings,
+    FeatureInstanceTileMap,
+)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def nearby_tiles(request) -> Response:
     """
     This function returns a list of nearby 3D map tiles given a latitude, longitude and distance.
@@ -30,7 +34,12 @@ def nearby_tiles(request) -> Response:
 
         # Create a response with the list of tiles
         response_data = [
-            {"id": tile.id, "file": tile.file.url, "lat": tile.center_lat, "lon": tile.center_lon}
+            {
+                "id": tile.id,
+                "file": tile.file.url,
+                "lat": tile.center_lat,
+                "lon": tile.center_lon,
+            }
             for tile in tiles
         ]
 
@@ -40,7 +49,7 @@ def nearby_tiles(request) -> Response:
         return Response({"error": "Invalid parameters"}, status=400)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_features_for_tiles(request) -> Response:
     """
     Returns a dictionary where each key is a tile file URL and each value is a list of
@@ -53,14 +62,15 @@ def get_features_for_tiles(request) -> Response:
         return Response({"error": "No tiles provided."}, status=400)
 
     try:
-        tile_ids = [int(i) for i in tiles_param.split(',')]
+        tile_ids = [int(i) for i in tiles_param.split(",")]
     except ValueError:
         return Response({"error": "Invalid tile IDs provided."}, status=400)
 
     # Get tile objects from the IDs
     tiles = Map3DChunk.objects.filter(id__in=tile_ids)
 
-    # Build the response data dictionary: key = tile file URL, value = list of feature details
+    # Build the response data dictionary: key = tile file URL, value = list of
+    # feature details
     response_data = {}
 
     for tile in tiles:
@@ -69,19 +79,22 @@ def get_features_for_tiles(request) -> Response:
         tile_mappings = FeatureInstanceTileMap.objects.filter(map_chunk=tile)
         for mapping in tile_mappings:
             instance = mapping.feature_instance
-            features_in_tile.append({
-                "lat": instance.latitude,
-                "lon": instance.longitude,
-                "colour": instance.feature.colour,
-                "mesh_url": instance.feature.feature_mesh.url if instance.feature.feature_mesh
-                else "None"
-            })
+            features_in_tile.append(
+                {
+                    "lat": instance.latitude,
+                    "lon": instance.longitude,
+                    "colour": instance.feature.colour,
+                    "mesh_url": instance.feature.feature_mesh.url
+                    if instance.feature.feature_mesh
+                    else "None",
+                }
+            )
         response_data[tile.file.url] = features_in_tile
 
     return Response(response_data, status=200)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def api_get_map_data(request) -> Response:
     """
     This function returns the map settings data for the 3D map.
@@ -112,20 +125,27 @@ def api_get_map_data(request) -> Response:
 
     # Create a response with the map settings data
     response_data = [
-        {"min_lat": min_lat, "max_lat": max_lat,
-         "min_lon": min_lon, "max_lon": max_lon,
-         "min_x": min_x, "max_x": max_x,
-         "min_y": min_y, "max_y": max_y,
-         "min_z": min_z, "max_z": max_z,
-         "camera_map_url": camera_map_url,
-         "bg_colour": bg_colour,
-         "render_dist": render_dist}
+        {
+            "min_lat": min_lat,
+            "max_lat": max_lat,
+            "min_lon": min_lon,
+            "max_lon": max_lon,
+            "min_x": min_x,
+            "max_x": max_x,
+            "min_y": min_y,
+            "max_y": max_y,
+            "min_z": min_z,
+            "max_z": max_z,
+            "camera_map_url": camera_map_url,
+            "bg_colour": bg_colour,
+            "render_dist": render_dist,
+        }
     ]
 
     return Response(response_data, status=200)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_current_location(request) -> Response:
     """
     This function returns a random location for the user that is not within 300m of the map's border.
@@ -158,7 +178,7 @@ def get_current_location(request) -> Response:
     return Response({"lat": lat, "lon": lon}, status=200)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_feature_instances(request) -> Response:
     """
     This function returns all feature instances in the database.
@@ -170,7 +190,11 @@ def get_feature_instances(request) -> Response:
 
     # for each feature instance, return its lat, lon, featureType.colour
     response_data = [
-        {"lat": instance.latitude, "lon": instance.longitude, "colour": instance.feature.colour}
+        {
+            "lat": instance.latitude,
+            "lon": instance.longitude,
+            "colour": instance.feature.colour,
+        }
         for instance in feature_instances
     ]
 
@@ -184,19 +208,22 @@ def validate_qr(request):
     """
     try:  # Check JSON daat has the qr_code in it
         data = json.loads(request.body)
-        qr_code = data.get('qr_code', '')
+        qr_code = data.get("qr_code", "")
     except json.JSONDecodeError:  # else return an error
-        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
     # get the slug (end bit) from the qr code
-    strip_qr = list(filter(None, qr_code.split('/')))[-1]
+    strip_qr = list(filter(None, qr_code.split("/")))[-1]
 
     # Find if any featureInstance has this slug and get it
     try:
         feature_instance = FeatureInstance.objects.get(slug=strip_qr)
     except FeatureInstance.DoesNotExist:  # invalid slug, don't do anything
-        return JsonResponse({'error': 'INVALID_QR'}, status=400)
+        return JsonResponse({"error": "INVALID_QR"}, status=400)
 
     # If valid go to to the page using reverse
-    target_url = reverse('locations:individual-feature', kwargs={'slug': strip_qr})
+    target_url = reverse(
+        "locations:individual-feature",
+        kwargs={
+            "slug": strip_qr})
     return redirect(target_url)

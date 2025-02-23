@@ -18,11 +18,13 @@ class FeatureForm(ModelForm):
         """
         This class is used to define the model and fields that the form will use.
         """
-        fields = '__all__'
+
+        fields = "__all__"
         model = FeatureType
         widgets = {
-            'colour': TextInput(attrs={'type': 'color'}),
+            "colour": TextInput(attrs={"type": "color"}),
         }
+
 
 class LocationsAppSettingsForm(ModelForm):
     """
@@ -34,8 +36,9 @@ class LocationsAppSettingsForm(ModelForm):
         """
         This class is used to define the model and fields that the form will use.
         """
-        fields = '__all__'
+
+        fields = "__all__"
         model = LocationsAppSettings
         widgets = {
-            'world_colour': TextInput(attrs={'type': 'color'}),
+            "world_colour": TextInput(attrs={"type": "color"}),
         }
