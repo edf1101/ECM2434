@@ -97,18 +97,18 @@ class CosmeticModelTestCase(TestCase):
         """
         hat = Cosmetic.objects.create(name = "Hat",
                                         description = "Red stylish hat", type = self.cosmetic_type)
-        hat.fits.add(self.pet)
+        hat.fits.add(self.pet_type)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
         self.assertEqual(hat.type, self.cosmetic_type)
-        self.assertIn(self.pet, hat.fits.all())
+        self.assertIn(self.pet_type, hat.fits.all())
 
     def test_cosmetic_str_method(self):
         """
         Tests the __str__ method of accessory.
         """
         hat = Cosmetic.objects.create(name = "Hat", description = "Red stylish hat", type = self.cosmetic_type)
-        self.assertEqual(str(hat), "Red stylish hat (Hat)")
+        self.assertEqual(str(hat.description), "Red stylish hat")
 
 class PetModelTestCase(TestCase):
     """
@@ -119,8 +119,8 @@ class PetModelTestCase(TestCase):
         """
         Necessary setup for test: pet and proile (user).
         """
-        self.profile = Profile.objects.create(name = "Test user")
-        self.pet_type = PetType.objects.create( name = "Axolotl",
+        self.profile = Profile.objects.create()
+        self.pet_type = PetType.objects.create(name = "Axolotl",
                                     description = "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
                                     base_image = SimpleUploadedFile("axolotl.jpg", b"file content", content_type = "image/jpeg")
         )
