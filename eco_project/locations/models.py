@@ -3,19 +3,20 @@ This file contains the models for the locations app.
 The models are used to store information about the different types of sustainability features
 and their locations.
 """
-from django.db import models
-from django.db.models import ImageField
-from django.db.models.fields.files import ImageFieldFile
-from typing import Self
-from thefuzz import fuzz
-from qrcode import QRCode, constants
-from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
-from qrcode.image.styles.colormasks import RadialGradiantColorMask
 import os
+from typing import Self
+
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
+from django.db.models import ImageField
+from django.db.models.fields.files import ImageFieldFile
+from qrcode import QRCode, constants
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.colormasks import RadialGradiantColorMask
+from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
+from thefuzz import fuzz
 
 
 # Create your models here.

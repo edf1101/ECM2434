@@ -1,11 +1,11 @@
+from challenges.models import ChallengeSettings
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from .models import FeatureInstance, FeatureType, QuestionFeature, Map3DChunk, LocationsAppSettings, \
     FeatureInstanceTileMap
-from challenges.models import ChallengeSettings
 
 
 class ViewsTestCase(TestCase):

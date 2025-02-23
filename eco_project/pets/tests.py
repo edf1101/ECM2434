@@ -4,11 +4,13 @@ Ensures that each model, Pet and Cosmetic, is created with the appropriate attri
 and that the methods of each model run correctly.
 """
 
-from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import PetType, CosmeticType, Cosmetic, Pet
-from django.contrib.auth.models import User
 import os
+
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
+
+from .models import PetType, CosmeticType, Cosmetic, Pet
 
 
 class PetTypeTestCase(TestCase):

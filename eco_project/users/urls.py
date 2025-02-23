@@ -2,8 +2,9 @@
 This file contains the URL patterns for the users app.
 """
 from django.urls import path
-from . import views
+
 from . import api
+from . import views
 
 app_name = 'users'
 

@@ -1,9 +1,8 @@
-from django.shortcuts import render
-from django.db.models import Sum
-from django.contrib.auth.models import User
-from users.models import Profile, UserGroup
-from pets.models import Pet
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render
+from pets.models import Pet
+from users.models import UserGroup
 
 
 @login_required

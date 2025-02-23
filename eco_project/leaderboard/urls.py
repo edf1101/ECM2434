@@ -1,5 +1,7 @@
 from django.urls import path
+
 from .views import leaderboard_view
+
 app_name = 'leaderboard'
 
 urlpatterns = [

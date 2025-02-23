@@ -1,8 +1,10 @@
 """
 This module contains tasks that are called by the scheduler.
 """
-from django.utils import timezone
 from datetime import timedelta
+
+from django.utils import timezone
+
 from .models import Streak, get_current_window, ChallengeSettings, UserFeatureReach
 
 

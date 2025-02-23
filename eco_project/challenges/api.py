@@ -1,16 +1,17 @@
-from django.utils import timezone
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from datetime import timedelta
+
 from django.conf import settings
 from django.http import JsonResponse
+from django.utils import timezone
+from locations.chunk_handling import haversine
+from locations.models import QuestionFeature, FeatureInstance
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-# Import your models and helper
-from .models import Streak, ChallengeSettings  # adjust import as needed
 from .challenge_helpers import get_current_window, streak_to_points, user_in_range_of_feature, \
     user_already_reached_in_window
-from locations.models import QuestionFeature, FeatureInstance
-from locations.chunk_handling import haversine
+# Import your models and helper
+from .models import Streak, ChallengeSettings  # adjust import as needed
 
 
 @api_view(['POST'])

@@ -2,10 +2,12 @@
 This file is used to configure the challenges app
 mainly just schedule the update_challenges task to run every 60 seconds.
 """
-from django.apps import AppConfig
 import atexit
-from .scheduler import scheduler
 import os
+
+from django.apps import AppConfig
+
+from .scheduler import scheduler
 
 
 class ChallengesConfig(AppConfig):
@@ -25,7 +27,6 @@ class ChallengesConfig(AppConfig):
             return
 
         from .tasks import update_challenges
-        import challenges.signals
 
         # Schedule the job for a 1m interval
         scheduler.add_job(

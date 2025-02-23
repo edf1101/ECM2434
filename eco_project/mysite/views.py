@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
+from django.shortcuts import render
 
 
 def homepage(request:HttpRequest) -> HttpResponse:

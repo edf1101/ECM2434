@@ -1,10 +1,11 @@
 """
 This module is a Django management command that creates some pet types in the database.
 """
+import os
+
+from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from django.conf import settings
-import os
 from pets.models import PetType
 
 

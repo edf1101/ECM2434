@@ -1,10 +1,11 @@
 """
 This module contains the views for the locations app.
 """
-from django.shortcuts import render
-from django.http import HttpResponse
-from .models import FeatureInstance, FeatureType, Map3DChunk, LocationsAppSettings, QuestionFeature
 from challenges.challenge_helpers import user_reached_feature
+from django.http import HttpResponse
+from django.shortcuts import render
+
+from .models import FeatureInstance, FeatureType, QuestionFeature
 
 
 def base_locations(request) -> HttpResponse:

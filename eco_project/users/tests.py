@@ -1,8 +1,9 @@
 """
 This module contains tests for the users app.
 """
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
+
 from .models import Profile, Badge, BadgeInstance, UserGroup, generate_unique_code
 
 

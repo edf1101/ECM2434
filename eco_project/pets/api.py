@@ -2,9 +2,9 @@
 This module is used to store the API endpoints for the pets app.
 This includes the frontend calling get_pet_data(user) to get the data for a pet.
 """
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
 
 
 @require_POST

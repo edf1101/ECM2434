@@ -5,20 +5,18 @@ Mocks are used extensively to simplify the tests and to avoid side effects.
 """
 import json
 from datetime import timedelta
-
-from django.contrib.auth import get_user_model
-from django.test import TestCase
-from django.urls import reverse
-
 from unittest.mock import patch, MagicMock
 
 from challenges.models import Streak, ChallengeSettings
-
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
 # Ensure the signals are imported so that the post_save signal gets registered.
 import challenges.signals
-
 # Import your actual Profile model.
 from users.models import Profile
+
+# Ensure the signals are imported so that the post_save signal gets registered.
 
 User = get_user_model()
 

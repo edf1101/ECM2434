@@ -1,8 +1,8 @@
-from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from users.models import Profile, UserGroup
-from pets.models import Pet, PetType
+from django.test import TestCase, Client
 from django.urls import reverse
+from pets.models import Pet, PetType
+from users.models import Profile, UserGroup
 
 
 class LeaderboardViewTest(TestCase):

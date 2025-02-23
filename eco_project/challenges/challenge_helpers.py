@@ -3,11 +3,12 @@ This module is stores helper functions to deal with challenges.
 """
 from datetime import timedelta
 from math import log2
-from django.contrib.auth.models import User
-from locations.models import FeatureInstance
-from locations.chunk_handling import haversine
+
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.utils import timezone
+from locations.chunk_handling import haversine
+from locations.models import FeatureInstance
 
 
 def get_current_window(now_time, interval):

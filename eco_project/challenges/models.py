@@ -1,12 +1,15 @@
 """
 Models for the Challenges app.
 """
-from django.db import models
 from datetime import timedelta
+
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils import timezone
-from .challenge_helpers import get_current_window  # make sure this helper works as expected
 from locations.models import FeatureInstance
+
+from .challenge_helpers import get_current_window  # make sure this helper works as expected
+
 
 class ChallengeSettings(models.Model):
     """
