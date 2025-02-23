@@ -1,0 +1,8 @@
+Django
+pillow
+djangorestframework
+thefuzz
+qrcode
+pylint
+pylint-django
+APScheduler

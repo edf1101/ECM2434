@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - Groups{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'users/css/groups.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="hero hero-groups">
+        {# Hero section to describe groups page #}
+        <div class="hero-content container">
+            <h1>Groups</h1>
+            <br>
+            <h5>Groups are a great way to connect with people to save your pets together!</h5>
+
+        </div>
+    </section>
+    <br>
+
+    {# This section contains buttons and inputs to create and join groups #}
+    <div class="card mb-4">
+        <div class="card-body">
+            {# Create group #}
+            <h5 class="card-title">Create a New Group</h5>
+            <div class="d-flex align-items-center mb-3">
+                <input type="text" id="group-name" class="form-control me-2"
+                       placeholder="Enter group name">
+                <button id="create-group-btn" class="btn btn-green-dark">Create Group</button>
+            </div>
+            <hr>
+            {# Join group #}
+            <h5 class="card-title">Join an Existing Group</h5>
+            <div class="d-flex align-items-center">
+                <input type="text" id="join-group-code" class="form-control me-2"
+                       placeholder="Enter group code">
+                <button id="join-group-btn" class="btn btn-green-dark">Join Group</button>
+            </div>
+        </div>
+    </div>
+
+    {# This is a bootstrap accordian (dropdown esque) to display all the groups a user is a part of #}
+    <div class="accordion" id="groupsAccordion">
+        {% if user_groups %}
+            {% for group in user_groups %} {# Go through all user groups and render them #}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ forloop.counter }}"
+                                aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                                aria-controls="collapse{{ forloop.counter }}">
+                            {{ group.name }} ({{ group.code }})
+                        </button>
+                    </h2>
+                    <div id="collapse{{ forloop.counter }}"
+                         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                         aria-labelledby="heading{{ forloop.counter }}"
+                         data-bs-parent="#groupsAccordion">
+                        <div class="accordion-body">
+                            <h5>Members:</h5>
+                            <ul class="list-group">
+                                {% for user in group.users.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ user.username }}{% if user == group.group_admin %} (group
+                                            admin){% endif %}
+                                        {% if request.user == group.group_admin and user != group.group_admin %}
+                                            <button class="btn btn-green-dark btn-sm remove-user-btn"
+                                                    data-user-id="{{ user.id }}"
+                                                    data-url="{% url 'users:remove_user' group.code %}">
+                                                Remove
+                                            </button>
+                                        {% endif %}
+                                    </li>
+                                    {% empty %}
+                                    <li class="list-group-item">No members in this group.</li>
+                                {% endfor %}
+                            </ul>
+                            <br>
+                            {# Show a buttons depending on if user is group admin or not #}
+                            {% if request.user == group.group_admin %}
+                                <button class="btn btn-green-dark delete-group-btn"
+                                        data-url="{% url 'users:delete_group' group.code %}">
+                                    Delete Group
+                                </button>
+                            {% elif request.user != group.group_admin %}
+                                <button class="btn btn-green-dark leave-group-btn"
+                                        data-url="{% url 'users:leave_group' group.code %}">
+                                    Leave Group
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info" {# make alert green #}
+                 style="background-color: #1a673a; border-color: #1a673a; color: white">
+                You are not a member of any groups yet.
+            </div>
+        {% endif %}
+    </div>
+
+    {# Import the js for the page #}
+    <script>
+        window.createGroupUrl = "{% url 'users:create_group' %}";
+        window.joinGroupUrl = "{% url 'users:join_group' %}";
+        window.groupHomeUrl = "{% url 'users:group_home' %}";
+        window.csrfToken = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'users/js/groups.js' %}"></script>
+{% endblock %}

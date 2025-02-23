@@ -1,0 +1,76 @@
+/* Map Box: white background with border and rounded corners */
+.map-box {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Map Box Header: contains the Explore Features text and the fullscreen button */
+.map-header {
+  padding: 0.5rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.map-header-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Fullscreen button styling */
+.fullscreen-btn {
+  font-size: 1.5rem;
+  color: #333;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* Small inline map container */
+.map-container-small {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #eaeaea; /* Debug background; adjust as needed */
+}
+
+/* Fullscreen map container inside the modal */
+.map-container-fullscreen {
+  width: 100%;
+  height: 100%;
+  background-color: #eaeaea;
+}
+
+/* Responsive adjustments: on small screens, make the inline map taller */
+@media (max-width: 576px) {
+  .map-container-small {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Horizontal carousel container for feature cards */
+.feature-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem;
+  -webkit-overflow-scrolling: touch; /* smoother scrolling on iOS */
+}
+
+/* Each feature card container */
+.feature-card {
+  flex: 0 0 auto; /* Prevents cards from shrinking or growing */
+  width: 250px;    /* Adjust width as desired */
+}
+
+/* Optional: Hide scrollbar on Webkit browsers */
+.feature-carousel::-webkit-scrollbar {
+  display: none;
+}

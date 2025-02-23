@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - Map & Features{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'locations/css/locationStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'locations/css/map.css' %}">
+
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
+          }
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <!-- Header for Map Section -->
+    <div class="container my-4">
+        <div class="row my-4">
+            <div class="col-12 text-center">
+                <h1>Locations</h1>
+                <p>Find locations and challenges around the campus for your pet!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Small Map Display in a White Box with Header -->
+    <div class="container-fluid p-0">
+        <div class="map-box mx-auto">
+            <!-- Map Box Header with Explore Features Text and Fullscreen Button -->
+            <div class="map-header d-flex justify-content-between align-items-center">
+                <span class="map-header-text">Explore the map! 🐘</span>
+                <button type="button" class="btn btn-link fullscreen-btn" data-bs-toggle="modal"
+                        data-bs-target="#fullscreenMapModal" aria-label="Enter Fullscreen">
+                    <i class="bi bi-arrows-fullscreen"></i>
+                </button>
+            </div>
+            <!-- Map Container below the header -->
+            <div id="map" class="map-container-small"></div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Map Modal -->
+    <div class="modal fade" id="fullscreenMapModal" tabindex="-1"
+         aria-labelledby="fullscreenMapModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fullscreenMapModalLabel">Find challenges for your
+                        pet!</h5>
+                    <!-- Default close button -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="modalMap" class="map-container-fullscreen"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Cards Section -->
+    <!-- Feature Cards Section (Horizontal Scroll) -->
+    <div class="container my-4">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2>Feature List</h2>
+                <p>Scroll to explore various sustainability locations available in EcoPet.</p>
+            </div>
+        </div>
+        <div class="feature-carousel">
+            {% for feature in feature_type_list %}
+                <div class="feature-card">
+                    <div class="card h-100">
+                        {% if feature.generic_img %}
+                            <img src="{{ feature.generic_img.url }}" alt="{{ feature.name }}"
+                                 class="card-img-top feature-img">
+                        {% endif %}
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="{% url 'locations:generic-feature' id_arg=feature.id %}">{{ feature.name }}</a>
+                            </h4>
+                            <p class="card-text">{{ feature.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <script type="module">
+        import {UniversityMap} from "{% static 'locations/js/map.js' %}";
+
+        // Clear the inline map container before initializing
+        const inlineContainer = document.getElementById("map");
+        inlineContainer.innerHTML = "";
+        const smallMapInstance = new UniversityMap("map");
+
+        // When the fullscreen modal opens, clear its container before initializing
+        let fullscreenMapInstance = null;
+        const fullscreenModal = document.getElementById('fullscreenMapModal');
+        fullscreenModal.addEventListener('shown.bs.modal', () => {
+            const modalContainer = document.getElementById("modalMap");
+            modalContainer.innerHTML = "";
+            if (!fullscreenMapInstance) {
+                fullscreenMapInstance = new UniversityMap("modalMap");
+            } else {
+                window.dispatchEvent(new Event('resize'));
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,32 @@
+# ECM2434
+Sustainability Group Software Engineering Project 
+
+## Installing
+Assuming you have a virtual environment set up (We will containerise later before submission?)
+(macos/linux)
+```shell
+chmod 755 install.sh
+./install.sh
+```
+(windows)
+```shell
+.\install.bat
+```
+
+
+
+## How to run After Installation
+From the base ECM2434 folder go to the eco_project folder 
+```shell
+cd eco_project
+```
+
+You can then run the manage.py commands eg:
+```shell
+python manage.py runserver
+```
+
+To run pylint on the project:
+```shell
+pylint .
+```

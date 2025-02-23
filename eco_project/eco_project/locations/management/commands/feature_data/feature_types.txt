@@ -1,0 +1,6 @@
+# lines are commented out.
+# format is each line, feature name, feature desc, colour, image name, mesh name
+# all fields are required apart from mesh name. JUST LEAVE BLANK still add end comma
+#
+Water Fountain, Water fountains are a great way to stay hydrated and additionally it cuts down the usage of plastic bottles., #0011FF, general_water_fountain.jpg, raindrop.glb
+Recycling Bin, Recycling bins are a great way to reduce waste and help the environment., #00FF00, green bin.jpg, recycle_logo2.glb

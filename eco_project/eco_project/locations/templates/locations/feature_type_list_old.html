@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPet - Feature List</title>
+    <link rel="stylesheet" href="{% static 'locations/locationStyle.css' %}">
+</head>
+<body>
+
+    <nav>
+        <div class="navbar">
+            <a href="/"><img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="logo"></a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/location/map">Map</a></li>
+                <li><a href="/features">Pet Challenges</a></li>
+                <li><a href="/leaderboard">Leaderboard</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Feature List</h1>
+        <p>Explore various sustainability features available in EcoPet.</p>
+
+        <div class="feature-list">
+            {% for feature in feature_type_list %}
+                <article class="feature-item">
+                    <h4>
+                        <a href="{%  url 'locations:generic-feature' id_arg=feature.id %}">
+                            {{ feature.name }}
+                        </a>
+                    </h4>
+                    <p>{{ feature.description }}</p>
+                    <img src="{{ feature.generic_img.url }}" alt="{{ feature.name }}" class="feature-img">
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="{% static 'ecoPetLogo.png' %}" alt="EcoPet Logo" class="footer-logo-img">
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Help & Support</h3>
+                    <a href="#">Help</a>
+                    <a href="#">Other</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Customer service</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <a href="#">Sitemap</a>
+                    <a href="#">How to guides</a>
+                    <a href="#">Subscriptions</a>
+                    <a href="#">Contact us</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Make sure to keep your pet alive!</p>
+        </div>
+    </footer>
+
+</body>
+</html>
