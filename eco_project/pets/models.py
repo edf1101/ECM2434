@@ -85,6 +85,7 @@ class Pet(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="pets")
+    points = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs) -> None:
         """
