@@ -50,13 +50,12 @@ def update_location(request) -> JsonResponse:
 @login_required
 @require_POST
 def create_group(request) -> JsonResponse:
-    """
-    Create a new user group with the current user as the admin.
-
-    @param request: The request object.
-    @return: The JSON response.
-    """
-    new_group = UserGroup.objects.create(group_admin=request.user)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        data = {}
+    group_name = data.get('name', '').strip()
+    new_group = UserGroup.objects.create(group_admin=request.user, name=group_name)
     new_group.users.add(request.user)
     return JsonResponse({'code': new_group.code})
 
@@ -83,9 +82,9 @@ def delete_group(request, code) -> JsonResponse:
 
 @login_required
 @require_POST
-def remove_user(request, code) -> JsonResponse:
+def remove_user_from_group(request, code) -> JsonResponse:
     """
-    API endpoint to remove a user from a group (only admin can do this).
+    API endpoint to remove a user from a group (only group admin can do this).
 
     :param request: the request object
     :param code: the group code

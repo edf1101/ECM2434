@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 description=pet["description"],
             )
 
-            img = settings.MEDIA_ROOT.joinpath(f"pets/base_imgs/{pet["image"]}")
+            img = settings.MEDIA_ROOT.joinpath(f"pets/base_imgs/{pet['image']}")
 
             with open(img, "rb") as f:
                 elephant.base_image = File(f, name=pet["image"])

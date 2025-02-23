@@ -203,24 +203,4 @@ def groups_home(request) -> HttpResponse:
     user_groups = UserGroup.objects.all().filter(users=user)
     context = {'user_groups': user_groups}
 
-    return render(request, "users/groups_home.html", context=context)
-
-
-@login_required
-def group_detail(request, code):
-    """
-    Display the details of a group including its list of users.
-
-    @param request: The HTTP request object.
-    @param  code: The unique code of the group.
-    @return: HttpResponse with the rendered group detail page.
-    """
-
-    # Retrieve the group by its unique code, or throw 404 if not found.
-    group = get_object_or_404(UserGroup, code=code)
-
-    if request.user not in group.users.all():  # Check that the user is a member of group
-        return redirect("groups_home")
-
-    context = {"group": group}
-    return render(request, "users/group_detail.html", context=context)
+    return render(request, "users/groups.html", context=context)
