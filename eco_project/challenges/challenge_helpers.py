@@ -1,5 +1,7 @@
 """
 This module is stores helper functions to deal with challenges.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from datetime import timedelta
 from math import log2
@@ -18,9 +20,9 @@ def get_current_window(now_time, interval):
     Buckets the current time into fixed windows.
     For example, if interval is 1 day, returns the start and end of the current day.
 
-    :param now_time: The current time.
-    :param interval: The size of the window.
-    :return: A tuple of (window_start, window_end).
+    @param now_time: The current time.
+    @param interval: The size of the window.
+    @return: A tuple of (window_start, window_end).
     """
     base = now_time.replace(hour=0, minute=0, second=0, microsecond=0)
     seconds_since_base = (now_time - base).total_seconds()
@@ -35,22 +37,21 @@ def streak_to_points(streak_count: int) -> int:
     """
     Given a streak count, returns the number of points that should be awarded.
 
-    :param streak_count: The number of days in the streak.
-    :return: The number of points to award.
+    @param streak_count: The number of days in the streak.
+    @return: The number of points to award.
     """
     return int(log2(streak_count) + 1)
 
 
 def user_in_range_of_feature(
-        user: User, feature_inst: FeatureInstance, range_dist: int = 100
-) -> bool:
+        user: User, feature_inst: FeatureInstance, range_dist: int = 100) -> bool:
     """
     Checks if a user is within the range of a feature.
 
-    :param user: The user to check.
-    :param feature_inst: The feature to check.
-    :param range_dist: The range to check in meters.
-    :return: True if the user is in range, False otherwise.
+    @param user: The user to check.
+    @param feature_inst: The feature to check.
+    @param range_dist: The range to check in meters.
+    @return: True if the user is in range, False otherwise.
     """
 
     if not settings.CHECK_USER_CHALLENGE_RANGE:
@@ -75,11 +76,11 @@ def user_already_reached_in_window(
     """
     Check if a user has already reached the feature in the current window.
 
-    :param user: The user to check.
-    :param feature_inst: The feature instance to check.
-    :param extra: An extra field to check.
-    :param update: If True, will add a record if the user has not already reached the feature.
-    :return: True if the user has reached the feature in the current window, False otherwise.
+    @param user: The user to check.
+    @param feature_inst: The feature instance to check.
+    @param extra: An extra field to check.
+    @param update: If True, will add a record if the user has not already reached the feature.
+    @return: True if the user has reached the feature in the current window, False otherwise.
     """
     # pylint: disable=import-outside-toplevel
     from .models import UserFeatureReach, ChallengeSettings  # avoid circular import
@@ -114,8 +115,8 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     """
     Does some things when a user reaches a feature.
 
-    :param user: The user to check.
-    :param feature_inst: The feature to check.
+    @param user: The user to check.
+    @param feature_inst: The feature to check.
     """
 
     if not user_in_range_of_feature(user, feature_inst):

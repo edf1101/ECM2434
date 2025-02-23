@@ -1,5 +1,7 @@
 """
 This module tests the locations app
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from challenges.models import ChallengeSettings
 from django.contrib.auth import get_user_model
@@ -31,6 +33,8 @@ class ViewsTestCase(TestCase):
         """
         Set up with necessary data for following view tests including feature type,
         instance, question, and user (user name and password)
+
+        @return: None
         """
         self.factory = RequestFactory()
         self.feature_type = FeatureType.objects.create(

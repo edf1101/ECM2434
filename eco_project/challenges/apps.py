@@ -1,6 +1,8 @@
 """
 This file is used to configure the challenges app
 mainly just schedule the update_challenges task to run every 60 seconds.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import atexit
 import os
@@ -8,6 +10,7 @@ import os
 from django.apps import AppConfig
 
 from .scheduler import scheduler
+
 
 # pylint errors are wrong here, the import is needed in the ready method
 # pylint: disable=unused-import, import-outside-toplevel,W0108
@@ -20,7 +23,7 @@ class ChallengesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "challenges"
 
-    def ready(self):
+    def ready(self) -> None:
         """
         This method is called when the app is ready to be used
         """

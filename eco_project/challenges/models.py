@@ -1,5 +1,7 @@
 """
 Models for the Challenges app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from datetime import timedelta
 
@@ -20,7 +22,7 @@ class ChallengeSettings(models.Model):
 
     interval = models.DurationField(
         default=timedelta(
-            days=1))  # adjustable interval
+            days=1))  # The interval in which the user must check in to maintain their streak
     question_feature_points: models.IntegerField = models.IntegerField(
         default=2
     )  # points per correct answer
@@ -29,11 +31,18 @@ class ChallengeSettings(models.Model):
     )  # points per reached normal feature
 
     def __str__(self):
+        """
+        Override the string representation of this model.
+        """
         return "Challenge Settings"
 
     def save(self, *args, **kwargs):
         """
         Override the save method to ensure only one instance of this model exists.
+
+        @param args: Additional arguments.
+        @param kwargs: Additional keyword
+        @return: None
         """
         self.pk = 1
         super().save(*args, **kwargs)
@@ -42,6 +51,8 @@ class ChallengeSettings(models.Model):
     def get_solo(cls):
         """
         Returns the single StreakSettings instance, creating it if there isnt one already.
+
+        @return: The single StreakSettings instance.
         """
 
         obj, _ = cls.objects.get_or_create(
@@ -74,7 +85,7 @@ class Streak(models.Model):
         If the last check-in window is not the current or immediately previous one,
         the streak is considered broken.
 
-        @returns int: The effective streak count.
+        @return int: The effective streak count.
         """
         settings_obj = ChallengeSettings.get_solo()
         interval = settings_obj.interval
@@ -90,6 +101,8 @@ class Streak(models.Model):
     def running_out(self) -> bool:
         """
         Returns True if the user's streak is about to be broken.
+
+        @return: True if the streak is about to be broken, False otherwise.
         """
         if self.effective_streak == 0:  # no streak to run out of
             return False
@@ -101,6 +114,11 @@ class Streak(models.Model):
         return self.last_window != current_window_start
 
     def __str__(self):
+        """
+        Override the string representation of this model.
+
+        @return: The string representation of this model.
+        """
         return f"{self.user.username} - Streak: {self.effective_streak}"
 
 
@@ -115,6 +133,11 @@ class UserFeatureReach(models.Model):
     extra = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
+        """
+        Override the string representation of this model.
+
+        @return: The string representation of this model.
+        """
         return (
             f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
         )

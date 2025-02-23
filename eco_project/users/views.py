@@ -1,5 +1,7 @@
 """
 This module contains the views for the users app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from challenges.challenge_helpers import get_current_window
 from challenges.models import UserFeatureReach, ChallengeSettings
@@ -99,8 +101,7 @@ def profile_view(request, username) -> HttpResponse:
     # get all the badges the user has
     badge_instances = user.badgeinstance_set.all()
     badges = [badge_instance.badge for badge_instance in badge_instances]
-    # sort the badges by their rarity so that the rarest ones are displayed
-    # first
+    # sort the badges by their rarity so that the rarest ones are displayed first
     badges.sort(key=lambda badge: badge.rarity, reverse=True)
     # only show the first 5 badges
     badges = badges[:5]

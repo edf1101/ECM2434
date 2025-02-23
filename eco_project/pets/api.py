@@ -1,12 +1,14 @@
 """
 This module is used to store the API endpoints for the pets app.
 This includes the frontend calling get_pet_data(user) to get the data for a pet.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 
-User = get_user_model() # Get the user model
+User = get_user_model()  # Get the user model
 
 
 @require_POST

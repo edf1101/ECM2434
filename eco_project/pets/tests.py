@@ -2,6 +2,8 @@
 Test Suite for the pets app.
 Ensures that each model, Pet and Cosmetic, is created with the appropriate attributes
 and that the methods of each model run correctly.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 import os
@@ -22,9 +24,11 @@ class PetTypeTestCase(TestCase):
     methods run appropriately.
     """
 
-    def pet_set_up(self):
+    def pet_set_up(self) -> None:
         """
         Creation of PetType instance including name, description, and image.
+
+        @return: None
         """
 
         PetType.objects.create(
@@ -45,7 +49,12 @@ class PetTypeTestCase(TestCase):
         )
         self.assertTrue(axolotl.base_image)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
+        """
+        Clean up any PetType image files created in setUp.
+
+        @return: None
+        """
         # Loop through all PetType instances and delete the file on disk if it
         # exists.
         for pet in PetType.objects.all():
@@ -56,10 +65,12 @@ class PetTypeTestCase(TestCase):
                     pass
         super().tearDown()
 
-    def test_pet_str_method(self):
+    def test_pet_str_method(self) -> None:
         """
         Tests the __str__ method of PetType, ensuring that the correct name of the
         PetType is returned as str.
+
+        @return: None
         """
         PetType.objects.create(
             name="Axolotl",
@@ -80,10 +91,12 @@ class CosmeticTypeTestCase(TestCase):
     and methods are made and run.
     """
 
-    def cosmetic_set_up(self):
+    def cosmetic_set_up(self) -> None:
         """
         Creation of cosmetic object for Pet inscluding cosmetic type name and position on
         pet image / canvas.
+
+        @return: None
         """
         CosmeticType.objects.create(name="Hat", x=5, y=20)
         hat = CosmeticType.objects.get(name="Hat")
@@ -91,9 +104,11 @@ class CosmeticTypeTestCase(TestCase):
         self.assertEqual(hat.x, 5)
         self.assertEqual(hat.y, 20)
 
-    def test_cosmetic_str_method(self):
+    def test_cosmetic_str_method(self) -> None:
         """
         Tests the __str__ method of CosmeticType
+
+        @return: None
         """
         CosmeticType.objects.create(name="Hat", x=5, y=20)
         hat = CosmeticType.objects.get(name="Hat")
@@ -105,9 +120,11 @@ class CosmeticModelTestCase(TestCase):
     Test for cosmetic object on pet model including accessory setup on pet object and str method.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """
         Set up with necessary data for PetType and CosmeticType objects.
+
+        @return: None
         """
         self.pet_type = PetType.objects.create(
             name="Axolotl",
@@ -120,7 +137,12 @@ class CosmeticModelTestCase(TestCase):
         )
         self.cosmetic_type = CosmeticType.objects.create(name="Hat", x=5, y=20)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
+        """
+        Clean up any PetType image files created in setUp.
+
+        @return: None
+        """
         # Clean up any PetType image files created in setUp.
         for pet in PetType.objects.all():
             if pet.base_image and os.path.exists(pet.base_image.path):
@@ -130,9 +152,11 @@ class CosmeticModelTestCase(TestCase):
                     pass
         super().tearDown()
 
-    def test_cosmetic_set_up(self):
+    def test_cosmetic_set_up(self) -> None:
         """
         Creation of cosmetic object for Pet and addition to pet.
+
+        @return: None
         """
         hat = Cosmetic.objects.create(
             name="Hat", description="Red stylish hat", type=self.cosmetic_type
@@ -143,9 +167,11 @@ class CosmeticModelTestCase(TestCase):
         self.assertEqual(hat.type, self.cosmetic_type)
         self.assertIn(self.pet_type, hat.fits.all())
 
-    def test_cosmetic_str_method(self):
+    def test_cosmetic_str_method(self) -> None:
         """
         Tests the __str__ method of accessory.
+
+        @return: None
         """
         hat = Cosmetic.objects.create(
             name="Hat", description="Red stylish hat", type=self.cosmetic_type
@@ -159,9 +185,11 @@ class PetModelTestCase(TestCase):
     and health and str method functionality.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """
         Necessary setup for test: pet and proile (user).
+
+        @return: None
         """
         self.user = User.objects.create_user(
             username="testuser", password="password")
@@ -175,9 +203,11 @@ class PetModelTestCase(TestCase):
                 content_type="image/jpeg"),
         )
 
-    def test_pet_setup(self):
+    def test_pet_setup(self) -> None:
         """
         Test for setting up pet and its attributes.
+
+        @return: None
         """
         axolotl = Pet.objects.create(
             name="Axo", type=self.pet_type, owner=self.user)
@@ -186,7 +216,12 @@ class PetModelTestCase(TestCase):
         self.assertEqual(axolotl.owner, self.user)
         self.assertEqual(axolotl.health, 100)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
+        """
+        Clean up any PetType image files created in setUp.
+
+        @return: None
+        """
         # Clean up the PetType image file created in setUp.
         for pet in PetType.objects.all():
             if pet.base_image and os.path.exists(pet.base_image.path):
@@ -196,9 +231,11 @@ class PetModelTestCase(TestCase):
                     pass
         super().tearDown()
 
-    def test_pet_str_method(self):
+    def test_pet_str_method(self) -> None:
         """
         Test for __str__ method of pet
+
+        @return: None
         """
         axolotl = Pet.objects.create(
             name="Axo", type=self.pet_type, owner=self.user)

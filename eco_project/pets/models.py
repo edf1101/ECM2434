@@ -1,5 +1,7 @@
 """
 This module contains the models for the pets app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -18,7 +20,12 @@ class PetType(models.Model):
     description = models.TextField()
     base_image = models.ImageField(upload_to="pets/base_imgs/", blank=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns the name of the pet type.
+
+        @return: The name of the pet type.
+        """
         return self.name
 
 
@@ -32,7 +39,12 @@ class CosmeticType(models.Model):
     x = models.FloatField()
     y = models.FloatField()
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns the name of the cosmetic type.
+
+        @return: The name of the cosmetic type.
+        """
         return self.name
 
 
@@ -47,7 +59,12 @@ class Cosmetic(models.Model):
     type = models.ForeignKey(CosmeticType, on_delete=models.PROTECT)
     fits = models.ManyToManyField(PetType, blank=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns the name of the cosmetic.
+
+        @return: The name of the cosmetic.
+        """
         return f"{self.name} ({self.type.name})"
 
 
@@ -72,9 +89,13 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
         related_name="pets")
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """
         Override save method to update the user's points whenever a pet's points are updated.
+
+        @param args: Additional arguments.
+        @param kwargs: Additional keyword arguments.
+        @return: None
         """
         # Save the pet first
         super().save(*args, **kwargs)
@@ -84,5 +105,10 @@ class Pet(models.Model):
             # This will update the user's points based on their pets
             self.owner.profile.update_points()
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+        Returns the name of the pet.
+
+        @return: The name of the pet
+        """
         return f"{self.owner.username}'s {self.name} ({self.type.name})"

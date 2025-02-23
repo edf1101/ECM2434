@@ -3,6 +3,8 @@ Signals for the Locations app.
 Signals are an action that gets triggered when a certain event occurs.
 These signals are used to update the min and max values of the lat/lon and world x/y/z of the
 LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved or deleted.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.db.models import Min, Max
 from django.db.models.signals import post_save, post_delete
@@ -22,8 +24,8 @@ def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
     """
     Update the QR code of a FeatureInstance or all FeatureInstances.
 
-    :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
-    :param instance: The instance of the sender
+    @param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
+    @param instance: The instance of the sender
     """
     # If this save is triggered by an update_qr_code call skip to avoid
     # infinite recursion.
@@ -92,7 +94,6 @@ def update_min_max_pos(sender, instance, **kwargs) -> None:
     # Set the flag to skip QR code updates when saving the settings.
     settings.skip_qr_update = True
     settings.save()
-    # Optionally, remove the attribute so future saves behave normally.
     del settings.skip_qr_update
 
 

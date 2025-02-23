@@ -1,5 +1,7 @@
 """
 Signals for the pets app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 # pylint: disable=unused-argument

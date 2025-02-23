@@ -1,5 +1,7 @@
 """
 This module contains the forms for the users app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django import forms
 from django.contrib.auth import get_user_model
@@ -16,7 +18,7 @@ User = get_user_model()
 class UserCreationFormWithNames(UserCreationForm):
     """
     This form is used to register a new user, it includes required fields for first name
-     and last name.
+    and last name.
     """
 
     first_name = forms.CharField(
@@ -41,9 +43,12 @@ class UserCreationFormWithNames(UserCreationForm):
             "password1",
             "password2")
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> User:
         """
         This method is used to save the user to the database.
+
+        @param commit: Whether to commit the changes to the database.
+        @return: The saved User instance.
         """
         user = super().save(commit=False)
 
@@ -95,12 +100,12 @@ class PetCreationForm(forms.ModelForm):
         model = Pet
         fields = ("name", "type")
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> Pet:
         """
         Saves the pet instance to the database.
 
-        :param commit: Whether to commit the changes to the database.
-        :return: The saved Pet instance.
+        @param commit: Whether to commit the changes to the database.
+        @return: The saved Pet instance.
         """
         pet = super().save(commit=False)
         if commit:
@@ -147,13 +152,16 @@ class RegistrationForm(forms.Form):
         """
         Checks if both the user form and the pet form are valid.
 
-        :return: True if both forms are valid, False otherwise.
+        @return: True if both forms are valid, False otherwise.
         """
         return self.user_form.is_valid() and self.pet_form.is_valid()
 
-    def save(self, commit=True):
+    def save(self, commit=True) -> tuple:
         """
         Saves the user and their pet to the database.
+
+        @param commit: Whether to commit the changes to the database.
+        @return: The saved User and Pet instances.
         """
         user = self.user_form.save(commit)
 

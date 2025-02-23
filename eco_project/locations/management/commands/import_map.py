@@ -21,7 +21,7 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
     This function reads the console_out.txt file and extracts the data from it about all the
     3D map chunks.
 
-    :return: A dictionary with the relevant data for each 3D map chunk.
+    @return: A dictionary with the relevant data for each 3D map chunk.
     """
     path_to_console_out: str = os.path.join(
         os.getcwd(), "locations/management/commands/console_out.txt"
@@ -115,9 +115,9 @@ class Command(BaseCommand):
         """
         This function is called when the import_chunks script is run.
 
-        :param args:  None expected
-        :param kwargs: None expected
-        :return: None
+        @param args:  None expected
+        @param kwargs: None expected
+        @return: None
         """
 
         post_save.disconnect(update_tile_feature_map, sender=Map3DChunk)

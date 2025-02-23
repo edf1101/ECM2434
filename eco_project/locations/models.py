@@ -2,6 +2,8 @@
 This file contains the models for the locations app.
 The models are used to store information about the different types of sustainability features
 and their locations.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 from typing import Self
@@ -43,7 +45,7 @@ class FeatureType(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: The name of the feature.
+        @return: The name of the feature.
         """
         return f"{self.name}"
 
@@ -77,7 +79,7 @@ class FeatureInstance(models.Model):
         """
         Updates the QR code for this feature instance.
 
-        :param skip_signal: Whether to skip the signal that triggers this method.
+        @param skip_signal: Whether to skip the signal that triggers this method.
         """
         # Find the absolute path of the static image
         logo_path = finders.find("locations/media/ecopetLogoWhiteBG.png")
@@ -130,7 +132,7 @@ class FeatureInstance(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: the name of the feature and the slug.
+        @return: the name of the feature and the slug.
         """
         return f'{self.feature.name} "{self.slug}"'
 
@@ -182,7 +184,7 @@ class Map3DChunk(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: The original file name.
+        @return: The original file name.
         """
         return f"{self.file_original_name}"
 
@@ -243,9 +245,9 @@ class LocationsAppSettings(models.Model):
         """
         Overriding the save method to ensure there is only one instance of this model.
 
-        :param args: Likely None
-        :param kwargs: Likely None
-        :return: None
+        @param args: Likely None
+        @param kwargs: Likely None
+        @return: None
         """
         self.pk = 1  # Ensure there's only one instance
         super().save(*args, **kwargs)
@@ -254,9 +256,9 @@ class LocationsAppSettings(models.Model):
         """
         Prevent deletion of this model.
 
-        :param args: Likely None.
-        :param kwargs: Likely None.
-        :return: None
+        @param args: Likely None.
+        @param kwargs: Likely None.
+        @return: None
         """
         return None  # Prevent deletion
 
@@ -266,7 +268,7 @@ class LocationsAppSettings(models.Model):
         Static method to return the instance of this model.
         If there is no instance, it will create one.
 
-        :return: The singleton instance of this model.
+        @return: The singleton instance of this model.
         """
         return cls.objects.first() or cls.objects.create()
 
@@ -274,7 +276,7 @@ class LocationsAppSettings(models.Model):
         """
         A nicer string representation of the model.
 
-        :return: String representation of the model.
+        @return: String representation of the model.
         """
         return "Site Settings"
 
@@ -292,7 +294,7 @@ class FeatureInstanceTileMap(models.Model):
         """
         Returns a string representation of the object.
 
-        :return: The name of the feature and the original file name of the map chunk.
+        @return: The name of the feature and the original file name of the map chunk.
         """
         return (f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "'
                 f'{self.map_chunk.file_original_name}"')
@@ -320,7 +322,7 @@ class QuestionFeature(models.Model):
     def __str__(self):
         """
         Returns a string representation of the object.
-        :return: The question.
+        @return: The question.
         """
         return f"{self.question_text}"
 
@@ -328,8 +330,8 @@ class QuestionFeature(models.Model):
         """
         This function checks if a given answer is valid for this question
 
-        :param input_answer: The answer to query
-        :return: A bool true or false for if this is a valid answer
+        @param input_answer: The answer to query
+        @return: A bool true or false for if this is a valid answer
         """
 
         # get all the answers for this question
@@ -364,4 +366,9 @@ class QuestionAnswer(models.Model):
     choice_text = models.CharField(max_length=200)
 
     def __str__(self):
+        """
+        Returns a string representation of the object.
+
+        @return: The choice text.
+        """
         return self.choice_text

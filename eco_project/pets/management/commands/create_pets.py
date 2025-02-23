@@ -1,5 +1,7 @@
 """
 This module is a Django management command that creates some pet types in the database.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 
@@ -20,9 +22,9 @@ class Command(BaseCommand):
         """
         This function creates an Axolotl, Elephant, and Bat in the database.
 
-        :param args: None expected
-        :param kwargs: None expected
-        :return: None
+        @param args: None expected
+        @param kwargs: None expected
+        @return: None
         """
 
         pets = [{"name": "African Bush Elephant",

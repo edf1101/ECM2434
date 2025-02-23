@@ -1,7 +1,8 @@
 """
 This module is to test the challenges app.
-
 Mocks are used extensively to simplify the tests and to avoid side effects.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import json
 from datetime import timedelta
@@ -14,13 +15,10 @@ from django.urls import reverse
 
 #pylint: disable=W0613,C0415,W0611
 
-# Ensure the signals are imported so that the post_save signal gets registered.
 import challenges.signals
 
-# Import your actual Profile model.
 from users.models import Profile
 
-# Ensure the signals are imported so that the post_save signal gets registered.
 
 User = get_user_model()
 

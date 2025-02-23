@@ -1,6 +1,8 @@
 """
 This module is a Django management command that clears the 3D map chunk data from the database
 and the media folder.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 
@@ -20,9 +22,9 @@ class Command(BaseCommand):
         """
         This function clears the 3D map chunk data from the database
 
-        :param args: None expected
-        :param kwargs: None expected
-        :return: None
+        @param args: None expected
+        @param kwargs: None expected
+        @return: None
         """
 
         # clear the media 3d_map_chunks folder

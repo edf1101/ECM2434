@@ -1,5 +1,6 @@
 """
 This file contains the API endpoints for the challenges app.
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from datetime import timedelta
 
@@ -18,8 +19,7 @@ from .challenge_helpers import (
     user_already_reached_in_window,
 )
 
-# Import your models and helper
-from .models import Streak, ChallengeSettings  # adjust import as needed
+from .models import Streak, ChallengeSettings
 
 
 @api_view(["POST"])
@@ -28,7 +28,6 @@ def collect_streak(request) -> Response:
     this gets called when the user wants to collect their streak
 
     @param request: The POST request object.
-
     @return: A JSON response with a message to the front end
     """
     user = request.user
@@ -86,9 +85,9 @@ def submit_answer_api(request) -> Response:
     """
     This function handles the submission of answers to questions.
 
-    :param request: The POST request object. Need a JSON object with 'answer'
+    @param request: The POST request object. Need a JSON object with 'answer'
     and 'question_id' keys.
-    :return: A JSON response with a message to the front end
+    @return: A JSON response with a message to the front end
     """
 
     signed_in = request.user and request.user.is_authenticated
@@ -146,10 +145,12 @@ def submit_answer_api(request) -> Response:
     )
 
 
-def nearest_challenges_api(request):
+def nearest_challenges_api(request) -> JsonResponse:
     """
     Returns up to 10 nearest challenges as JSON, sorted by distance.
-    In production, you’d query your database based on user location.
+
+    @param request: The GET request object.
+    @return: A JSON response with a list of challenges
     """
     challenges = []
     if (

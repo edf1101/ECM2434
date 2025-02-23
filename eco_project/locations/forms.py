@@ -1,6 +1,8 @@
 """
 This module contains the form for the Feature model. It is used so that we can have a colour
 picker in the admin menu.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.forms import ModelForm
 from django.forms.widgets import TextInput

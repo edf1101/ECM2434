@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Create an alert element for a challenge
      *
      * @param challenge The challenge object to create an alert for
-     * @returns {HTMLDivElement} The alert element to display
+     * @return {HTMLDivElement} The alert element to display
      */
     function createAlertElement(challenge) {
         const alertDiv = document.createElement('div');

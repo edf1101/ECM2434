@@ -1,5 +1,7 @@
 """
 This script imports features from a file into the database.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 import sys
@@ -30,9 +32,9 @@ class Command(BaseCommand):
         """
         This function is called when the import_features script is run.
 
-        :param args:  None expected
-        :param kwargs: None expected
-        :return: None
+        @param args:  None expected
+        @param kwargs: None expected
+        @return: None
         """
         # Disconnect the QR code update signal to prevent it from running on
         # every save.
@@ -63,6 +65,8 @@ class Command(BaseCommand):
     def import_feature_types(self) -> None:
         """
         Import the generic feature types from the file.
+
+        @return: None
         """
 
         # read lines from the file

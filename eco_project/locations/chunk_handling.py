@@ -1,5 +1,7 @@
 """
 This module contains functions for handling 3D map tiles and other geodesic calculations.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import math
 
@@ -13,11 +15,11 @@ def haversine(lat1, lon1, lat2, lon2) -> float:
     The haversine formula is used for calculating the distance between two points on the Earth's
     surface in meters given their latitudes and longitudes.
 
-    :param lat1: Input latitude 1 ie y1
-    :param lon1: Input longitude 1 ie x1
-    :param lat2: Input latitude 2 ie y2
-    :param lon2: Input longitude 2 ie x2
-    :return: The distance between the two points in meters
+    @param lat1: Input latitude 1 ie y1
+    @param lon1: Input longitude 1 ie x1
+    @param lat2: Input latitude 2 ie y2
+    @param lon2: Input longitude 2 ie x2
+    @return: The distance between the two points in meters
     """
 
     earth_rad = 6371000  # Earth's radius in meters
@@ -38,11 +40,11 @@ def get_nearby_tiles(lat, lon, max_distance_meters=100):
     """
     Get all 3D map chunks within a certain distance of a given latitude and longitude.
 
-    :param lat: The input latitude  (y)
-    :param lon: The input longitude (x)
-    :param max_distance_meters: The maximum distance in meters to search for
+    @param lat: The input latitude  (y)
+    @param lon: The input longitude (x)
+    @param max_distance_meters: The maximum distance in meters to search for
      nearby tiles (default 100)
-    :return: The list of nearby 3D map chunks
+    @return: The list of nearby 3D map chunks
     """
 
     # Create a bounding box that the tiles center lat/lon must be within

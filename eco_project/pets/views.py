@@ -1,5 +1,7 @@
 """
 This module contains the views for the pets app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -11,8 +13,8 @@ def view_pet(request) -> HttpResponse:
     """
     View for displaying the pet details
 
-    :param request: HttpRequest object
-    :return: HttpResponse object
+    @param request: HttpRequest object
+    @return: HttpResponse object
     """
     pet = request.user.pets.first()
     return render(request, "pets/mypet.html", {"pet": pet})

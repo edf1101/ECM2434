@@ -1,5 +1,7 @@
 """
 This class deals with how the models appear in the admin menu.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib import admin
 
@@ -110,8 +112,8 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
         """
         Returns a description of the page.
 
-        :param obj: None
-        :return: A string description of the page.
+        @param obj: None
+        @return: A string description of the page.
         """
         return "This page is a singleton model that stores the settings for the Locations app."
 

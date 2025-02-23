@@ -1,5 +1,7 @@
 """
 This module contains the API views for the users app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import json
 
@@ -81,9 +83,9 @@ def delete_group(request, code) -> JsonResponse:
     API endpoint to delete a group.
     Only the group admin can delete the group.
 
-    :param request: the request object
-    :param code: the group code
-    :return : the JSON response
+    @param request: the request object
+    @param code: the group code
+    @return : the JSON response
     """
     group = get_object_or_404(UserGroup, code=code)
 
@@ -102,9 +104,9 @@ def remove_user_from_group(request, code) -> JsonResponse:
     """
     API endpoint to remove a user from a group (only group admin can do this).
 
-    :param request: the request object
-    :param code: the group code
-    :return : the JSON response
+    @param request: the request object
+    @param code: the group code
+    @return : the JSON response
     """
 
     group = get_object_or_404(UserGroup, code=code)  # get the group
@@ -142,8 +144,8 @@ def join_group(request) -> JsonResponse:
     """
     API endpoint for a user to join an existing group using a group code
 
-    :param request: the request object
-    :return : the JSON response
+    @param request: the request object
+    @return : the JSON response
     """
     try:  # Try to parse the JSON data else return an error
         data = json.loads(request.body)
@@ -182,9 +184,9 @@ def leave_group(request, code) -> JsonResponse:
     """
     API endpoint for a user to leave a group
 
-    :param request: the request object
-    :param code: the group code
-    :return   : the JSON response
+    @param request: the request object
+    @param code: the group code
+    @return   : the JSON response
     """
     group = get_object_or_404(UserGroup, code=code)
 

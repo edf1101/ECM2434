@@ -1,6 +1,8 @@
 """
 This module is a Django management command that clears the 3D map chunk data from the database
 and the media folder.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 
@@ -20,9 +22,9 @@ class Command(BaseCommand):
         """
         This function clears the 3D map chunk data from the database
 
-        :param args: None expected
-        :param kwargs: None expected
-        :return: None
+        @param args: None expected
+        @param kwargs: None expected
+        @return: None
         """
 
         self.clear_feature_types()
@@ -33,6 +35,8 @@ class Command(BaseCommand):
     def clear_feature_types(self) -> None:
         """
         Clear the feature types data
+
+        @return: None
         """
         # clear the media feature_type_img folder
         folder = os.path.join(MEDIA_ROOT, "locations/feature_type_img")
@@ -57,6 +61,8 @@ class Command(BaseCommand):
     def clear_feature_instances(self) -> None:
         """
         Clear the feature instances data
+
+        @return: None
         """
 
         # clear the media feature_type_img folder
@@ -82,5 +88,7 @@ class Command(BaseCommand):
     def clear_question_data(self) -> None:
         """
         Clear the question data from the database
+
+        @return: None
         """
         QuestionFeature.objects.all().delete()

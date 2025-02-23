@@ -1,5 +1,7 @@
 """
 This module contains the test suite for the leaderboard app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
@@ -15,11 +17,10 @@ class LeaderboardViewTest(TestCase):
     Test suite for the leaderboard view.
     Ensures that the leaderboard page functions correctly
     Tests included are: checking the behavior when the user is not logged in,
-    when a group is selected,
-    and when no group is selected.
+    when a group is selected, and when no group is selected.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """
         Set up the test environment by creating necessary data, including users,
         profiles, pets, and groups. This will be executed before each test method.
@@ -51,19 +52,23 @@ class LeaderboardViewTest(TestCase):
         self.group = UserGroup.objects.create(name="Group1", code="G1")
         self.group.users.add(self.user1, self.user2)
 
-    def test_redirect_if_not_logged_in(self):
+    def test_redirect_if_not_logged_in(self) -> None:
         """
         Test that an unauthenticated user is redirected to the login page
         when trying to access the leaderboard.
+
+        @return: None
         """
         response = self.client.get(reverse("leaderboard:leaderboard"))
         self.assertEqual(response.status_code, 302)
 
-    def test_leaderboard_view_logged_in(self):
+    def test_leaderboard_view_logged_in(self) -> None:
         """
         Test that the leaderboard view displays correctly for a logged-in user,
         including rendering the correct template and ensuring that the context
         contains the expected 'users' and 'pets' data sorted by points.
+
+        @return: None
         """
         self.client.login(username="user1", password="testpass")
         response = self.client.get(reverse("leaderboard:leaderboard"))
@@ -81,11 +86,13 @@ class LeaderboardViewTest(TestCase):
         sorted_pets = Pet.objects.order_by("-points")
         self.assertEqual(list(response.context["pets"]), list(sorted_pets))
 
-    def test_leaderboard_with_group_selection(self):
+    def test_leaderboard_with_group_selection(self) -> None:
         """
         Test that the leaderboard displays correctly when a specific user group
         is selected from the group dropdown. Verifies that the correct users
         from the selected group are displayed and sorted by points.
+
+        @return: None
         """
         self.client.login(username="user1", password="testpass")
         response = self.client.get(
@@ -108,11 +115,13 @@ class LeaderboardViewTest(TestCase):
                 response.context["group_users"]),
             sorted_group_users)
 
-    def test_leaderboard_without_group_selection(self):
+    def test_leaderboard_without_group_selection(self) -> None:
         """
         Test that the leaderboard displays correctly when no group is selected.
         Verifies that 'selected_group' is None and no group users are included
         in the context.
+
+        @return: None
         """
         self.client.login(username="user1", password="testpass")
         response = self.client.get(reverse("leaderboard:leaderboard"))

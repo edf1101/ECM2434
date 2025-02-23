@@ -1,12 +1,14 @@
 """
 This script imports badge data from a file into the database.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 
 from django.core.management.base import BaseCommand
 from users.models import (
     Badge,
-)  # Adjust the import if your Badge model is in a different module
+)
 
 
 # pylint: disable=R0801
@@ -16,11 +18,7 @@ class Command(BaseCommand):
     """
     This script imports badge data from a file into the database.
     The expected format for each non-comment line in badge_data.txt is:
-
         Badge title, Badge description, Badge colour as #HEX, Badge rarity
-
-    Example line:
-        100 Day Streak, You've logged in for 100 days in a row!, #d4b86c, 10
     """
 
     help = "Import badge data into the database from badge_data.txt"
@@ -28,6 +26,10 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs) -> None:
         """
         Reads badge data from badge_data.txt and creates Badge objects.
+
+        @param args: Command line arguments
+        @param kwargs: Command line keyword arguments
+        @return: None
         """
         file_path = os.path.join(
             os.getcwd(), "users/management/commands/badge_data.txt"

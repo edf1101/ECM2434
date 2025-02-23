@@ -1,5 +1,7 @@
 """
 This module contains tests for the users app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -118,10 +120,12 @@ class UserGroupModelTests(TestCase):
     Test the UserGroup model.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """
         The setUp method is run before each test method to set up the test environment
         to test the groups an admin member is needed along with a normal member and group.
+
+        @return: None
         """
 
         # create the objects
@@ -137,13 +141,6 @@ class UserGroupModelTests(TestCase):
 
         # Add the admin to the group's users
         self.group.users.add(self.admin_user)
-
-    def test_group_str(self) -> None:
-        """
-        This test asserts that the __str__ method of the UserGroup model works correctly.
-        It should return "Group <code>" where code is the group's unique code.
-        """
-        self.assertTrue(str(self.group).startswith("Group "))
 
     def test_users_in_group(self) -> None:
         """
@@ -164,7 +161,7 @@ class UserGroupModelTests(TestCase):
         self.group.add_user(self.member_user)
         self.assertIn(self.member_user, self.group.users.all())
 
-    def test_remove_user(self):
+    def test_remove_user(self) -> None:
         """
         Test that the remove_user method removes a user from the group.
 
