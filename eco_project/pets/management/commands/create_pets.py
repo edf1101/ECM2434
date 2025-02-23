@@ -1,6 +1,7 @@
 """
 This module is a Django management command that creates some pet types in the database.
 """
+from django.db.utils import IntegrityError
 from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -55,7 +56,7 @@ class Command(BaseCommand):
         ]
 
         for pet in pets:
-            elephant = PetType(
+            pet_type = PetType(
                 name=pet["name"],
                 description=pet["description"],
             )
@@ -63,7 +64,10 @@ class Command(BaseCommand):
             img = settings.MEDIA_ROOT.joinpath(f"pets/base_imgs/{pet["image"]}")
 
             with open(img, "rb") as f:
-                elephant.base_image = File(f, name=pet["image"])
-                elephant.save()
+                pet_type.base_image = File(f, name=pet["image"])
 
-        self.stdout.write(self.style.SUCCESS("Created pets"))
+                try:
+                    pet_type.save()
+                    self.stderr.write(self.style.SUCCESS(f"Created {pet["name"]}"))
+                except IntegrityError as e:
+                    self.stderr.write(self.style.WARNING(f"Could not create {pet["name"]}, skipping it: {str(e)}"))
