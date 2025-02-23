@@ -143,5 +143,4 @@ def nearest_challenges_api(request):
             "directions": dist,
             "description": feature.name,
         })
-    print(challenges)
     return JsonResponse({"challenges": challenges})

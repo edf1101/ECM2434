@@ -5,12 +5,14 @@ automates it. There must be the console_out.txt file from blender in the same di
 script and the exports folder with all the .glb files in the same directory as this script.
 """
 from django.core.management.base import BaseCommand
-from locations.models import Map3DChunk, LocationsAppSettings
+from locations.models import Map3DChunk, LocationsAppSettings, FeatureInstance
 from django.core.files import File
 import os
 from typing import Any
 from django.core.files.storage import default_storage
 from random import choice
+from django.db.models.signals import post_save, post_delete
+from locations.signals import update_tile_feature_map
 
 
 def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
@@ -91,6 +93,11 @@ class Command(BaseCommand):
         :return: None
         """
 
+        post_save.disconnect(update_tile_feature_map, sender=Map3DChunk)
+        post_delete.disconnect(update_tile_feature_map, sender=Map3DChunk)
+        post_save.disconnect(update_tile_feature_map, sender=FeatureInstance)
+        post_delete.disconnect(update_tile_feature_map, sender=FeatureInstance)
+
         chunk_dict = get_mesh_data_from_file()
         # clear the Map3D chunks table
         path_to_exports: str = os.path.join(os.getcwd(),
@@ -134,12 +141,10 @@ class Command(BaseCommand):
             chunk.save()
 
         self.stdout.write(self.style.SUCCESS(f"Saved {len(chunk_dict)} chunks to database"))
-
         image_path = os.path.join(os.getcwd(),
                                   "locations/management/commands/heightmap.png")
         # create some random letters to make the file name unique
         letters = ''.join([choice('1234567890ABCDEF') for i in range(5)])
-
         img_file = None
         with open(image_path, 'rb') as f:
             file = File(f)  # Create a Django file object
@@ -157,4 +162,15 @@ class Command(BaseCommand):
         settings.render_dist = 250
         settings.default_lat, settings.default_lon = 50.73585506490216, -3.534556667162146
 
+        settings._skip_qr_update = True
         settings.save()
+        del settings._skip_qr_update
+
+        # Reconnect the signals
+        post_save.connect(update_tile_feature_map, sender=Map3DChunk)
+        post_delete.connect(update_tile_feature_map, sender=Map3DChunk)
+        post_save.connect(update_tile_feature_map, sender=FeatureInstance)
+        post_delete.connect(update_tile_feature_map, sender=FeatureInstance)
+
+        dummy_instance = Map3DChunk.objects.first()  # This is just to trigger the signal handler
+        update_tile_feature_map(sender=Map3DChunk, instance=dummy_instance)

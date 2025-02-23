@@ -27,7 +27,6 @@ class Command(BaseCommand):
         except FileNotFoundError:  # Throw error if file not found
             self.stdout.write(self.style.ERROR(f"File not found: {file_path}"))
             return
-
         # Remove blank lines and comments
         lines = [line.strip() for line in lines if
                  line.strip() and not line.strip().startswith("#")]
@@ -47,7 +46,6 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.ERROR(f"Invalid rarity value '{rarity_str}' in line: {line}"))
                 continue
-
             # Make Badge
             badge = Badge(title=title, hover_text=hover_text, colour=colour, rarity=rarity)
             try:

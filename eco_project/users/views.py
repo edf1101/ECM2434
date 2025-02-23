@@ -5,6 +5,8 @@ from django.db.transaction import commit
 from django.shortcuts import redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.utils import timezone
+
 from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm, RegistrationForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -14,6 +16,8 @@ from django.http import HttpResponse
 from .models import UserGroup
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from challenges.models import UserFeatureReach, ChallengeSettings
+from challenges.challenge_helpers import get_current_window
 
 
 def registration_view(request) -> HttpResponse:
@@ -37,7 +41,7 @@ def registration_view(request) -> HttpResponse:
     else:
         form = RegistrationForm()
 
-    return render(request, "users/registration.html", { "form": form })
+    return render(request, "users/registration.html", {"form": form})
 
 
 def login_view(request) -> HttpResponse:
@@ -100,7 +104,28 @@ def profile_view(request, username) -> HttpResponse:
     # only show the first 5 badges
     badges = badges[:5]
 
-    context = {'user': user, 'badges': badges}
+    # Get the user's challenges completed in the current window
+    now_time = timezone.now()
+    interval = ChallengeSettings.get_solo().interval
+    window_start, window_end = get_current_window(now_time, interval)
+    user_feature_reaches = UserFeatureReach.objects.filter(
+        user=user,
+        reached_at__gte=window_start,
+        reached_at__lt=window_end,
+        extra=""
+    )
+    # only take most recent 10
+    user_feature_reaches = user_feature_reaches.order_by('-reached_at')[:10]
+
+    pet = user.pets.first() # assumes user only has one pet for sprint 1
+    # if there is no pet fill this in with a default pet
+    if not pet:
+        pet = {
+            'name': 'Ellie the Elephant',
+            'health': 100,
+        }
+
+    context = {'user': user, 'badges': badges, 'challenges': user_feature_reaches, 'pet': pet}
     return render(request, "users/profile.html", context=context)
 
 
@@ -178,24 +203,4 @@ def groups_home(request) -> HttpResponse:
     user_groups = UserGroup.objects.all().filter(users=user)
     context = {'user_groups': user_groups}
 
-    return render(request, "users/groups_home.html", context=context)
-
-
-@login_required
-def group_detail(request, code):
-    """
-    Display the details of a group including its list of users.
-
-    @param request: The HTTP request object.
-    @param  code: The unique code of the group.
-    @return: HttpResponse with the rendered group detail page.
-    """
-
-    # Retrieve the group by its unique code, or throw 404 if not found.
-    group = get_object_or_404(UserGroup, code=code)
-
-    if request.user not in group.users.all():  # Check that the user is a member of group
-        return redirect("groups_home")
-
-    context = {"group": group}
-    return render(request, "users/group_detail.html", context=context)
+    return render(request, "users/groups.html", context=context)

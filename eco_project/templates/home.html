@@ -47,6 +47,11 @@
     </script>
     <script>
         var currentUsername = "{{ user.username|default:'' }}";
+        {% if user.is_authenticated %}
+            var baseApiUrlPet = "{% url 'pets:get_pet_data' user.username%}";
+        {% else %}
+            var baseApiUrlPet = "";
+        {% endif %}
     </script>
     <script src="{% static 'js/home.js' %}"></script> {# Import carousel logic #}
 {% endblock %}
@@ -175,10 +180,10 @@
                 <div class="feature-box d-flex flex-column p-0">
 
                     <div class="pet-header d-flex align-items-center"> {# Header for the widget #}
-                       {% if user.is_authenticated %}
-                        <span class="map-header-text">Take care of your pet</span>
+                        {% if user.is_authenticated %}
+                            <span class="map-header-text">Take care of your pet</span>
                         {% else %}
-                        <span class="map-header-text">Not signed in, Look at an example pet!</span>
+                            <span class="map-header-text">Not signed in, Look at an example pet!</span>
                         {% endif %}
                     </div>
 
