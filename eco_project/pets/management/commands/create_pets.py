@@ -84,6 +84,6 @@ class Command(BaseCommand):
 
                 try:
                     pet_type.save()
-                    self.stderr.write(self.style.SUCCESS(f"Created {pet["name"]}"))
+                    self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
                 except IntegrityError as e:
-                    self.stderr.write(self.style.WARNING(f"Could not create {pet["name"]}, skipping it: {str(e)}"))
+                    self.stderr.write(self.style.WARNING(f"Could not create {pet['name']}, skipping it: {str(e)}"))
