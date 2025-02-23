@@ -13,18 +13,16 @@ from django.db.models import Min, Max
 
 @receiver(post_save, sender=FeatureInstance)
 @receiver(post_save, sender=LocationsAppSettings)
-def update_feature_instance_qr_code(sender, instance, created, **kwargs) -> None:
+def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
     """
     Update the QR code of a FeatureInstance or all FeatureInstances.
 
     :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
     :param instance: The instance of the sender
-    :param created: Whether the instance was created or updated
     """
     # If this save is triggered by an update_qr_code call skip to avoid infinite recursion.
     if hasattr(instance, '_skip_qr_update') and instance._skip_qr_update:
         return
-
     # If the sender is FeatureInstance, update only that instance this fixes infinite recursion
     if sender == FeatureInstance:
         instance._skip_qr_update = True
@@ -32,6 +30,8 @@ def update_feature_instance_qr_code(sender, instance, created, **kwargs) -> None
         instance._skip_qr_update = False
     else:
         for feature_instance in FeatureInstance.objects.all():
+            # print(f'created QR code for feature instance {feature_instance}')
+
             feature_instance._skip_qr_update = True
             feature_instance.update_qr_code(skip_signal=True)
             feature_instance._skip_qr_update = False

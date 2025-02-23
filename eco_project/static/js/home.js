@@ -79,16 +79,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const csrftoken = getCookie('csrftoken');
 
-        // Fetch pet data for the provided username.
-        fetch(`pets/api/get_pet_data/${currentUsername}/`, {
+        // Use the apiBaseUrl variable provided from the template and append the username.
+        const apiUrl = baseApiUrlPet;
+
+        fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken
             }
         })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 404) {
+                    console.log("No pet found for this user, using default values.");
+                    // Return null so the following then block can skip UI updates.
+                    return null;
+                } else if (!response.ok) {
+                    throw new Error("Error fetching pet data");
+                }
+                return response.json();
+            })
             .then(data => {
+                // If data is null, exit the function.
+                if (!data) {
+                    console.log("No pet data found, using default values.");
+                    return;
+                }
+
                 // Update pet points
                 document.getElementById('petPoints').textContent = data.user_points;
 
@@ -118,6 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error fetching pet data:', error);
             });
     }
+
+// Run the update function when the DOM is fully loaded.
+    document.addEventListener("DOMContentLoaded", updatePetStats);
+
 
 // Run the update function when the DOM is fully loaded.
     document.addEventListener("DOMContentLoaded", updatePetStats);
