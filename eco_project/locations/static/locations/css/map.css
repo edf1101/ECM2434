@@ -9,7 +9,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Map Box Header: contains the Explore Features text and the fullscreen button */
 .map-header {
   padding: 0.5rem 1rem;
   background: #fff;
@@ -38,7 +37,7 @@
 .map-container-small {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background-color: #eaeaea; /* Debug background; adjust as needed */
+  background-color: #eaeaea;
 }
 
 /* Fullscreen map container inside the modal */
@@ -48,7 +47,6 @@
   background-color: #eaeaea;
 }
 
-/* Responsive adjustments: on small screens, make the inline map taller */
 @media (max-width: 576px) {
   .map-container-small {
     aspect-ratio: 4 / 3;
@@ -61,16 +59,15 @@
   overflow-x: auto;
   gap: 1rem;
   padding: 1rem;
-  -webkit-overflow-scrolling: touch; /* smoother scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Each feature card container */
 .feature-card {
-  flex: 0 0 auto; /* Prevents cards from shrinking or growing */
-  width: 250px;    /* Adjust width as desired */
+  flex: 0 0 auto;
+  width: 250px;
 }
 
-/* Optional: Hide scrollbar on Webkit browsers */
 .feature-carousel::-webkit-scrollbar {
   display: none;
 }

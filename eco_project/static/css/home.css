@@ -128,7 +128,7 @@
 .feature-box.map-feature {
     display: flex;
     flex-direction: column;
-    padding: 0; /* box is the border */
+    padding: 0;
     border-radius: 0.5rem;
 }
 
