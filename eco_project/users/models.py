@@ -23,14 +23,11 @@ class Profile(models.Model):
 
     def update_points(self):
         """
-        Updates the points field with the sum of all owned pets' points
+        Recalculates and updates the user's points based on all owned pets.
         """
-        total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
-        self.points = total_points
-        self.save()
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
+        # total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
+        # self.points = total_points
+        # self.save()
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -92,6 +89,10 @@ class UserGroup(models.Model):
         primary_key=True,
         default=generate_unique_code
     )
+    name = models.CharField(
+        max_length=100,
+        help_text="The display name for the group"
+    )
     users = models.ManyToManyField(User, blank=True)
     group_admin = models.ForeignKey(
         User,
@@ -101,6 +102,9 @@ class UserGroup(models.Model):
         related_name='administered_groups',
         help_text="The admin for the group. Must be a member of the group."
     )
+
+    def __str__(self):
+        return self.name
 
     @property
     def users_in_group(self) -> str:

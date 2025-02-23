@@ -16,10 +16,9 @@ urlpatterns = [
     path("profile/<str:username>/", views.profile_view, name="user_profile"),
     path('api/update_location/', api.update_location, name='update_location'),
     path('groups/', views.groups_home, name='group_home'),
-    path('groups/<str:code>/', views.group_detail, name='group_detail'),
     path('api/groups/create/', api.create_group, name='create_group'),
     path('api/groups/<str:code>/delete/', api.delete_group, name='delete_group'),
-    path('api/groups/<str:code>/remove_user/', api.remove_user, name='remove_user'),
+    path('api/groups/<str:code>/remove_user/', api.remove_user_from_group, name='remove_user'),
     path('api/groups/join/', api.join_group, name='join_group'),
     path('api/groups/<str:code>/leave/', api.leave_group, name='leave_group'),
 ]

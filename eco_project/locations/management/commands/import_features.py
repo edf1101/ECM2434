@@ -4,9 +4,11 @@ This script imports features from a file into the database.
 from django.core.management.base import BaseCommand
 from django.core.files import File
 from django.core.files.storage import default_storage
-from locations.models import FeatureType, FeatureInstance, QuestionAnswer, QuestionFeature
+from locations.models import FeatureType, FeatureInstance, QuestionAnswer, QuestionFeature, LocationsAppSettings
 from random import choice
 import os
+from django.db.models.signals import post_save
+from locations.signals import update_feature_instance_qr_code
 
 
 class Command(BaseCommand):
@@ -23,10 +25,23 @@ class Command(BaseCommand):
         :param kwargs: None expected
         :return: None
         """
+        # Disconnect the QR code update signal to prevent it from running on every save.
+        post_save.disconnect(update_feature_instance_qr_code, sender=FeatureInstance)
+        post_save.disconnect(update_feature_instance_qr_code, sender=LocationsAppSettings)
 
         self.import_feature_types()
         self.import_feature_instances()
         self.import_feature_questions()
+
+        # Reconnect the signal so that it can trigger again
+        post_save.connect(update_feature_instance_qr_code, sender=FeatureInstance)
+
+        # Now trigger an update of QR codes for all FeatureInstances.
+        update_feature_instance_qr_code(
+            sender=LocationsAppSettings,
+            instance=LocationsAppSettings.get_instance()
+        )
+        post_save.connect(update_feature_instance_qr_code, sender=FeatureInstance)
 
     def import_feature_types(self) -> None:
         """

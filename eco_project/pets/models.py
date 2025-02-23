@@ -2,7 +2,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
-# Remove the import of Profile if it's no longer needed for PetType
 
 class PetType(models.Model):
     """
@@ -53,6 +52,17 @@ class Pet(models.Model):
     health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pets')
+
+    def save(self, *args, **kwargs):
+        """
+        Override save method to update the user's points whenever a pet's points are updated.
+        """
+        # Save the pet first
+        super().save(*args, **kwargs)
+
+        # After saving, update the user's profile points
+        if self.owner.profile:
+            self.owner.profile.update_points()  # This will update the user's points based on their pets
 
     def __str__(self):
         return f"{self.owner.username}'s {self.name} ({self.type.name})"

@@ -18,4 +18,5 @@ urlpatterns = [
     path('api/get_location/', api.get_current_location, name='get-location'),
     path('api/get_feature_instances/', api.get_feature_instances, name='get-feature-instances'),
     path('api/get_features_for_tile/', api.get_features_for_tiles, name='get-feature-for-tiles'),
+    path('api/validate_qr/',api.validate_qr,name='validate_qr'),
 ]

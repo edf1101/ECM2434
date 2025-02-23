@@ -1,0 +1,70 @@
+body {
+    background-color: #99D887;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    text-align: center;
+}
+.leaderboard-container {
+    background: rgba(30, 68, 33, 0.6);
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+th {
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.2);
+}
+td {
+    font-size: 16px;
+}
+tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.2);
+}
+.group-selector {
+    margin: 20px 0;
+}
+.group-selector select {
+    padding: 8px;
+    border-radius: 5px;
+    background: white;
+    color: #1E4421;
+    border: none;
+}
+.current-user {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.leaderboard-container {
+    background: rgba(30, 68, 33, 0.6);
+    max-width: 90%;
+    width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
