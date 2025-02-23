@@ -26,7 +26,7 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.profile.points }}</td>
+                    <td>{{ user.total_pet_points }}</td>
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
                             <span class="badge" title="{{ badge_instance.badge.hover_text }}"
@@ -75,7 +75,7 @@
                             <tr {% if user == current_user %}class="current-user"{% endif %}>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user.username }}</td>
-                                <td>{{ user.profile.points }}</td>
+                                <td>{{ user.total_pet_points }}</td>
                                 <td>
                                     {% for badge_instance in user.badgeinstance_set.all %}
                                         <span title="{{ badge_instance.badge.hover_text }}"
