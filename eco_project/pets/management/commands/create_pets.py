@@ -4,7 +4,7 @@ This module is a Django management command that creates some pet types in the da
 from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.conf import settings
-
+import os
 from pets.models import PetType
 
 
@@ -54,13 +54,23 @@ class Command(BaseCommand):
             }
         ]
 
+        # empty pet media directory beforehand to reduce clutter in there
+        # clear the media 3d_map_chunks folder
+        folder = os.path.join(settings.MEDIA_ROOT, 'pets/base_imgs')
+
+        # Check if the folder exists
+        if os.path.exists(folder):
+            # Remove everything in the folder
+            for file in os.listdir(folder):
+                os.remove(os.path.join(folder, file))
+
         for pet in pets:
             elephant = PetType(
                 name=pet["name"],
                 description=pet["description"],
             )
 
-            img = settings.MEDIA_ROOT.joinpath(f"pets/base_imgs/{pet['image']}")
+            img = os.path.join(os.getcwd(), "pets/management/commands/pet_images", pet["image"])
 
             with open(img, "rb") as f:
                 elephant.base_image = File(f, name=pet["image"])

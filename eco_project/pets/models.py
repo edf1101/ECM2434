@@ -2,7 +2,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 
-# Remove the import of Profile if it's no longer needed for PetType
 
 class PetType(models.Model):
     """
