@@ -1,17 +1,28 @@
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import *
+from .models import PetType, CosmeticType, Cosmetic, Pet
 from users.models import Profile
 
-class PetTypeTestCase(TestCase):
+"""
+Test Suite for the pets app.
+Ensures that each model, Pet and Cosmetic, is created with the appropriate attributes
+and that the methods of each model run correctly.
+"""
 
+class PetTypeTestCase(TestCase):
+    """
+    Set up for PetType model.
+    Ensures that the PetType and its appropraite attirbutes are created and its associated
+    methods run appropriately.
+    """
     def PetSetUp(self):
         """
-        Creation of PetType instance
+        Creation of PetType instance including name, description, and image.
         """
         PetType.objects.create( name = "Axolotl",
                                 description = "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-                                base_image = SimpleUploadedFile("axolotl.jpg", b"file content", content_type = "image/jpeg"), #dummy image (axolotl.jpg) needed
+                                base_image = SimpleUploadedFile("axolotl.jpg", b"file content",
+                                content_type = "image/jpeg"), #dummy image (axolotl.jpg) needed
         )
         axolotl = PetType.objects.get(name = "Axolotl")
         self.assertEqual(axolotl.name, "Axolotl")
@@ -20,7 +31,8 @@ class PetTypeTestCase(TestCase):
 
     def test_pet_str_method(self):
         """
-        Tests the __str__ method of PetType
+        Tests the __str__ method of PetType, ensuring that the correct name of the
+        PetType is returned as str.
         """
         PetType.objects.create( name = "Axolotl",
                                 description = "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
@@ -30,10 +42,15 @@ class PetTypeTestCase(TestCase):
         self.assertEqual(str(axolotl), "Axolotl")
 
 class CosmeticTypeTestCase(TestCase):
+    """
+    Test Suite for CosmeticType model, similar to PetType where its appropraite attirbutes
+    and methods are made and run.
+    """
 
     def cosmeticSetUp(self):
         """
-        Creation of cosmetic object for Pet
+        Creation of cosmetic object for Pet inscluding cosmetic type name and position on
+        pet image / canvas.
         """
         CosmeticType.objects.create(name = "Hat",
                                     x = 5,
@@ -57,7 +74,14 @@ class CosmeticTypeTestCase(TestCase):
 
 class CosmeticModelTestCase(TestCase):
 
+    """
+    Test for cosmetic object on pet model including accessory setup on pet object and str method.
+    """
+
     def setUp(self):
+        """
+        Set up with necessary data for PetType and CosmeticType objects.
+        """
         self.pet_type = PetType.objects.create( name = "Axolotl",
                                 description = "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
                                 base_image = SimpleUploadedFile("axolotl.jpg", b"file content", content_type = "image/jpeg"), #dummy image (axolotl.jpg) needed
@@ -66,9 +90,13 @@ class CosmeticModelTestCase(TestCase):
                                     x = 5,
                                     y = 20
         )
-    
+
     def test_cosmetic_setUp(self):
-        hat = Cosmetic.objects.create(name = "Hat", description = "Red stylish hat", type = self.cosmetic_type)
+        """
+        Creation of cosmetic object for Pet and addition to pet.
+        """
+        hat = Cosmetic.objects.create(name = "Hat",
+                                        description = "Red stylish hat", type = self.cosmetic_type)
         hat.fits.add(self.pet)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
@@ -77,21 +105,30 @@ class CosmeticModelTestCase(TestCase):
 
     def test_cosmetic_str_method(self):
         """
-        Tests the __str__ method of Cosmetic
+        Tests the __str__ method of accessory.
         """
         hat = Cosmetic.objects.create(name = "Hat", description = "Red stylish hat", type = self.cosmetic_type)
         self.assertEqual(str(hat), "Red stylish hat (Hat)")
 
 class PetModelTestCase(TestCase):
-
+    """
+    Tests for creation of pet model and its attributes including its type, owner (user)
+    and health and str method functionality.
+    """
     def setUp(self):
+        """
+        Necessary setup for test: pet and proile (user).
+        """
         self.profile = Profile.objects.create(name = "Test user")
         self.pet_type = PetType.objects.create( name = "Axolotl",
                                     description = "Critically endangered aquatic species native only to the freshwater of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
                                     base_image = SimpleUploadedFile("axolotl.jpg", b"file content", content_type = "image/jpeg")
         )
-    
-    def test_pet_setUp(self):
+
+    def test_pet_setup(self):
+        """
+        Test for setting up pet and its attributes.
+        """
         axolotl = Pet.objects.create(
             name = "Axo",
             type = self.pet_type,
@@ -101,12 +138,14 @@ class PetModelTestCase(TestCase):
         self.assertEqual(axolotl.type, self.pet_type)
         self.assertEqual(axolotl.owner, self.profile)
         self.assertEqual(axolotl.health, 100)
-    
+
     def test_pet_str_method(self):
+        """
+        Test for __str__ method of pet
+        """
         axolotl = Pet.objects.create(
             name = "Axo",
             type = self.pet_type,
             owner = self.profile
         )
         self.assertEqual(str(axolotl), "Test user's Axo (Axolotl)")
-
