@@ -1,3 +1,6 @@
+"""
+This script imports badge data from a file into the database.
+"""
 import os
 
 from django.core.management.base import BaseCommand
@@ -5,6 +8,9 @@ from users.models import (
     Badge,
 )  # Adjust the import if your Badge model is in a different module
 
+
+# pylint: disable=R0801
+# pylint: disable=R0401
 
 class Command(BaseCommand):
     """
@@ -28,7 +34,7 @@ class Command(BaseCommand):
         )
 
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding='utf-8') as file:
                 lines = file.readlines()
         except FileNotFoundError:  # Throw error if file not found
             self.stdout.write(self.style.ERROR(f"File not found: {file_path}"))
@@ -65,14 +71,8 @@ class Command(BaseCommand):
                 hover_text=hover_text,
                 colour=colour,
                 rarity=rarity)
-            try:
-                badge.save()
-                successes += 1
-            except Exception as e:
-                self.stdout.write(
-                    self.style.ERROR(f"Error saving badge '{title}': {e}")
-                )
-                continue
+            badge.save()
+            successes += 1
 
         self.stdout.write(
             self.style.SUCCESS(f"Saved {successes} badge(s) to the database")

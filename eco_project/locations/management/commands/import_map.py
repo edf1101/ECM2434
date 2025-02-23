@@ -26,8 +26,8 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
     path_to_console_out: str = os.path.join(
         os.getcwd(), "locations/management/commands/console_out.txt"
     )
-    console_read = open(path_to_console_out, "r")
-    console_lines = console_read.readlines()
+    with open(path_to_console_out, "r", encoding="utf-8") as console_read:
+        console_lines = console_read.readlines()
 
     data: dict[str, dict[str, Any]] = {}  # dict to store the data
 
@@ -44,11 +44,11 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
 
     for line in console_lines:
         if (
-            "{'center'" in line
+                "{'center'" in line
         ):  # if the line contains the center coordinates of the chunk
             d = line.split("(")[1:]
-            for i in range(len(d)):
-                d[i] = d[i].split(")")[0]
+            for i, item in enumerate(d):
+                d[i] = item.split(")")[0]
 
             center = d[0].split(", ")
             bottom_left = d[1].split(", ")
@@ -70,12 +70,12 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
             )
 
         if (
-            "Tile center in" in line
+                "Tile center in" in line
         ):  # if the line contains the blender coordinates of the chunk
             t = line.split("((")[1:]
 
-            for i in range(len(t)):
-                t[i] = t[i].split("))")[0]
+            for i, item in enumerate(t):
+                t[i] = item.split(")")[0]
 
             bottom_left = t[0].split(", ")
             top_right = t[1].split(", ")

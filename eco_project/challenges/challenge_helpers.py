@@ -42,14 +42,14 @@ def streak_to_points(streak_count: int) -> int:
 
 
 def user_in_range_of_feature(
-        user: User, feature_inst: FeatureInstance, dist: int = 100
+        user: User, feature_inst: FeatureInstance, range_dist: int = 100
 ) -> bool:
     """
     Checks if a user is within the range of a feature.
 
     :param user: The user to check.
     :param feature_inst: The feature to check.
-    :param dist: The range to check in meters.
+    :param range_dist: The range to check in meters.
     :return: True if the user is in range, False otherwise.
     """
 
@@ -66,7 +66,7 @@ def user_in_range_of_feature(
 
     # Calculate the distance between the user and the feature
     dist = haversine(feature_lat, feature_lon, user_lat, user_lon)
-    return dist <= dist
+    return dist <= range_dist
 
 
 def user_already_reached_in_window(
@@ -81,7 +81,7 @@ def user_already_reached_in_window(
     :param update: If True, will add a record if the user has not already reached the feature.
     :return: True if the user has reached the feature in the current window, False otherwise.
     """
-    #pylint: disable=import-outside-toplevel
+    # pylint: disable=import-outside-toplevel
     from .models import UserFeatureReach, ChallengeSettings  # avoid circular import
 
     # Get the current challenge settings for the interval
@@ -127,7 +127,7 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
         return
 
     # needed to avoid circular import
-    #pylint: disable=import-outside-toplevel
+    # pylint: disable=import-outside-toplevel
     from .models import ChallengeSettings
 
     points_for_feature = ChallengeSettings.get_solo().reached_feature_points

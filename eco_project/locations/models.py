@@ -50,7 +50,8 @@ class FeatureType(models.Model):
 
 class FeatureInstance(models.Model):
     """
-    A model to store a feature type that is specific to a location. Ie a recycling bin outside the forum.
+    A model to store a feature type that is specific to a location. Ie a
+     recycling bin outside the forum.
     """
 
     slug = models.SlugField(
@@ -71,6 +72,7 @@ class FeatureInstance(models.Model):
         blank=True,
         null=True)
 
+    #pylint: disable=unused-argument
     def update_qr_code(self, skip_signal=False) -> None:
         """
         Updates the QR code for this feature instance.
@@ -256,7 +258,7 @@ class LocationsAppSettings(models.Model):
         :param kwargs: Likely None.
         :return: None
         """
-        pass  # Prevent deletion
+        return None  # Prevent deletion
 
     @classmethod
     def get_instance(cls) -> Self:
@@ -292,7 +294,8 @@ class FeatureInstanceTileMap(models.Model):
 
         :return: The name of the feature and the original file name of the map chunk.
         """
-        return f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "{self.map_chunk.file_original_name}"'
+        return (f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "'
+                f'{self.map_chunk.file_original_name}"')
 
 
 class QuestionFeature(models.Model):
@@ -354,6 +357,9 @@ class QuestionFeature(models.Model):
 
 
 class QuestionAnswer(models.Model):
+    """
+    This model stores the possible answers to a question
+    """
     question = models.ForeignKey(QuestionFeature, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
 

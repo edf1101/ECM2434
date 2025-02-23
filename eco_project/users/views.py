@@ -61,17 +61,16 @@ def login_view(request) -> HttpResponse:
         if form.is_valid():
             login(request, form.get_user())
             return redirect(next_url or homepage_url)
-        else:
-            # If the login was tried from the homepage go to the homepage
-            if next_url == homepage_url:
-                return render(request, "home.html", {"form": form})
-            else:
-                return render(request, "users/login.html",
-                              {"form": form, "next": next_url})
-    else:
-        form = AuthenticationForm(request)
+
+        # If the login was tried from the homepage go to the homepage
+        if next_url == homepage_url:
+            return render(request, "home.html", {"form": form})
         return render(request, "users/login.html",
-                      {"form": form, "next": next_url})
+                          {"form": form, "next": next_url})
+
+    form = AuthenticationForm(request)
+    return render(request, "users/login.html",
+                  {"form": form, "next": next_url})
 
 
 def logout_view(request) -> HttpResponse:

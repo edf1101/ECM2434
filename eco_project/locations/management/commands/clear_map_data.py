@@ -47,4 +47,4 @@ class Command(BaseCommand):
                 os.remove(os.path.join(folder, file))
 
         Map3DChunk.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS(f"Cleared the map data"))
+        self.stdout.write(self.style.SUCCESS("Cleared the map data"))

@@ -2,11 +2,13 @@
 This file deals with displaying user app related models in the admin panel.
 """
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
 
 from .forms import BadgeAdminForm, UserGroupForm
 from .models import Profile, Badge, BadgeInstance, UserGroup
+
+User = get_user_model()
 
 
 class BadgeInstanceInline(admin.TabularInline):

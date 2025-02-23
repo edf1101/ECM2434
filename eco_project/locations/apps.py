@@ -18,4 +18,5 @@ class LocationsConfig(AppConfig):
 
         :return: None
         """
+        # pylint: disable=unused-import, import-outside-toplevel
         import locations.signals

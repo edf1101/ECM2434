@@ -3,9 +3,11 @@ This module contains the models needed for the users app
 """
 from random import choices
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+User = get_user_model()
 
 
 class Profile(models.Model):
@@ -76,7 +78,12 @@ class BadgeInstance(models.Model):
         unique_together = ("user", "badge")
 
 
-def generate_unique_code():
+def generate_unique_code() -> str:
+    """
+    Generate a unique 6-character code for a UserGroup
+
+    @return: a unique 6-character code
+    """
     length = 6
     while True:
         # Generate a random 6-letter uppercase string
@@ -109,9 +116,6 @@ class UserGroup(models.Model):
         help_text="The admin for the group. Must be a member of the group.",
     )
 
-    def __str__(self):
-        return self.name
-
     @property
     def users_in_group(self) -> str:
         """
@@ -143,4 +147,4 @@ class UserGroup(models.Model):
 
         :return: a string representation of the group
         """
-        return f"Group {self.code}"
+        return f"{self.name} ({self.code})"

@@ -104,6 +104,8 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
     # create a description for this admin page
     readonly_fields = ("desc",)  # Add the method name here
 
+    # is needed to avoid pylint error which django forces
+    # pylint: disable=W0613
     def desc(self, obj=None) -> str:
         """
         Returns a description of the page.

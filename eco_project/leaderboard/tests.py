@@ -14,7 +14,8 @@ class LeaderboardViewTest(TestCase):
     """
     Test suite for the leaderboard view.
     Ensures that the leaderboard page functions correctly
-    Tests included are: checking the behavior when the user is not logged in, when a group is selected,
+    Tests included are: checking the behavior when the user is not logged in,
+    when a group is selected,
     and when no group is selected.
     """
 

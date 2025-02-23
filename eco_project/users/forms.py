@@ -4,12 +4,13 @@ This module contains the forms for the users app.
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.forms.widgets import TextInput
 from pets.models import Pet, PetType
 
 from .models import Profile, Badge, UserGroup
+
+User = get_user_model()
 
 
 class UserCreationFormWithNames(UserCreationForm):
@@ -73,6 +74,9 @@ class UserCreationFormWithNames(UserCreationForm):
 
 
 class PetCreationForm(forms.ModelForm):
+    """
+    This form is used to register a new pet.
+    """
     name = forms.CharField(
         max_length=30,
         required=True,
@@ -255,7 +259,7 @@ class UserGroupForm(forms.ModelForm):
         users = cleaned_data.get("users")
         if group_admin and users:  # check of group_admin and users are not None
             if (
-                group_admin not in users
+                    group_admin not in users
             ):  # check if group_admin is among the selected users
                 raise forms.ValidationError(
                     "Group admin must be a member of the group."

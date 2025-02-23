@@ -8,9 +8,7 @@ from django.db import models
 from django.utils import timezone
 from locations.models import FeatureInstance
 
-from .challenge_helpers import (
-    get_current_window,
-)  # make sure this helper works as expected
+from .challenge_helpers import get_current_window # make sure this helper works as expected
 
 User = get_user_model()
 

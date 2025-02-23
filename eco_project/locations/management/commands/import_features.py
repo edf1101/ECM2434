@@ -2,6 +2,7 @@
 This script imports features from a file into the database.
 """
 import os
+import sys
 from random import choice
 
 from django.core.files import File
@@ -65,15 +66,15 @@ class Command(BaseCommand):
         """
 
         # read lines from the file
-        dir = os.path.join(
+        folder = os.path.join(
             os.getcwd(),
             "locations/management/commands/feature_data")
-        image_dir = os.path.join(dir, "images")
-        mesh_dir = os.path.join(dir, "meshes")
-        file_dir = os.path.join(dir, "feature_types.txt")
+        image_dir = os.path.join(folder, "images")
+        mesh_dir = os.path.join(folder, "meshes")
+        file_dir = os.path.join(folder, "feature_types.txt")
 
         lines = []
-        with open(file_dir, "r") as file:
+        with open(file_dir, "r", encoding='utf-8') as file:
             lines = file.readlines()
             lines = [line.strip() for line in lines]
             lines = [line for line in lines if (line != "" and line[0] != "#")]
@@ -95,16 +96,16 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.ERROR(f"Image {image_path} does not exist")
                 )
-                exit()
+                sys.exit()
             img_extension = image_path.split(".")[-1]
             # check mesh exists
             mesh_path = os.path.join(mesh_dir, mesh_path)
             if using_mesh and (
-                not os.path.exists(mesh_path) or not os.path.isfile(image_path)
+                    not os.path.exists(mesh_path) or not os.path.isfile(image_path)
             ):
                 self.stdout.write(
                     self.style.ERROR(f"Mesh {mesh_path} does not exist"))
-                exit()
+                sys.exit()
 
             # create some random letters for end of the filename to avoid
             # duplicates
@@ -156,7 +157,7 @@ class Command(BaseCommand):
 
         # Read and filter lines from file
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding='utf-8') as file:
                 lines = file.readlines()
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))
@@ -217,7 +218,7 @@ class Command(BaseCommand):
             if img_filename:
                 full_img_path = os.path.join(image_dir, img_filename)
                 if not os.path.exists(full_img_path) or not os.path.isfile(
-                    full_img_path
+                        full_img_path
                 ):
                     self.stdout.write(
                         self.style.ERROR(
@@ -269,7 +270,7 @@ class Command(BaseCommand):
 
         # Read the file
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding='utf-8') as file:
                 lines = file.readlines()
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))

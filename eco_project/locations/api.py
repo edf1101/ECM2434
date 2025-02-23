@@ -1,3 +1,6 @@
+"""
+This file contains the API endpoints for the Locations app
+"""
 import json
 
 from django.http import JsonResponse
@@ -53,9 +56,11 @@ def nearby_tiles(request) -> Response:
 def get_features_for_tiles(request) -> Response:
     """
     Returns a dictionary where each key is a tile file URL and each value is a list of
-    features on that tile. Each feature is represented by its latitude, longitude, and feature colour.
+    features on that tile. Each feature is represented by its latitude, longitude,
+    and feature colour. Expects a GET parameter "tiles" with a comma-separated list of tile IDs.
 
-    Expects a GET parameter "tiles" with a comma-separated list of tile IDs.
+    @param request: The GET request object.
+    @return: The response containing the dictionary of features.
     """
     tiles_param = request.GET.get("tiles")
     if not tiles_param:
@@ -148,10 +153,11 @@ def api_get_map_data(request) -> Response:
 @api_view(["GET"])
 def get_current_location(request) -> Response:
     """
-    This function returns a random location for the user that is not within 300m of the map's border.
+    This function returns a random location for the user that is not within 300m of
+     the map's border.
 
-    :param request: The GET request object. No data to read here.
-    :return: The current location of the user as a JSON response.
+    @param request: The GET request object. No data to read here.
+    @return The current location of the user as a JSON response.
     """
 
     # get default lat and lon
@@ -217,7 +223,7 @@ def validate_qr(request):
 
     # Find if any featureInstance has this slug and get it
     try:
-        feature_instance = FeatureInstance.objects.get(slug=strip_qr)
+        FeatureInstance.objects.get(slug=strip_qr)
     except FeatureInstance.DoesNotExist:  # invalid slug, don't do anything
         return JsonResponse({"error": "INVALID_QR"}, status=400)
 

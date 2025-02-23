@@ -1,8 +1,17 @@
-from django.contrib.auth.models import User
+"""
+This command updates all user profile points based on their pets.
+"""
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+
+User = get_user_model()
 
 
 class Command(BaseCommand):
+    """
+    This class is a Django management command that updates all user profile points
+    based on their pets
+    """
     help = "Updates all user profile points based on their pets"
 
     def handle(self, *args, **kwargs):

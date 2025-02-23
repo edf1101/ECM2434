@@ -3,13 +3,15 @@ This module contains the API views for the users app.
 """
 import json
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 
 from .models import UserGroup
+
+User = get_user_model()
 
 
 @require_POST
@@ -55,6 +57,12 @@ def update_location(request) -> JsonResponse:
 @login_required
 @require_POST
 def create_group(request) -> JsonResponse:
+    """
+    API endpoint to create a new group.
+
+    @param request: the request object
+    @return: the JSON response
+    """
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:

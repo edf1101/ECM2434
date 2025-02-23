@@ -1,10 +1,12 @@
 """
 This module contains tests for the users app.
 """
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from .models import Profile, Badge, BadgeInstance, UserGroup, generate_unique_code
+
+User = get_user_model()
 
 
 class ProfileModelTests(TestCase):

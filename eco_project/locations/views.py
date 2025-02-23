@@ -60,9 +60,9 @@ def individual_feature_page(request, slug) -> HttpResponse:
             request,
             "locations/feature_instance_with_q.html",
             context)
-    else:
-        context["question"] = None
-        return render(request, "locations/feature_instance.html", context)
+
+    context["question"] = None
+    return render(request, "locations/feature_instance.html", context)
 
 
 def generic_feature_page(request, id_arg) -> HttpResponse:

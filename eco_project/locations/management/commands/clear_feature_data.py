@@ -28,7 +28,7 @@ class Command(BaseCommand):
         self.clear_feature_types()
         self.clear_feature_instances()
         self.clear_question_data()
-        self.stdout.write(self.style.SUCCESS(f"Cleared the Feature data"))
+        self.stdout.write(self.style.SUCCESS("Cleared the Feature data"))
 
     def clear_feature_types(self) -> None:
         """

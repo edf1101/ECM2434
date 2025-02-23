@@ -21,4 +21,4 @@ class Command(BaseCommand):
         :return: None
         """
         Badge.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS(f"Cleared the Badge data"))
+        self.stdout.write(self.style.SUCCESS("Cleared the Badge data"))
