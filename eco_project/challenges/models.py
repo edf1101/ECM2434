@@ -1,30 +1,48 @@
 """
 Models for the Challenges app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.db import models
 from datetime import timedelta
-from django.contrib.auth.models import User
+
+from django.contrib.auth import get_user_model
+from django.db import models
 from django.utils import timezone
-from .challenge_helpers import get_current_window  # make sure this helper works as expected
 from locations.models import FeatureInstance
+
+from .challenge_helpers import get_current_window # make sure this helper works as expected
+
+User = get_user_model()
+
 
 class ChallengeSettings(models.Model):
     """
     Singleton model to store the Challenge app settings
     """
 
-    interval = models.DurationField(default=timedelta(days=1))  # adjustable interval
+    interval = models.DurationField(
+        default=timedelta(
+            days=1))  # The interval in which the user must check in to maintain their streak
     question_feature_points: models.IntegerField = models.IntegerField(
-        default=2)  # points per correct answer
+        default=2
+    )  # points per correct answer
     reached_feature_points: models.IntegerField = models.IntegerField(
-        default=1)  # points per reached normal feature
+        default=1
+    )  # points per reached normal feature
 
     def __str__(self):
-        return f"Challenge Settings"
+        """
+        Override the string representation of this model.
+        """
+        return "Challenge Settings"
 
     def save(self, *args, **kwargs):
         """
         Override the save method to ensure only one instance of this model exists.
+
+        @param args: Additional arguments.
+        @param kwargs: Additional keyword
+        @return: None
         """
         self.pk = 1
         super().save(*args, **kwargs)
@@ -33,15 +51,20 @@ class ChallengeSettings(models.Model):
     def get_solo(cls):
         """
         Returns the single StreakSettings instance, creating it if there isnt one already.
+
+        @return: The single StreakSettings instance.
         """
 
-        obj, created = cls.objects.get_or_create(pk=1, defaults={'interval': timedelta(days=1)})
+        obj, _ = cls.objects.get_or_create(
+            pk=1, defaults={"interval": timedelta(days=1)}
+        )
         return obj
 
     class Meta:
         """
         Override the verbose name for this model.
         """
+
         verbose_name_plural = "Challenge Settings"
 
 
@@ -62,7 +85,7 @@ class Streak(models.Model):
         If the last check-in window is not the current or immediately previous one,
         the streak is considered broken.
 
-        @returns int: The effective streak count.
+        @return int: The effective streak count.
         """
         settings_obj = ChallengeSettings.get_solo()
         interval = settings_obj.interval
@@ -78,6 +101,8 @@ class Streak(models.Model):
     def running_out(self) -> bool:
         """
         Returns True if the user's streak is about to be broken.
+
+        @return: True if the streak is about to be broken, False otherwise.
         """
         if self.effective_streak == 0:  # no streak to run out of
             return False
@@ -89,14 +114,30 @@ class Streak(models.Model):
         return self.last_window != current_window_start
 
     def __str__(self):
+        """
+        Override the string representation of this model.
+
+        @return: The string representation of this model.
+        """
         return f"{self.user.username} - Streak: {self.effective_streak}"
 
 
 class UserFeatureReach(models.Model):
+    """
+    This model holds the unique relationship of features that a user has reached.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    feature_instance = models.ForeignKey(FeatureInstance, on_delete=models.CASCADE)
+    feature_instance = models.ForeignKey(
+        FeatureInstance, on_delete=models.CASCADE)
     reached_at = models.DateTimeField(auto_now_add=True)
     extra = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
+        """
+        Override the string representation of this model.
+
+        @return: The string representation of this model.
+        """
+        return (
+            f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
+        )
