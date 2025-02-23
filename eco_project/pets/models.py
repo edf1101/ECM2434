@@ -79,15 +79,13 @@ class Pet(models.Model):
         PetType, on_delete=models.PROTECT
     )  # Reference to global PetType
 
-    points = models.IntegerField(default=0)
-    health = models.IntegerField(
-        default=100, validators=[MinValueValidator(0), MaxValueValidator(100)]
-    )
+    health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="pets")
+    points = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs) -> None:
         """

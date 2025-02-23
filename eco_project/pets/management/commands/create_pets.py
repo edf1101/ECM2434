@@ -4,10 +4,10 @@ This module is a Django management command that creates some pet types in the da
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
-
 from django.conf import settings
 from django.core.files import File
 from django.core.management.base import BaseCommand
+from django.db.utils import IntegrityError
 from pets.models import PetType
 
 
@@ -59,18 +59,17 @@ class Command(BaseCommand):
                  },
                 ]
 
-        # empty pet media directory beforehand to reduce clutter in there
-        # clear the media 3d_map_chunks folder
-        folder = os.path.join(settings.MEDIA_ROOT, "pets/base_imgs")
+        # Empty pet media directory beforehand to reduce clutter in there
+        media_folder = os.path.join(settings.MEDIA_ROOT, "pets/base_imgs")
 
         # Check if the folder exists
-        if os.path.exists(folder):
+        if os.path.exists(media_folder):
             # Remove everything in the folder
-            for file in os.listdir(folder):
-                os.remove(os.path.join(folder, file))
+            for file in os.listdir(media_folder):
+                os.remove(os.path.join(media_folder, file))
 
         for pet in pets:
-            elephant = PetType(
+            pet_type = PetType(
                 name=pet["name"],
                 description=pet["description"],
             )
@@ -81,7 +80,10 @@ class Command(BaseCommand):
                 pet["image"])
 
             with open(img, "rb") as f:
-                elephant.base_image = File(f, name=pet["image"])
-                elephant.save()
+                pet_type.base_image = File(f, name=pet["image"])
 
-        self.stdout.write(self.style.SUCCESS("Created pets"))
+                try:
+                    pet_type.save()
+                    self.stderr.write(self.style.SUCCESS(f"Created {pet["name"]}"))
+                except IntegrityError as e:
+                    self.stderr.write(self.style.WARNING(f"Could not create {pet["name"]}, skipping it: {str(e)}"))
