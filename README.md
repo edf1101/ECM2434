@@ -1,4 +1,4 @@
-# ECM2434
+# Ecopet - ECM2434
 Sustainability Group Software Engineering Project 
 
 Group Members
