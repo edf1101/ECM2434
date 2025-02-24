@@ -3,22 +3,23 @@ from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from .models import FeatureInstance, FeatureType, QuestionFeature, Map3DChunk, LocationsAppSettings, \
-    FeatureInstanceTileMap
+from .models import FeatureInstance, FeatureType, QuestionAnswer, QuestionFeature, Map3DChunk, \
+LocationsAppSettings, FeatureInstanceTileMap
 from challenges.models import ChallengeSettings
 
 
 class ViewsTestCase(TestCase):
     """
     Test suite for the views of the locations app.
-    Ensures that each user request returns the correct url (response) and template, including when the page
-    does or does not have a question and redirected when the user is not logged in.
+    Ensures that each user request returns the correct url (response) and template,
+    including when the page does or does not have a question and redirected 
+    when the user is not logged in.
     """
 
     def setUp(self):
         """
-        Set up with necessary data for following view tests including feature type, instance, question,
-        and user (user name and password)
+        Set up with necessary data for following view tests including feature type, instance,
+        question, and user (user name and password)
         """
         self.factory = RequestFactory()
         self.feature_type = FeatureType.objects.create(
@@ -26,7 +27,7 @@ class ViewsTestCase(TestCase):
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                           content_type="image/jpeg")
+                                            content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -42,12 +43,14 @@ class ViewsTestCase(TestCase):
         ChallengeSettings.objects.create()
 
     def test_base_locations(self):
+        # Test if returns homepage for the locations app
         response = self.client.get(reverse("locations:base"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "locations/location_home.html")
         self.assertIn("feature_type_list", response.context)
 
     def test_test_map(self):
+        # Test if returns test map for the locations app
         response = self.client.get(reverse("locations:map"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "locations/test_map.html")
@@ -77,6 +80,7 @@ class ViewsTestCase(TestCase):
 
 
     def test_individual_feature_page_user_authenticated(self):
+        # Test if the user is directed to a with a specific feature instance page
         self.client.login(username="testuser", password="testpass")
         self.feature_instance.questionfeature_set.all().delete()
         response = self.client.get(
@@ -87,6 +91,7 @@ class ViewsTestCase(TestCase):
         self.assertIsNone(response.context.get("question"))
 
     def test_generic_feature_page(self):
+        # Test if the page displays a generic feature type
         response = self.client.get(
             reverse("locations:generic-feature-list"))
         self.assertEqual(response.status_code, 200)
@@ -94,6 +99,7 @@ class ViewsTestCase(TestCase):
         self.assertIn("feature_type_list", response.context)
 
     def test_generic_feature_list(self):
+        # Test if it returns a page with the list of all the generic features types with hyperlinks
         response = self.client.get(reverse("locations:generic-feature-list"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "locations/feature_type_list.html")
@@ -103,10 +109,12 @@ class ViewsTestCase(TestCase):
 class SignalsTests(TestCase):
     """
     Test suite for the signals of the locations app.
-    Ensures that the signals update the min max position, tile feature map, and feature instance qr code correctly.
+    Ensures that the signals update the min max position, 
+    tile feature map, and feature instance qr code correctly.
     """
 
     def setUp(self):
+        #
         LocationsAppSettings.get_instance()
         self.feature_type = FeatureType.objects.create(
             name="Test Feature Type",
@@ -120,9 +128,7 @@ class SignalsTests(TestCase):
         )
 
     def test_update_min_max_post_save(self):
-        """
-        Test the update min max position signal
-        """
+        #Test the update min max position signal
         chunk = Map3DChunk.objects.create(
             bottom_left_lat=0.0,
             top_right_lat=2.0,
@@ -144,9 +150,7 @@ class SignalsTests(TestCase):
         self.assertEqual(FeatureInstanceTileMap.objects.count(), 1)
 
     def test_update_tile_feature_map_post_save_map_chunk(self):
-        """
-        Test the update tile feature map post save map chunk signal
-        """
+        #Test the update tile feature map post save map chunk signal
         chunk = Map3DChunk.objects.create(
             bottom_left_lat=0.0,
             top_right_lat=2.0,
@@ -168,9 +172,7 @@ class SignalsTests(TestCase):
         self.assertEqual(FeatureInstanceTileMap.objects.count(), 1)
 
     def test_update_feature_instance_qr_code_post_save(self):
-        """
-        Test the update feature instance qr code post save signal
-        """
+        #Test the update feature instance qr code post save signal
         self.feature_instance.update_qr_code()
         self.assertEqual(FeatureInstanceTileMap.objects.count(), 0)
         self.feature_instance.latitude = 3.0
@@ -182,14 +184,23 @@ class SignalsTests(TestCase):
 
 
 class ModelsTests(TestCase):
+    """
+    Test suite for models of location app.
+    Ensures that each model can store the appropriate information and can return correct boolean
+    and return the correct string representation.
+    """
 
     def setUp(self):
+        """
+        Necessary set up for the following tests including creation of feature type, 
+        instance, and map
+        """
         self.feature_type = FeatureType.objects.create(
             name="Test Feature Type",
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                           content_type="image/jpeg")
+                                            content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -217,9 +228,77 @@ class ModelsTests(TestCase):
         )
         LocationsAppSettings.get_instance()
 
-    def test_feature_instance_str(self):
-        self.assertEqual(str(self.feature_instance),
-                         f'{self.feature_type.name} "test-feature-instance"')
-
     def test_feature_type_str(self):
+        # Test the str method of feature type
         self.assertEqual(str(self.feature_type), self.feature_type.name)
+
+    def test_feature_instance_has_question(self):
+        # Test if the feature instance has a question and return appropriate boolean
+        question = QuestionFeature.objects.create(
+            feature=self.feature_instance,
+            question_text="Test question",
+        )
+        self.assertTrue(self.feature_instance.has_question())
+
+    def test_feature_instance_has_challenge(self):
+        # Test if the feature instance has a challenge and return appropriate boolean
+        self.assertFalse(self.feature_instance.has_challenge())
+        ChallengeSettings.objects.create()
+        self.assertTrue(self.feature_instance.has_challenge())
+
+    def test_feature_instance_str(self):
+        # Test the str method of feature instance
+        self.assertEqual(str(self.feature_instance),
+                        f'{self.feature_type.name} "test-feature-instance"')
+
+    def test_map_chunk_str(self):
+        # Test the str method of map chunk
+        self.assertEqual(str(self.map_chunk), self.map_chunk.file_original_name)
+
+    def test_locations_app_settings_get_instance(self):
+        # Test the get instance method of locations app settings
+        settings = LocationsAppSettings.get_instance()
+        self.assertEqual(settings, LocationsAppSettings.objects.first())
+
+    def test_locations_app_settings_str(self):
+        # Test the str method of locations app settings
+        settings = LocationsAppSettings.get_instance()
+        self.assertEqual(str(settings), 'Locations App Settings')
+
+    def test_tile_map_str(self):
+        # Test the str method of tile map
+        tile_map = FeatureInstanceTileMap.objects.create(
+            feature_instance=self.feature_instance,
+            map_chunk=self.map_chunk,
+            x=1,
+            y=1,
+            z=1,
+        )
+        expected_str = f'{self.feature_instance.slug} at (1, 1, 1)'
+        self.assertEqual(str(tile_map), expected_str)
+
+    def test_question_feature_str(self):
+        # Test the str method of question feature
+        question = QuestionFeature.objects.create(
+            question_text="Test question",
+            feature=self.feature_instance,
+        )
+        self.assertEqual(str(question), f'{self.feature_instance.slug} question')
+
+    def test_question_feature_is_valid_answer(self):
+        # Test if the answer is valid for a given sample question and return correct boolean
+        question = QuestionFeature.objects.create(
+            feature=self.feature_instance,
+            question_text="Test question",
+            answer="Test answer",
+        )
+        self.assertTrue(question.is_valid_answer("Test answer"))
+        self.assertFalse(question.is_valid_answer("Wrong answer"))
+
+    def test_question_answer_str(self):
+        # Test the str method of question answer
+        answer = QuestionAnswer.objects.create(
+            answer="Test answer",
+            correct=True,
+        )
+        self.assertEqual(str(answer), "Test answer")
