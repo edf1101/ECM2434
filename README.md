@@ -11,7 +11,7 @@ Group Members
 - Haruka Kimura
 
 # Project Overview 
-EcoPet was made to raise awareness of sustainability challenges on campus aswell as encouraging eco freinldy behaviour by engaging with an endangered pet 
+EcoPet was made to raise awareness of sustainability challenges on campus aswell as encouraging eco friendly behaviour by engaging with an endangered pet 
 
 # Details 
 Users can register a profile on Ecopet and thier account detials are stored with compliance to GDPR regulations.
