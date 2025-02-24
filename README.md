@@ -43,6 +43,7 @@ python manage.py runserver
 
 To run pylint on the project:
 ```shell
+cd ECM2434-main
 pylint .
 ```
 
