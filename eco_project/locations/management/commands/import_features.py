@@ -117,7 +117,6 @@ class Command(BaseCommand):
                 [choice("1234567890ABCDEF") for i in range(5)])
 
             # create image file
-            img_file = None
             mesh_file = None
 
             with open(image_path, "rb") as f:

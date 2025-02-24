@@ -2,9 +2,7 @@
 This file contains the API endpoints for the challenges app.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from datetime import timedelta
 
-from django.conf import settings
 from django.http import JsonResponse
 from django.utils import timezone
 from locations.chunk_handling import haversine
@@ -17,6 +15,7 @@ from .challenge_helpers import (
     streak_to_points,
     user_in_range_of_feature,
     user_already_reached_in_window,
+    get_interval
 )
 
 from .models import Streak, ChallengeSettings
@@ -39,13 +38,7 @@ def collect_streak(request) -> Response:
     streak, _ = Streak.objects.get_or_create(user=user)
     now_time = timezone.now()
 
-    # Determine the streak interval:
-    # Try to get it from the DB; if not, fallback to a default from settings.
-    try:
-        settings_obj = ChallengeSettings.objects.first()
-        interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except ChallengeSettings.DoesNotExist:
-        interval = getattr(settings, "STREAK_INTERVAL", timedelta(days=1))
+    interval = get_interval()
 
     current_window_start, _ = get_current_window(now_time, interval)
     previous_window_start = current_window_start - interval

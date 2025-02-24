@@ -15,6 +15,22 @@ from locations.models import FeatureInstance
 User = get_user_model()
 
 
+def get_interval() -> timedelta:
+    """
+    Get the interval for the streaks.
+
+    @return: The interval for the streaks.
+    """
+    # pylint: disable=import-outside-toplevel
+    from .models import ChallengeSettings
+    try:
+        settings_obj = ChallengeSettings.objects.first()
+        interval = settings_obj.interval if settings_obj else timedelta(days=1)
+    except ChallengeSettings.DoesNotExist:
+        interval = timedelta(days=1)
+    return interval
+
+
 def get_current_window(now_time, interval):
     """
     Buckets the current time into fixed windows.
