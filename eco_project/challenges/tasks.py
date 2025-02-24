@@ -3,12 +3,11 @@ This module contains tasks that are called by the scheduler.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from datetime import timedelta
 
 from django.utils import timezone
 
-from .models import Streak, get_current_window, ChallengeSettings, UserFeatureReach
-
+from .models import Streak, get_current_window, UserFeatureReach
+from .challenge_helpers import get_interval
 
 def update_challenges() -> None:
     """
@@ -29,12 +28,7 @@ def reset_missed_streaks() -> None:
     """
     now_time = timezone.now()
 
-    # get the interval
-    try:
-        settings_obj = ChallengeSettings.objects.first()
-        interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except ChallengeSettings.DoesNotExist:
-        interval = timedelta(days=1)
+    interval = get_interval()
 
     # get current window
     current_window_start, _ = get_current_window(now_time, interval)
@@ -57,13 +51,8 @@ def cleanup_user_feature_reaches() -> None:
     @return: None
     """
     now_time = timezone.now()
-    try:
-        settings_obj = ChallengeSettings.objects.first()
-        interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except ChallengeSettings.DoesNotExist:
-        interval = timedelta(days=1)
 
-    current_window_start, _ = get_current_window(now_time, interval)
+    current_window_start, _ = get_current_window(now_time, get_interval())
 
     # Delete all records where reached_at is before the start of the current
     UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()
