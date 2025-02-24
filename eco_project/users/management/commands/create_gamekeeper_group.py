@@ -1,13 +1,15 @@
 """
-This module is used to run a command 'create roles' that sets up a gamekeeper and an admin
+This module is used to run a command 'create roles' that sets up a gamekeeper group
 """
-import sys
 
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import Group, Permission, User
+from django.contrib.auth.models import Group, Permission
 
 
 class Command(BaseCommand):
+    """
+    This command creates the gamekeepers group
+    """
     help = 'Creates the "gamekeepers" user group with predefined permissions'
 
     def handle(self, *args, **kwargs) -> None:
@@ -17,7 +19,6 @@ class Command(BaseCommand):
         @return: None
         """
         self.create_gamekeepers_role()
-        self.create_users()
 
     def create_gamekeepers_role(self) -> None:
         """
@@ -134,7 +135,8 @@ class Command(BaseCommand):
                 group.permissions.add(permission)
             except Permission.DoesNotExist:
                 self.stdout.write(self.style.ERROR(
-                    f'Permission "{codename}" for model "{model_name}" in app "{app_label}" not found.'
+                    f'Permission "{codename}" for model "{model_name}" '
+                    f'in app "{app_label}" not found.'
                 ))
         group.save()
         # Check that the number of permissions is correct
@@ -143,98 +145,10 @@ class Command(BaseCommand):
 
         if total_permissions == expected_permissions:
             self.stdout.write(self.style.SUCCESS(
-                f'Successfully created group Gamekeepers".'
+                'Successfully created group Gamekeepers".'
             ))
         else:
             self.stdout.write(self.style.ERROR(
-                f'Error: Group "Gamekeepers" has {total_permissions} permissions, but {expected_permissions} were expected.'
+                f'Error: Group "Gamekeepers" has {total_permissions} permissions, but '
+                f'{expected_permissions} were expected.'
             ))
-
-    def create_users(self) -> None:
-        """
-        Try to create demo admin and gamekeeper users
-        """
-        from pets.models import Pet, PetType  # Import your Pet models here if not already imported
-
-        # Try to get the 'gamekeepers' group
-        try:
-            gamekeepers_group = Group.objects.get(name='Gamekeepers')
-        except Group.DoesNotExist:
-            gamekeepers_group = None
-            self.stdout.write(self.style.ERROR("Gamekeeper group does't exist"))
-            sys.exit()
-
-        # 1. Create admin superuser
-        admin_username = 'admin'
-        admin_password = 'admin'
-        try:
-            admin_user = User.objects.get(username=admin_username)
-            self.stdout.write(self.style.ERROR("Error making admin demo user (already exists)"))
-            sys.exit()
-        except User.DoesNotExist:
-            try:
-                admin_user = User.objects.create_superuser(
-                    username=admin_username,
-                    password=admin_password,
-                    is_staff=True
-                )
-            except Exception as e:
-                self.stdout.write(self.style.ERROR("Error making admin demo user"))
-                sys.exit()
-
-        # 2. Create gamekeeper user
-        gamekeeper_username = 'gamekeeper'
-        gamekeeper_password = 'gamekeeper'
-        try:
-            gamekeeper_user = User.objects.get(username=gamekeeper_username)
-            self.stdout.write(
-                self.style.ERROR("Error making gamekeeper demo user (already exists)"))
-            sys.exit()
-        except User.DoesNotExist:
-            try:
-                gamekeeper_user = User.objects.create_user(
-                    username=gamekeeper_username,
-                    password=gamekeeper_password,
-                    is_staff=True
-                )
-                if gamekeepers_group:
-                    gamekeeper_user.groups.add(gamekeepers_group)
-            except Exception as e:
-                self.stdout.write(self.style.ERROR("Error making gamekeeper demo user"))
-                sys.exit()
-
-        if len(PetType.objects.all()) == 0:  # get a default pet if there is one
-            self.stdout.write(self.style.ERROR("No default pet available"))
-            sys.exit()
-        default_pettype = PetType.objects.all()[0]
-
-        # Helper function to ensure a user has at least one pet
-        def ensure_user_has_pet(user_obj, pet_name):
-            if not user_obj or not default_pettype:
-                return
-            # Check if the user already has any pets
-            existing_pet = Pet.objects.filter(owner=user_obj).first()
-            if existing_pet:
-                self.stdout.write(self.style.ERROR("Error making gamekeeper demo user's pet"))
-                sys.exit()
-            else:
-                try:
-                    Pet.objects.create(
-                        name=pet_name,
-                        type=default_pettype,
-                        owner=user_obj,
-                        health=100,
-                        points=0
-                    )
-                except Exception as e:
-                    self.stdout.write(self.style.ERROR("Error making gamekeeper demo user's pet"))
-                    sys.exit()
-
-        # Create pets if the users were successfully created
-        ensure_user_has_pet(admin_user, "Admin's Pet")
-
-        ensure_user_has_pet(gamekeeper_user, "Gamekeeper's Pet")
-
-        self.stdout.write(self.style.SUCCESS(
-            'Successfully created demo users'
-        ))
