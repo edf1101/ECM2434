@@ -26,7 +26,7 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.total_pet_points }}</td>
+                    <td>{{ user.profile.points }}</td>
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
                             <span class="badge" title="{{ badge_instance.badge.hover_text }}"
@@ -44,6 +44,34 @@
             </tbody>
         </table>
     </div>
+    <div class="leaderboard-container">
+        <h2>Global Top Pets</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Pet Name</th>
+                    <th>Owner</th>
+                    <th>Health</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pet in pets %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ pet.name }}</td>
+                    <td>{{ pet.owner.username }}</td>
+                    <td>{{ pet.health }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No pets available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <div class="leaderboard-container">    
         {% if user.is_authenticated %}
             {% if user_groups %}
@@ -97,33 +125,8 @@
                 <p>You are not a member of any groups</p>
             {% endif %}
         {% endif %}
-
-        <h2>Top Pets</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Pet Name</th>
-                    <th>Owner</th>
-                    <th>Health</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pet in pets %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ pet.name }}</td>
-                    <td>{{ pet.owner.username }}</td>
-                    <td>{{ pet.health }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">No pets available</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
+
 
 
 {% endblock %}

@@ -14,8 +14,11 @@ def leaderboard_view(request) -> HttpResponse:
     View to render the leaderboard page, showing the top users and pets.
     """
     top_users = User.objects.prefetch_related('pets').all()
-    for user in top_users:
-        user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
+    # sort top_users by profile.points
+    top_users = sorted(top_users, key=lambda user: user.profile.points, reverse=True)
+    #
+    # for user in top_users:
+    #     user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
 
     pets = Pet.objects.order_by("-health")[:10]
 
