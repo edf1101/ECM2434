@@ -1,5 +1,5 @@
 # Ecopet - ECM2434
-Sustainability Group Software Engineering Project 
+Sustainability Group Software Engineering Project by Team Group
 
 Group Members
 - Hugo Blanco
