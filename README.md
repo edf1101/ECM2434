@@ -53,3 +53,6 @@ cd eco_project
 coverage run --source='.' manage.py test mysite
 coverage report
 ```
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
