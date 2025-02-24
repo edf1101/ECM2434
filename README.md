@@ -1,6 +1,15 @@
 # ECM2434
 Sustainability Group Software Engineering Project 
 
+Group Members:
+1.Hugo Blanco
+2.Ryan Butler
+3.Elizabeth Zara Brown
+4.Edward Fillingham
+5.Kit Matthewson 
+6.Tasbir Rahaman
+7.Haruka Kimura 
+
 # Details 
 Users can register a profile on Ecopet and thier account detials are stored with compliance to GDPR regulations.
 Once an account is made users are able to create a pet which they can then care for by completing eco freindly challenges around campus to promote sustainability. 
