@@ -76,6 +76,10 @@ cd eco_project
 coverage run --source='.' manage.py test mysite
 coverage report
 ```
+```
+## GDPR Compliance
+
+This project complies with the GDPR - see [GDPR](GDPR.md) for details.
 
 ## License
 
