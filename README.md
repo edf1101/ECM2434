@@ -29,10 +29,6 @@ chmod 755 install.sh
 ```shell
 .\install.bat
 ```
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 
 ## How to run After Installation
 From the base ECM2434 folder go to the eco_project folder 
@@ -57,3 +53,6 @@ cd eco_project
 coverage run --source='.' manage.py test mysite
 coverage report
 ```
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
