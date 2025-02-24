@@ -1,8 +1,3 @@
-"""
-Views for the leaderboard app.
-
-@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
-"""
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -20,8 +15,7 @@ def leaderboard_view(request) -> HttpResponse:
     """
     top_users = User.objects.prefetch_related('pets').all()
     for user in top_users:
-        user.total_pet_points = sum(pet.points for pet in user.pets.all())
-
+        user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
 
     pets = Pet.objects.order_by("-points")[:10]
 
@@ -38,7 +32,7 @@ def leaderboard_view(request) -> HttpResponse:
     if selected_group:
         group_users = User.objects.filter(usergroup=selected_group).prefetch_related('pets')
         for user in group_users:
-            user.total_pet_points = sum(pet.points for pet in user.pets.all())
+            user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
 
     context = {
         "users": top_users,
