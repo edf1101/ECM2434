@@ -14,9 +14,9 @@ Group Members
 EcoPet was made to raise awareness of sustainability challenges on campus aswell as encouraging eco friendly behaviour by engaging with an endangered pet 
 
 # Details 
-Users can register a profile on Ecopet and thier account detials are stored with compliance to GDPR regulations.
-Once an account is made users are able to create a pet which they can then care for by completing eco freindly challenges around campus to promote sustainability. 
-Users can then check out our leaderboard page to compare how they are doing in terms of completing chanllenges compared to teh rest of the community. 
+Users can register a profile on Ecopet and their account detials are stored with compliance to GDPR regulations.
+Once an account is made users are able to create a pet which they can then care for by completing eco freindly challenges around campus to promote sustainability. Once your at a location for a challenge you need to scan a QR code so that our GPS tracker can check that you are actually at the location of the challenge. 
+Users can then check out our leaderboard page to compare how they are doing in terms of completing chanllenges compared to the rest of the community. 
 
 ## Installing
 Assuming you have a virtual environment set up (We will containerise later before submission?)
