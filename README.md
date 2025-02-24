@@ -1,14 +1,14 @@
 # ECM2434
 Sustainability Group Software Engineering Project 
 
-Group Members:
-*1.Hugo Blanco
-*2.Ryan Butler
-*3.Elizabeth Zara Brown
-4.Edward Fillingham
-5.Kit Matthewson 
-6.Tasbir Rahaman
-7.Haruka Kimura 
+- Hugo Blanco
+- Ryan Butler
+- Elizabeth Zara Brown
+- Edward Fillingham
+- Kit Matthewson
+- Tasbir Rahaman
+- Haruka Kimura
+
 
 # Details 
 Users can register a profile on Ecopet and thier account detials are stored with compliance to GDPR regulations.
