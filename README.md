@@ -2,7 +2,7 @@
 
 Sustainability Group Software Engineering Project by Team Group
 
-<img src="eco_project/static/media/readme_banner.png" alt="Alt Text" width="500">
+<img src="eco_project/static/media/readme_banner.png" alt="Alt Text" width="1000">
 
 
 Group Members
