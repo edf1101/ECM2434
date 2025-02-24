@@ -17,7 +17,7 @@ def leaderboard_view(request) -> HttpResponse:
     for user in top_users:
         user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
 
-    pets = Pet.objects.order_by("-points")[:10]
+    pets = Pet.objects.order_by("-health")[:10]
 
     user_groups = UserGroup.objects.filter(users=request.user)
 

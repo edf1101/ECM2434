@@ -105,7 +105,7 @@
                     <th>Rank</th>
                     <th>Pet Name</th>
                     <th>Owner</th>
-                    <th>Points</th>
+                    <th>Health</th>
                 </tr>
             </thead>
             <tbody>
@@ -114,7 +114,7 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ pet.name }}</td>
                     <td>{{ pet.owner.username }}</td>
-                    <td>{{ pet.points }}</td>
+                    <td>{{ pet.health }}</td>
                 </tr>
                 {% empty %}
                 <tr>
