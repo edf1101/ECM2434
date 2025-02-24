@@ -12,6 +12,7 @@ from django.urls import reverse
 from .models import (
     FeatureInstance,
     FeatureType,
+    QuestionAnswer,
     QuestionFeature,
     Map3DChunk,
     LocationsAppSettings,
@@ -255,6 +256,8 @@ class SignalsTests(TestCase):
 class ModelsTests(TestCase):
     """
     Test suite for the models of the locations app.
+    Ensures that each model can store the appropriate information and can return correct boolean
+    and return the correct string representation.
     """
 
     def setUp(self) -> None:
@@ -300,6 +303,30 @@ class ModelsTests(TestCase):
         )
         LocationsAppSettings.get_instance()
 
+    def test_feature_type_str(self) -> None:
+        """
+        Test the feature type string representation.
+        """
+        self.assertEqual(str(self.feature_type), self.feature_type.name)
+
+    def test_feature_instance_has_question(self) -> None:
+        """
+        Test if the feature instance has a question and return correct boolean
+        """
+        QuestionFeature.objects.create(
+            feature=self.feature_instance,
+            question_text="Test question",
+        )
+        self.assertTrue(self.feature_instance.has_question())
+    
+    def test_feature_instance_has_challenge(self) -> None:
+        """
+        Test if the feature instance has a challenge and return correct boolean
+        """
+        self.assertFalse(self.feature_instance.has_challenge())
+        ChallengeSettings.objects.create()
+        self.assertTrue(self.feature_instance.has_challenge())
+
     def test_feature_instance_str(self) -> None:
         """
         Test the feature instance string representation
@@ -311,8 +338,68 @@ class ModelsTests(TestCase):
             f'{self.feature_type.name} "test-feature-instance"',
         )
 
-    def test_feature_type_str(self) -> None:
+    def test_map_cunk_str(self) -> None:
         """
-        Test the feature type string representation.
+        test the map chunk string representation
         """
-        self.assertEqual(str(self.feature_type), self.feature_type.name)
+        self.assertEqual(str(self.map_chunk), self.map_chunk.file_original_name)
+    
+    def test_locations_app_settings_get_instance(self) -> None:
+        """
+        Test the get instance method of the locations app settings
+        """
+        settings = LocationsAppSettings.get_instance()
+        self.assertEqual(settings, LocationsAppSettings.objects.first())
+    
+    def test_locations_app_settings_str(self) -> None:
+        """
+        Test the string representation of the locations app settings
+        """
+        settings = LocationsAppSettings.get_instance()
+        self.assertEqual(str(settings), 'Locations App Settings') 
+    
+    def test_tile_map_str(self) -> None:
+        """
+        Test the string representation of the tile map
+        """
+        tile_map = FeatureInstanceTileMap.objects.create(
+            feature_instance=self.feature_instance,
+            map_chunk=self.map_chunk,
+            x=1,
+            y=1,
+            z=1,
+        )
+        expected_str = f'{self.feature_instance.slug} at (1, 1, 1)'
+        self.assertEqual(str(tile_map), expected_str)
+
+    def test_question_feature_str(self) -> None:
+        """
+        Test the string representation of the question feature
+        """
+        question = QuestionFeature.objects.create(
+            question_text="Test question",
+            feature=self.feature_instance,
+        )
+        self.assertEqual(str(question), f'{self.feature_instance.slug} question')
+
+    def test_question_feature_is_valid_answer(self) -> None:
+        """
+        Tests if the answer is valid for a given sample question and return correct boolean
+        """
+        question = QuestionFeature.objects.create(
+            feature=self.feature_instance,
+            question_text="Test question",
+            answer="Test answer",
+        )
+        self.assertTrue(question.is_valid_answer("Test answer"))
+        self.assertFalse(question.is_valid_answer("Wrong answer"))
+
+    def test_question_answer_str(self) -> None:
+        """
+        Test teh string representation of the question answer
+        """
+        answer = QuestionAnswer.objects.create(
+            answer="Test answer",
+            correct=True,
+        )
+        self.assertEqual(str(answer), "Test answer")
