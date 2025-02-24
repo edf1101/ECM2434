@@ -38,8 +38,8 @@
                     {% endif %}
                 </p>
                 <p><strong>Points:</strong>
-                    {% if user.profile %}
-                        {{ user.profile.points }}
+                    {% if request.user.profile %}
+                        {{ request.user.profile.points }}
                     {% else %}
                         0
                     {% endif %}
