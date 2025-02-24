@@ -43,7 +43,8 @@ python manage.py runserver
 
 To run pylint on the project:
 ```shell
-pylint .
+cd ECM2434
+pylint eco_project
 ```
 
 To generate a test coverage report:
