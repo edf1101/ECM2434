@@ -83,7 +83,7 @@ class LeaderboardViewTest(TestCase):
         )
         self.assertEqual(list(response.context["users"]), list(sorted_users))
 
-        sorted_pets = Pet.objects.order_by("-points")
+        sorted_pets = Pet.objects.order_by("-health")
         self.assertEqual(list(response.context["pets"]), list(sorted_pets))
 
     def test_leaderboard_with_group_selection(self) -> None:
