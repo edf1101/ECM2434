@@ -25,7 +25,8 @@
             {% for user in users %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ user.username }}</td>
+                    <td><a href="{% url 'users:user_profile' user.username %}"
+                           class="profileLink"> {{ user.username }}</a></td>
                     <td>{{ user.profile.points }}</td>
                     <td>
                         {% for badge_instance in user.badgeinstance_set.all %}
@@ -60,7 +61,8 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ pet.name }}</td>
-                    <td>{{ pet.owner.username }}</td>
+                    <td><a href="{% url 'users:user_profile' pet.owner.username %}"
+                           class="profileLink"> {{ pet.owner.username }}</a></td>
                     <td>{{ pet.health }}</td>
                 </tr>
                 {% empty %}
@@ -101,7 +103,7 @@
                             {% for user in group.users %}
                                 <tr {% if user == current_user %}class="current-user"{% endif %}>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{ user.username }}</td>
+                                    <td><a href="{% url 'users:user_profile' user.username %}" class ="profileLink"> {{ user.username }}</a></td>
                                     <td>{{ user.total_pet_points }}</td>
                                     <td>
                                         {% for badge_instance in user.badgeinstance_set.all %}
