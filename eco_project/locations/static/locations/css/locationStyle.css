@@ -71,7 +71,7 @@ body {
 }
 
 .clickable-sections .section-icon {
-    width: 80px; /* Adjusted size */
+    width: 80px;
     height: auto;
     margin-bottom: 10px;
 }
@@ -110,7 +110,7 @@ body {
 
 .feature-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates a 3-column grid */
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     padding: 20px;
 }
@@ -216,13 +216,13 @@ footer .footer-bottom p {
 }
 
 .custom-btn-primary {
-    background-color: #80CD27; /* Your primary button color */
+    background-color: #80CD27;
     color: #fff;
     border: 1px solid #80CD27;
 }
 
 .custom-btn-primary:hover {
-    background-color: #28963D; /* Darker shade for hover */
+    background-color: #28963D;
     border-color: #28963D;
 }
 

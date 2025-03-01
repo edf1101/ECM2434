@@ -38,16 +38,13 @@
                     {% endif %}
                 </p>
                 <p><strong>Points:</strong>
-                    {% if user.profile %}
-                        {{ user.profile.points }}
+                    {% if request.user.profile %}
+                        {{ request.user.profile.points }}
                     {% else %}
                         0
                     {% endif %}
                 </p>
-                {#      <div class="gamify-info">#}
-                {#        <p>Level: 1</p>#}
-                {#        <p>XP: 0 / 100</p>#}
-                {#      </div>#}
+
             </div>
         </div>
         <a href="#" class="accessorise-btn">Accessorise Here</a>

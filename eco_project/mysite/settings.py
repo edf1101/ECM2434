@@ -23,13 +23,9 @@ SECRET_KEY = "django-insecure-!jxg!t($d^0-bnhgr(ylg179tn=+g9q4xkt$(ufr$o^$m*(*_q
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ngrok_url = 'https://212f-144-173-255-190.ngrok-free.app'
-ngrok_host = ngrok_url.split('//')[1]
-ALLOWED_HOSTS = ["192.168.0.168", "localhost", "127.0.0.1", "192.168.5.31",
-                 ngrok_host]
-CSRF_TRUSTED_ORIGINS = [
-    ngrok_url
-]
+
+ALLOWED_HOSTS = ["192.168.0.168", "localhost", "127.0.0.1", "192.168.5.31"]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -135,5 +131,5 @@ LOGIN_URL = "/users/login/"
 
 LOGIN_REDIRECT_URL = "/pets/mypet/"
 
-CHECK_USER_CHALLENGE_RANGE = True
-USER_CHALLENGE_RANGE = 400
+
+CHECK_USER_CHALLENGE_RANGE = False

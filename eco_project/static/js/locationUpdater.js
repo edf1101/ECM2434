@@ -45,7 +45,7 @@ function startLocationTracking() {
     if (navigator.geolocation) {
         console.log("Starting geolocation tracking");
 
-        // Use watchPosition for real-time tracking that doesn't require polling
+        // Use watchPosition for realtime tracking that doesn't require polling
         navigator.geolocation.watchPosition(
             position => {
                 lastKnownPosition = position;

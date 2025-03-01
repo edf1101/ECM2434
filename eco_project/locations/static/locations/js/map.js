@@ -26,7 +26,7 @@ export class UniversityMap {
     /**
      * This function sets up all the important map settings data, ie the bounds for the scene,
      * height maps etc.
-     * @returns {Promise<void>} Promises that the async action has completed
+     * @return {Promise<void>} Promises that the async action has completed
      * @private
      */
     async _initLocationAndMapData() {
@@ -129,7 +129,7 @@ export class UniversityMap {
      * access.
      *
      * @param {string} url - The URL of the heightmap image to load into the app
-     * @returns {Promise} Promise that resolves when the heightmap is fully loaded.
+     * @return {Promise} Promise that resolves when the heightmap is fully loaded.
      */
     _initHeightMap(url) {
         return new Promise((resolve, reject) => {
@@ -156,7 +156,7 @@ export class UniversityMap {
     /**
      * Fetches map data from the API, updates map bounds and grid values,
      * and loads the heightmap image.
-     * @returns {Promise} returns a promise that the map data has been loaded successfully.
+     * @return {Promise} returns a promise that the map data has been loaded successfully.
      */
     async _initMapSettings() {
         try {
@@ -204,7 +204,7 @@ export class UniversityMap {
      * @param {number} lat - Latitude
      * @param {number} lon - Longitude
      * @param {number} [radius=this.render_dist] - Search radius (default is this.render_dist).
-     * @returns {Promise<Array>} Promise resolving to an array of tile file names.
+     * @return {Promise<Array>} Promise resolving to an array of tile file names.
      */
     async getNearbyTiles(lat, lon, radius = this.render_dist) {
         if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
@@ -245,7 +245,7 @@ export class UniversityMap {
                     const gltf = await this.gltfLoader.loadGLTF(name);
                     const mesh = gltf.scene;
 
-                    // Position the tile (adjustments can be made here if necessary).
+                    // Position the tile
                     mesh.position.set(0, 0, 0);
                     this.scene.add(mesh);
                     this.loadedTiles[name] = mesh;
@@ -348,7 +348,7 @@ export class UniversityMap {
      * @param {number|string} colour - The colour of the marker
      * @param {THREE.Object3D} parent - The parent object to attach the marker to
      * @param {string} [custom_mesh_url] - The URL to fetch a custom marker from
-     * @returns {Promise<void>} A promise resolving when the marker has been created.
+     * @return {Promise<void>} A promise resolving when the marker has been created.
      */
     async createMarker(lat, lon, colour, parent, custom_mesh_url = "None") {
         // Convert geographic coordinates to scene coordinates.
@@ -412,7 +412,7 @@ export class UniversityMap {
      * all of said tiles
      *
      * @param tiles The list of tiles to retrieve feature instances for
-     * @returns {Promise<void>} A promise that resolves when the feature instances have been retrieved
+     * @return {Promise<void>} A promise that resolves when the feature instances have been retrieved
      * (Also returns the response).
      * @private
      */
@@ -445,7 +445,7 @@ export class UniversityMap {
      *
      * @param {number} lat - Latitude
      * @param {number} lon - Longitude
-     * @returns {[number, number]} An array containing the x and y coordinates.
+     * @return {[number, number]} An array containing the x and y coordinates.
      */
     _latLonToXY(lat, lon) {
         // open up the bounds for the scene
@@ -464,7 +464,7 @@ export class UniversityMap {
      *
      * @param {number} lat - Latitude
      * @param {number} lon - Longitude
-     * @returns {number|null} The calculated terrain height or null if not loaded.
+     * @return {number|null} The calculated terrain height or null if not loaded.
      */
     _getHeightAtPos(lat, lon) {
         if (!this.heightMapCanvas) {
@@ -572,7 +572,7 @@ export class UniversityMap {
 
         // Rotate each marker in our rotatingMarkers array.
         this.activeMarkers.forEach(marker => {
-            marker.rotation.y += 0.01; // Adjust the speed of rotation as needed.
+            marker.rotation.y += 0.01;
             // make marker bob up and down
             marker.position.y = Math.sin(Date.now() * 0.002) * 0.3 + 4;
         });
@@ -589,7 +589,7 @@ export class UniversityMap {
      * @param {THREE.Vector3} endPos - The end camera position.
      * @param {THREE.Vector3} offset - The offset from the camera to its target.
      * @param {number} duration - The duration of the tween in ms.
-     * @returns {Promise} A promise that resolves when the tween is complete.
+     * @return {Promise} A promise that resolves when the tween is complete.
      */
     _lerpCamera(startPos, endPos, offset, duration) {
 

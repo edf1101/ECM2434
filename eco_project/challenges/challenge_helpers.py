@@ -62,6 +62,7 @@ def streak_to_points(streak_count: int) -> int:
 def user_in_range_of_feature(
         user: User, feature_inst: FeatureInstance,
         range_dist: int = settings.USER_CHALLENGE_RANGE) -> bool:
+
     """
     Checks if a user is within the range of a feature.
 

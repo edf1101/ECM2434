@@ -68,9 +68,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'locations:base' %}">Locations</a>
                 </li>
-                {#                <li class="nav-item">#}
-                {#                    <a class="nav-link" href="{% url 'locations:generic-feature-list' %}">Challenges</a>#}
-                {#                </li>#}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'leaderboard:leaderboard' %}">Leaderboard</a>
                 </li>
@@ -82,13 +79,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
-                <!-- New QR Scanner Icon: triggers the file dialog immediately -->
+
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="qrScannerIcon" onclick="triggerFileInput()">
                         <i class="bi bi-qr-code-scan"></i>
                     </a>
                 </li>
-                <!-- Existing Profile Dropdown -->
+
                 <li class="nav-item dropdown ms-3">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">

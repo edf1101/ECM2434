@@ -1,13 +1,23 @@
 """
 This script imports features from a file into the database.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.core.management.base import BaseCommand
+import os
+import sys
+from random import choice
+
 from django.core.files import File
 from django.core.files.storage import default_storage
-from locations.models import FeatureType, FeatureInstance, QuestionAnswer, QuestionFeature, LocationsAppSettings
-from random import choice
-import os
+from django.core.management.base import BaseCommand
 from django.db.models.signals import post_save
+from locations.models import (
+    FeatureType,
+    FeatureInstance,
+    QuestionAnswer,
+    QuestionFeature,
+    LocationsAppSettings,
+)
 from locations.signals import update_feature_instance_qr_code
 
 
@@ -15,26 +25,34 @@ class Command(BaseCommand):
     """
     This script is used to import feature instance and type data into the database.
     """
+
     help = "Import 3D map chunk data into the database"
 
     def handle(self, *args, **kwargs) -> None:
         """
         This function is called when the import_features script is run.
 
-        :param args:  None expected
-        :param kwargs: None expected
-        :return: None
+        @param args:  None expected
+        @param kwargs: None expected
+        @return: None
         """
-        # Disconnect the QR code update signal to prevent it from running on every save.
-        post_save.disconnect(update_feature_instance_qr_code, sender=FeatureInstance)
-        post_save.disconnect(update_feature_instance_qr_code, sender=LocationsAppSettings)
+        # Disconnect the QR code update signal to prevent it from running on
+        # every save.
+        post_save.disconnect(
+            update_feature_instance_qr_code,
+            sender=FeatureInstance)
+        post_save.disconnect(
+            update_feature_instance_qr_code, sender=LocationsAppSettings
+        )
 
         self.import_feature_types()
         self.import_feature_instances()
         self.import_feature_questions()
 
         # Reconnect the signal so that it can trigger again
-        post_save.connect(update_feature_instance_qr_code, sender=FeatureInstance)
+        post_save.connect(
+            update_feature_instance_qr_code,
+            sender=FeatureInstance)
 
         self.stdout.write(self.style.SUCCESS(f"Starting saving QR codes"))
         # Now trigger an update of QR codes for all FeatureInstances.
@@ -50,16 +68,20 @@ class Command(BaseCommand):
     def import_feature_types(self) -> None:
         """
         Import the generic feature types from the file.
+
+        @return: None
         """
 
         # read lines from the file
-        dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
-        image_dir = os.path.join(dir, "images")
-        mesh_dir = os.path.join(dir, "meshes")
-        file_dir = os.path.join(dir, "feature_types.txt")
+        folder = os.path.join(
+            os.getcwd(),
+            "locations/management/commands/feature_data")
+        image_dir = os.path.join(folder, "images")
+        mesh_dir = os.path.join(folder, "meshes")
+        file_dir = os.path.join(folder, "feature_types.txt")
 
         lines = []
-        with open(file_dir, "r") as file:
+        with open(file_dir, "r", encoding='utf-8') as file:
             lines = file.readlines()
             lines = [line.strip() for line in lines]
             lines = [line for line in lines if (line != "" and line[0] != "#")]
@@ -76,66 +98,83 @@ class Command(BaseCommand):
 
             # check image exists
             image_path = os.path.join(image_dir, image_path)
-            if not os.path.exists(image_path) or not os.path.isfile(image_path):
-                self.stdout.write(self.style.ERROR(f"Image {image_path} does not exist"))
-                exit()
+            if not os.path.exists(
+                    image_path) or not os.path.isfile(image_path):
+                self.stdout.write(
+                    self.style.ERROR(f"Image {image_path} does not exist")
+                )
+                sys.exit()
             img_extension = image_path.split(".")[-1]
             # check mesh exists
             mesh_path = os.path.join(mesh_dir, mesh_path)
-            if using_mesh and (not os.path.exists(mesh_path) or not os.path.isfile(image_path)):
-                self.stdout.write(self.style.ERROR(f"Mesh {mesh_path} does not exist"))
-                exit()
+            if using_mesh and (
+                    not os.path.exists(mesh_path) or not os.path.isfile(image_path)
+            ):
+                self.stdout.write(
+                    self.style.ERROR(f"Mesh {mesh_path} does not exist"))
+                sys.exit()
 
-            # create some random letters for end of the filename to avoid duplicates
-            random_letters = ''.join([choice('1234567890ABCDEF') for i in range(5)])
+            # create some random letters for end of the filename to avoid
+            # duplicates
+            random_letters = "".join(
+                [choice("1234567890ABCDEF") for i in range(5)])
 
             # create image file
-            img_file = None
             mesh_file = None
 
-            with open(image_path, 'rb') as f:
+            with open(image_path, "rb") as f:
                 file = File(f)  # Create a Django file object
 
                 # Save it with a safe path so that unsafe error isn't raised
                 img_file = default_storage.save(
-                    f'locations/feature_type_img/{name}{random_letters}.{img_extension}', file)
+                    f"locations/feature_type_img/{name}{random_letters}.{img_extension}", file, )
             if using_mesh:
-                with open(mesh_path, 'rb') as f:
+                with open(mesh_path, "rb") as f:
                     file = File(f)
                     mesh_file = default_storage.save(
-                        f'locations/feature_mesh/{name}{random_letters}.glb', file)
+                        f"locations/feature_mesh/{name}{random_letters}.glb", file)
 
             # actually create the object
-            feature = FeatureType(name=name, description=description, colour=colour,
-                                  generic_img=img_file)
+            feature = FeatureType(
+                name=name,
+                description=description,
+                colour=colour,
+                generic_img=img_file)
             if using_mesh:
                 feature.feature_mesh = mesh_file
 
             feature.save()
             successes += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Saved {successes} feature type to database"))
+        self.stdout.write(
+            self.style.SUCCESS(f"Saved {successes} feature type to database")
+        )
 
     def import_feature_instances(self) -> None:
         """
         Import feature instances from a text file.
         """
         # Set up directories
-        base_dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
+        base_dir = os.path.join(
+            os.getcwd(), "locations/management/commands/feature_data"
+        )
         image_dir = os.path.join(base_dir, "images")
         file_path = os.path.join(base_dir, "feature_instances.txt")
 
         # Read and filter lines from file
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding='utf-8') as file:
                 lines = file.readlines()
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))
             return
 
         # clean up the lines
-        lines = [line.strip() for line in lines if
-                 line.strip() and not line.strip().startswith("#")]
+        lines = [
+            line.strip()
+            for line in lines
+            if line.strip() and not line.strip().startswith("#")
+        ]
 
         successes = 0
         for line in lines:
@@ -143,7 +182,9 @@ class Command(BaseCommand):
             split_data = [data.strip() for data in line.split(",")]
             # Ensure we have at least 5 elements (img filename is optional)
             if len(split_data) < 5:
-                self.stdout.write(self.style.ERROR(f"Invalid line (not enough data): {line}"))
+                self.stdout.write(
+                    self.style.ERROR(f"Invalid line (not enough data): {line}")
+                )
                 continue
 
             # Unpack the fields
@@ -160,36 +201,51 @@ class Command(BaseCommand):
                 longitude = float(lon_str)
             except ValueError:
                 self.stdout.write(
-                    self.style.ERROR(f"Invalid latitude/longitude for instance {instance_name}"))
+                    self.style.ERROR(
+                        f"Invalid latitude/longitude for instance {instance_name}"
+                    )
+                )
                 continue
 
             # Retrieve the related FeatureType by its name
             try:
                 feature = FeatureType.objects.get(name=general_type_name)
             except FeatureType.DoesNotExist:
-                self.stdout.write(self.style.ERROR(
-                    f"FeatureType with name '{general_type_name}' "
-                    f"does not exist for instance {instance_name}"))
+                self.stdout.write(
+                    self.style.ERROR(
+                        f"FeatureType with name '{general_type_name}' "
+                        f"does not exist for instance {instance_name}"
+                    )
+                )
                 continue
 
             # Handle the instance-specific image if provided
             specific_img_file = None
             if img_filename:
                 full_img_path = os.path.join(image_dir, img_filename)
-                if not os.path.exists(full_img_path) or not os.path.isfile(full_img_path):
-                    self.stdout.write(self.style.ERROR(
-                        f"Image {full_img_path} does not exist for instance {instance_name}"))
+                if not os.path.exists(full_img_path) or not os.path.isfile(
+                        full_img_path
+                ):
+                    self.stdout.write(
+                        self.style.ERROR(
+                            f"Image {full_img_path} does not exist for instance {instance_name}"
+                        )
+                    )
                     continue
 
                 img_extension = full_img_path.split(".")[-1]
-                random_letters = ''.join(choice('1234567890ABCDEF') for _ in range(5))
+                random_letters = "".join(
+                    choice("1234567890ABCDEF") for _ in range(5))
                 # Construct a safe storage path for the image
-                storage_path = (f'locations/feature_instance_img/'
-                                f'{instance_name}{random_letters}.{img_extension}')
+                storage_path = (
+                    f"locations/feature_instance_img/"
+                    f"{instance_name}{random_letters}.{img_extension}"
+                )
 
-                with open(full_img_path, 'rb') as f:
+                with open(full_img_path, "rb") as f:
                     file_obj = File(f)
-                    specific_img_file = default_storage.save(storage_path, file_obj)
+                    specific_img_file = default_storage.save(
+                        storage_path, file_obj)
 
             # Create and save the FeatureInstance
             feature_instance = FeatureInstance(
@@ -205,27 +261,33 @@ class Command(BaseCommand):
             feature_instance.save()
             successes += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Saved {successes} feature instances to database"))
+        self.stdout.write(self.style.SUCCESS(
+            f"Saved {successes} feature instances to database"))
 
     def import_feature_questions(self) -> None:
         """
         Import question and answer data for feature instances from a text file.
         """
         # Define the directory and file path
-        base_dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
+        base_dir = os.path.join(
+            os.getcwd(), "locations/management/commands/feature_data"
+        )
         file_path = os.path.join(base_dir, "feature_questions.txt")
 
         # Read the file
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding='utf-8') as file:
                 lines = file.readlines()
         except FileNotFoundError:
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))
             return
 
         # clean up the read lines data
-        lines = [line.strip() for line in lines if
-                 line.strip() and not line.strip().startswith("#")]
+        lines = [
+            line.strip()
+            for line in lines
+            if line.strip() and not line.strip().startswith("#")
+        ]
 
         successes = 0
 
@@ -233,7 +295,8 @@ class Command(BaseCommand):
             # Split the line into fields.
             fields = [field.strip() for field in line.split(",")]
             if len(fields) < 6:
-                self.stdout.write(self.style.ERROR(f"Not enough data in line: {line}"))
+                self.stdout.write(
+                    self.style.ERROR(f"Not enough data in line: {line}"))
                 continue
 
             # Unpack fields
@@ -252,22 +315,31 @@ class Command(BaseCommand):
             try:
                 fuzzy_threshold = int(fuzzy_threshold_str)
             except ValueError:
-                self.stdout.write(self.style.ERROR(
-                    f"Invalid fuzzy threshold '{fuzzy_threshold_str}' in line: {line}"))
+                self.stdout.write(
+                    self.style.ERROR(
+                        f"Invalid fuzzy threshold '{fuzzy_threshold_str}' in line: {line}"
+                    )
+                )
                 continue
             if fuzzy_threshold < 0 or fuzzy_threshold > 100:
-                self.stdout.write(self.style.ERROR(
-                    f"Fuzzy threshold must be between 0 and 100, not {fuzzy_threshold} "
-                    f"in line: {line}"))
+                self.stdout.write(
+                    self.style.ERROR(
+                        f"Fuzzy threshold must be between 0 and 100, not {fuzzy_threshold} "
+                        f"in line: {line}"))
                 continue
 
             # Get FeatureInstance object by slug
             try:
-                feature_instance = FeatureInstance.objects.get(slug=feature_instance_slug)
+                feature_instance = FeatureInstance.objects.get(
+                    slug=feature_instance_slug
+                )
             except FeatureInstance.DoesNotExist:
                 self.stdout.write(
-                    self.style.ERROR(f"FeatureInstance with slug '{feature_instance_slug}'"
-                                     f" not found for question: {question_text}"))
+                    self.style.ERROR(
+                        f"FeatureInstance with slug '{feature_instance_slug}'"
+                        f" not found for question: {question_text}"
+                    )
+                )
                 continue
 
             # Create the QuestionFeature object and add in the data
@@ -276,7 +348,7 @@ class Command(BaseCommand):
                 feature=feature_instance,
                 case_sensitive=case_sensitive,
                 use_fuzzy_comparison=use_fuzzy_comparison,
-                fuzzy_threshold=fuzzy_threshold
+                fuzzy_threshold=fuzzy_threshold,
             )
             question_feature.save()
 
@@ -284,10 +356,11 @@ class Command(BaseCommand):
             for answer in answer_choices:
                 if answer:  # ensure that the answer is not an empty string
                     question_answer = QuestionAnswer(
-                        question=question_feature,
-                        choice_text=answer)
+                        question=question_feature, choice_text=answer
+                    )
                     question_answer.save()
 
             successes += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Saved {successes} question features to database"))
+        self.stdout.write(self.style.SUCCESS(
+            f"Saved {successes} question features to database"))

@@ -7,12 +7,17 @@
     <meta charset="UTF-8">
     <title>✨{{ feature_instance.feature.name }}✨</title>
     <link rel="stylesheet" href="{% static 'locations/css/features.css' %}">
+    <style>
+        body {
+            background-color: #99D887;
+        }
+    </style>
     <script>
 
         /**
          * Function to get a cookie
          * @param name The name of the cookie
-         * @returns The cookie value
+         * @return The cookie value
          */
         function getCookie(name) {
             let cookieValue = null;
@@ -32,7 +37,7 @@
 
         /**
          * Function sending a POST request to the API to submit an answer
-         * @returns {Promise<void>} A promise that resolves when the answer is submitted
+         * @return {Promise<void>} A promise that resolves when the answer is submitted
          */
         async function submitAnswer() {
             // get required fields for the API
