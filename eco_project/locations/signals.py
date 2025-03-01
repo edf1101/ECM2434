@@ -9,16 +9,18 @@ from django.dispatch import receiver
 from .models import Map3DChunk, LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
     Map3DChunk
 from django.db.models import Min, Max
+import sys
 
 
 @receiver(post_save, sender=FeatureInstance)
 @receiver(post_save, sender=LocationsAppSettings)
-def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
+def update_feature_instance_qr_code(sender, instance, progress_bar=False, **kwargs) -> None:
     """
     Update the QR code of a FeatureInstance or all FeatureInstances.
 
     :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
     :param instance: The instance of the sender
+    :param progress_bar: Whether to display a progress bar
     """
     # If this save is triggered by an update_qr_code call skip to avoid infinite recursion.
     if hasattr(instance, '_skip_qr_update') and instance._skip_qr_update:
@@ -29,12 +31,22 @@ def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
         instance.update_qr_code(skip_signal=True)
         instance._skip_qr_update = False
     else:
-        for feature_instance in FeatureInstance.objects.all():
+        for ind, feature_instance in enumerate(FeatureInstance.objects.all()):
             # print(f'created QR code for feature instance {feature_instance}')
 
             feature_instance._skip_qr_update = True
             feature_instance.update_qr_code(skip_signal=True)
             feature_instance._skip_qr_update = False
+
+            length = FeatureInstance.objects.all().count()
+            per = int(20 * (1 + ind) / length)  # how many # to draw
+            if progress_bar:
+                sys.stdout.write(  # draw a progress bar
+                    f'\r[{"#" * per}{" " * (20 - per)}] {(1 + ind)}/{length}')
+                sys.stdout.flush()
+        if progress_bar:
+            sys.stdout.write('\r\n')
+            sys.stdout.flush()
 
 
 @receiver(post_save, sender=Map3DChunk)
