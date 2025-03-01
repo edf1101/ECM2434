@@ -54,7 +54,7 @@ class Command(BaseCommand):
             update_feature_instance_qr_code,
             sender=FeatureInstance)
 
-        self.stdout.write(self.style.SUCCESS(f"Starting saving QR codes"))
+        self.stdout.write(self.style.SUCCESS("Starting saving QR codes"))
         # Now trigger an update of QR codes for all FeatureInstances.
         update_feature_instance_qr_code(
             sender=LocationsAppSettings,
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             progress_bar=True
         )
         post_save.connect(update_feature_instance_qr_code, sender=FeatureInstance)
-        self.stdout.write(self.style.SUCCESS(f"Saved QR codes to database"))
+        self.stdout.write(self.style.SUCCESS("Saved QR codes to database"))
 
 
     def import_feature_types(self) -> None:

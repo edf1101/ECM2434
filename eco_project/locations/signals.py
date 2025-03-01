@@ -6,8 +6,8 @@ LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved 
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.db.models import Min, Max
 import sys
+from django.db.models import Min, Max
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 

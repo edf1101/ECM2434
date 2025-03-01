@@ -278,7 +278,7 @@ class LocationsAppSettings(models.Model):
 
         @return: String representation of the model.
         """
-        return "Site Settings"
+        return "Map Settings"
 
 
 class FeatureInstanceTileMap(models.Model):

@@ -87,7 +87,11 @@ class BadgeInstance(models.Model):
 
         @return: a string representation of the badge instance
         """
-        return f"{self.user.username} - {self.badge.title}"
+
+        user: User = self.user
+        badge: Badge = self.badge
+
+        return f"{user.username} - {badge.title}"
 
     class Meta:
         """
