@@ -23,31 +23,33 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<!-- Top Bar to welcome users, as a block so it can be overridden out -->
 {% block topBar %}
-    <div class="top-bar py-2">
-        <div class="container">
-            {% if user.is_authenticated %}
-                {% with pet=user.pets.all|first %}
-                    <p class="mb-0 text-center">
-                        Hello {{ user.first_name|default:user.username }}, It's time to get
-                        {% if pet %}
-                            {{ pet.name }}
-                        {% else %}
-                            your pet
-                        {% endif %}
-                        moving!
-                    </p>
-                {% endwith %}
-            {% else %}
-                <p class="mb-0 text-center">
-                    Hello Guest, Please <a href="{% url 'users:login' %}">log in</a> or <a
-                        href="{% url 'users:registration' %}">register to see your pet!</a>
-                </p>
-            {% endif %}
-        </div>
-    </div>
+<nav class="navbar navbar-dark bg-dark py-2">
+  <div class="container-fluid">
+    {% if user.is_authenticated %}
+      {% with pet=user.pets.all|first %}
+        <p class="mb-0 w-100 text-center navbar-text">
+          Hello {{ user.first_name|default:user.username }}, it's time to get
+          {% if pet %}
+            {{ pet.name }}
+          {% else %}
+            your pet
+          {% endif %}
+          moving!
+        </p>
+      {% endwith %}
+    {% else %}
+      <p class="mb-0 w-100 text-center navbar-text">
+        Hello Guest, Please
+        <a href="{% url 'users:login' %}" class="text-white">log in</a> or
+        <a href="{% url 'users:registration' %}" class="text-white">register</a> to see your pet!
+      </p>
+    {% endif %}
+  </div>
+</nav>
 {% endblock %}
+
+
 
 <nav class="navbar navbar-expand-lg">
     <div class="container">
