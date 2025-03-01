@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 
 
-def homepage(request:HttpRequest) -> HttpResponse:
+def homepage(request: HttpRequest) -> HttpResponse:
     """
     Renders the homepage with a login form in case the user is not authenticated.
 
@@ -14,7 +14,7 @@ def homepage(request:HttpRequest) -> HttpResponse:
     return render(request, 'home.html', {'form': form})
 
 
-def about(request:HttpRequest) -> HttpResponse:
+def about(request: HttpRequest) -> HttpResponse:
     """
     Renders the about page.
 
@@ -24,7 +24,7 @@ def about(request:HttpRequest) -> HttpResponse:
     return render(request, 'about.html')
 
 
-def contact(request:HttpRequest) -> HttpResponse:
+def contact(request: HttpRequest) -> HttpResponse:
     """
     Renders the contact page.
 
@@ -34,7 +34,7 @@ def contact(request:HttpRequest) -> HttpResponse:
     return render(request, 'contact.html')
 
 
-def faq(request:HttpRequest) -> HttpResponse:
+def faq(request: HttpRequest) -> HttpResponse:
     """
     Renders the faq page.
 
@@ -43,3 +43,13 @@ def faq(request:HttpRequest) -> HttpResponse:
     """
     return render(request, 'faq.html')
 
+
+def gdpr(request: HttpRequest) -> HttpResponse:
+    """
+    Renders the gdpr page.
+
+    @param request: HttpRequest object
+    @return: HttpResponse object
+    """
+
+    return render(request, "gdpr.html")
