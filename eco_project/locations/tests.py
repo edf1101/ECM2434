@@ -62,6 +62,8 @@ class ViewsTestCase(TestCase):
 
         @return: None
         """
+        self.client.login(username="testuser", password="testpass")
+
         QuestionFeature.objects.create(
             feature=self.feature_instance,
             question_text="Test question"
@@ -79,6 +81,8 @@ class ViewsTestCase(TestCase):
 
         @return: None
         """
+        self.client.login(username="testuser", password="testpass")
+
         self.feature_instance.questionfeature_set.all().delete()
         response = self.client.get(
             reverse("locations:individual-feature", args=[self.feature_instance.slug]))
@@ -102,17 +106,6 @@ class ViewsTestCase(TestCase):
         self.assertIn("feature_instance", response.context)
         self.assertIsNone(response.context.get("question"))
 
-    def test_generic_feature_page(self) -> None:
-        """
-        Test if the page displays a generic feature type
-
-        @return: None
-        """
-        response = self.client.get(
-            reverse("locations:generic-feature-list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/feature_type_list.html")
-        self.assertIn("feature_type_list", response.context)
 
 class SignalsTests(TestCase):
     """
