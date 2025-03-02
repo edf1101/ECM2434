@@ -23,6 +23,7 @@ def leaderboard_view(request) -> HttpResponse:
 
     user_groups = UserGroup.objects.filter(users=request.user)
 
+
     group_leaderboards = []
     for group in user_groups:
         group_users = User.objects.filter(usergroup=group).prefetch_related('pets')

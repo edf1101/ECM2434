@@ -256,5 +256,4 @@ main.container {
 /* Override the default arrow icon to ensure it stays white */
 .accordion-button::after {
     filter: brightness(0) invert(1);
-
 }
