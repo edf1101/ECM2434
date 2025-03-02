@@ -3,7 +3,7 @@ This module contains the views for the locations app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from challenges.challenge_helpers import user_reached_feature
+from challenges.challenge_helpers import user_reached_feature, user_in_range_of_feature
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -55,6 +55,8 @@ def individual_feature_page(request, slug) -> HttpResponse:
     # if user signed in update points for reaching feature
     if request.user.is_authenticated:
         user_reached_feature(request.user, feature_instance)
+
+    context["in_range"] = user_in_range_of_feature(request.user, feature_instance)
 
     if feature_instance.has_question:
         context["question"] = question
