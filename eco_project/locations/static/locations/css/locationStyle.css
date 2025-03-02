@@ -226,3 +226,10 @@ footer .footer-bottom p {
     border-color: #28963D;
 }
 
+.feature-card .card {
+    transition: transform 0.3s ease-in-out;
+}
+
+.feature-card:hover .card {
+    transform: scale(1.05);
+}

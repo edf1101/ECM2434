@@ -48,7 +48,7 @@ class FeatureInstanceAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Feature Info", {"fields": ["name", "feature", "slug"]}),
         ("Location", {"fields": ["longitude", "latitude"]}),
-        ("Display information", {"fields": ["specific_img"]}),
+        ("Display information", {"fields": ["specific_img","instance_description"]}),
         ("Challenge Info", {"fields": ["has_challenge", "has_question"]}),
         ("QR Code", {"fields": ["qr_code"]}),
     ]

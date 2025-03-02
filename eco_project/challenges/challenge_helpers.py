@@ -60,7 +60,9 @@ def streak_to_points(streak_count: int) -> int:
 
 
 def user_in_range_of_feature(
-        user: User, feature_inst: FeatureInstance, range_dist: int = 100) -> bool:
+        user: User, feature_inst: FeatureInstance,
+        range_dist: int = settings.USER_CHALLENGE_RANGE) -> bool:
+
     """
     Checks if a user is within the range of a feature.
 
@@ -151,3 +153,44 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
 
     user.profile.points += points_for_feature
     user.profile.save()
+
+
+def get_features_near(lat:float,lon:float,user =None, specific_feature=None) -> list[dict[str,str]]:
+    """
+    Returns a list of dictionaries representing the challenges near the given location.
+    Dicts are in format {directions:"1km away",description:"East park pond"}
+
+    @param lat: The latitude of the location.
+    @param lon: The longitude of the location.
+    @param user: If included then check that the user hasn't visited before
+    @param specific_feature: The specific feature type to search for.
+    @return: A list of dictionaries representing the challenges near the given location.
+    """
+
+    challenge_data: dict[FeatureInstance, str] = {}
+    all_features = FeatureInstance.objects.all()
+    if specific_feature:
+        all_features = all_features.filter(feature=specific_feature)
+
+    for feature in all_features:
+        if not user_already_reached_in_window(
+                user, feature, update=False):
+            dist = haversine(
+                lat,
+                lon,
+                feature.latitude,
+                feature.longitude)
+            dist_str = f"{dist / 1000.0:.2f}km away" if dist > 1 else f"{int(dist)}m away"
+            challenge_data[feature] = dist_str
+
+    # Sort the challenges by distance and get the 10 closest
+    sorted_challenges = sorted(challenge_data.items(), key=lambda x: x[1])
+    return_challenges = []
+    for feature, dist in sorted_challenges[:10]:
+        return_challenges.append(
+            {
+                "directions": dist,
+                "description": feature.name,
+            }
+        )
+    return return_challenges

@@ -1,3 +1,6 @@
+"""
+Views for the leaderboard app.
+"""
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -22,6 +25,7 @@ def leaderboard_view(request) -> HttpResponse:
     pets = Pet.objects.order_by("-health")[:10]
 
     user_groups = UserGroup.objects.filter(users=request.user)
+
 
     group_leaderboards = []
     for group in user_groups:

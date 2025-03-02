@@ -6,6 +6,7 @@ This module contains the URL patterns for the project.
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic.base import RedirectView
 from django.views.static import serve
 
 from . import views
@@ -13,6 +14,7 @@ from . import views
 urlpatterns = [
     re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
     re_path(r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicon.ico')),
     path("admin/", admin.site.urls),
     path("locations/", include("locations.urls")),
     path("users/", include("users.urls")),
@@ -23,4 +25,5 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("contact/", views.contact, name="contact"),
     path("faq/", views.faq, name="faq"),
+    path("gdpr/", views.gdpr, name="gdpr"),
 ]

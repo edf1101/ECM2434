@@ -7,30 +7,57 @@
     <meta charset="UTF-8">
     <title>{{ feature_instance.feature.name }}</title>
     <link rel="stylesheet" href="{% static 'locations/css/features.css' %}">
-
     <style>
-    body {
+        body {
             background-color: #99D887;
         }
+
+        .vertical-divider {
+            border-right: 2px solid rgba(37, 46, 42, 0.32);
+        }
+
+        img.rounded {
+            border-radius: 10px;
+        }
+
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="center-content">
-        <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
-        <h3>Lat: {{ feature_instance.latitude }}, Lon: {{ feature_instance.longitude }},
-            Code: {{ feature_instance.slug }}</h3>
-        <br>
-        <img
-                src="{{ feature_instance.image.url }}"
-                alt="Image of {{ feature_instance.name }}"
-                style="width: 50vw; height: auto;"
-        />
+    <div class="container my-4">
 
-        <br>
-        <br>
-        <h2> About this Feature </h2>
-        <h3> {{ feature_instance.feature.name }}</h3>
-        <p>{{ feature_instance.feature.description }}</p>
+        <div class="row">
+            <div class="col-12 text-center">
+                {% if in_range %}
+                    <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
+                    <h4>You have gained points for getting here!</h4>
+                {% else %}
+                    <h1>✨The {{ feature_instance.name }}✨</h1>
+                    <h4>We don't think you are actually in range... Try reloading or getting
+                        closer?</h4>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            {# Show image and info stats about feature instance #}
+            <div class="col-md-6 vertical-divider pr-md-3 text-center">
+                <h3>Lat: {{ feature_instance.latitude |floatformat:"3"}}, Lon:
+                    {{ feature_instance.longitude|floatformat:"3" }}</h3>
+                <h3>Code: {{ feature_instance.slug }}</h3>
+                <img src="{{ feature_instance.image.url }}"
+                     alt="Image of {{ feature_instance.name }}" class="img-fluid rounded"/>
+            </div>
+            {# Show feature instance info if there is any otherwise just show feature type info #}
+            <div class="col-md-6 pl-md-3 text-center">
+                {% if feature_instance.instance_description %}
+                    <h2>About the {{ feature_instance.name }}</h2>
+                    <p>{{ feature_instance.instance_description }}</p>
+                    <br>
+                {% endif %}
+                <h2>About {{ feature_instance.feature.name }}s</h2>
+                <p>{{ feature_instance.feature.description }}</p>
+            </div>
+        </div>
     </div>
 {% endblock %}
