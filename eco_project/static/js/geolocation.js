@@ -25,7 +25,7 @@ export class GeoHelper {
     /**
      * Requests the current location from the API.
      *
-     * @returns {Promise<[number, number]>} A promise that resolves with [latitude, longitude].
+     * @return {Promise<[number, number]>} A promise that resolves with [latitude, longitude].
      */
     static async requestCurrentLocation() {
         try {
@@ -51,7 +51,7 @@ export class GeoHelper {
      * @param {number} lon1 - Longitude of the first point (in degrees).
      * @param {number} lat2 - Latitude of the second point (in degrees).
      * @param {number} lon2 - Longitude of the second point (in degrees).
-     * @returns {number} The distance between the two points in meters.
+     * @return {number} The distance between the two points in meters.
      */
     static haversineDistance(lat1, lon1, lat2, lon2) {
         function toRadians(degrees) {
