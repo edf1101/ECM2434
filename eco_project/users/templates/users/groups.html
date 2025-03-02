@@ -64,8 +64,10 @@
                             <ul class="list-group">
                                 {% for user in group.users.all %}
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ user.username }}{% if user == group.group_admin %} (group
-                                            admin){% endif %}
+                                        <a href="{% url 'users:user_profile' user.username %}" class = 'profileLink'>{% if user == request.user %}You{% else %}
+                                            {{ user.username }}{% endif %}
+                                        {% if user == group.group_admin %} (group
+                                            admin){% endif %}</a>
                                         {% if request.user == group.group_admin and user != group.group_admin %}
                                             <button class="btn btn-green-dark btn-sm remove-user-btn"
                                                     data-user-id="{{ user.id }}"
