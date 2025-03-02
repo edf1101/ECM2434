@@ -1,3 +1,6 @@
+"""
+Views for the leaderboard app.
+"""
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse

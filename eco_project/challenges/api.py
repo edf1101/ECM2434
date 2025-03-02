@@ -15,7 +15,8 @@ from .challenge_helpers import (
     streak_to_points,
     user_in_range_of_feature,
     user_already_reached_in_window,
-    get_interval
+    get_interval,
+    get_features_near
 )
 
 from .models import Streak, ChallengeSettings
@@ -155,25 +156,5 @@ def nearest_challenges_api(request) -> JsonResponse:
     # and are within a certain distance of the user
     current_user_lat = request.user.profile.latitude
     current_user_long = request.user.profile.longitude
-    challenge_data: dict[FeatureInstance, str] = {}
-    for feature in FeatureInstance.objects.all():
-        if not user_already_reached_in_window(
-                request.user, feature, update=False):
-            dist = haversine(
-                current_user_lat,
-                current_user_long,
-                feature.latitude,
-                feature.longitude)
-            dist_str = f"{dist / 1000.0:.2f}km away" if dist > 1 else f"{int(dist)}m away"
-            challenge_data[feature] = dist_str
-
-    # Sort the challenges by distance and get the 10 closest
-    sorted_challenges = sorted(challenge_data.items(), key=lambda x: x[1])
-    for feature, dist in sorted_challenges[:10]:
-        challenges.append(
-            {
-                "directions": dist,
-                "description": feature.name,
-            }
-        )
+    challenges = get_features_near(current_user_lat, current_user_long, request.user)
     return JsonResponse({"challenges": challenges})

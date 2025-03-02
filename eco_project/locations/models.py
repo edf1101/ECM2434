@@ -74,7 +74,21 @@ class FeatureInstance(models.Model):
         blank=True,
         null=True)
 
-    #pylint: disable=unused-argument
+    instance_description: models.TextField = models.TextField()
+
+    @property
+    def description(self) -> str:
+        """
+        Returns the description of the feature instance if there is one else
+        returns the description of the feature type.
+
+        @return: The description of the feature instance.
+        """
+
+        return str(self.instance_description if self.instance_description else
+                   self.feature.description)
+
+    # pylint: disable=unused-argument
     def update_qr_code(self, skip_signal=False) -> None:
         """
         Updates the QR code for this feature instance.
@@ -278,7 +292,7 @@ class LocationsAppSettings(models.Model):
 
         @return: String representation of the model.
         """
-        return "Site Settings"
+        return "Map Settings"
 
 
 class FeatureInstanceTileMap(models.Model):
@@ -347,7 +361,7 @@ class QuestionFeature(models.Model):
                 input_answer.lower() if not self.case_sensitive else input_answer)
 
             valid_non_fuzzy = (
-                not self.use_fuzzy_comparison and input_answer == correct_answer)
+                    not self.use_fuzzy_comparison and input_answer == correct_answer)
             valid_fuzzy = (self.use_fuzzy_comparison and fuzz.ratio(
                 input_answer, correct_answer) > self.fuzzy_threshold)
 

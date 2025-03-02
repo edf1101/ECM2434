@@ -6,6 +6,7 @@ LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved 
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+import sys
 from django.db.models import Min, Max
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -20,10 +21,13 @@ from .models import (
 # pylint: disable=unused-argument
 @receiver(post_save, sender=FeatureInstance)
 @receiver(post_save, sender=LocationsAppSettings)
-def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
+def update_feature_instance_qr_code(sender, instance, progress_bar=False, **kwargs) -> None:
     """
     Update the QR code of a FeatureInstance or all FeatureInstances.
 
+    :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
+    :param instance: The instance of the sender
+    :param progress_bar: Whether to display a progress bar
     @param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
     @param instance: The instance of the sender
     """
@@ -38,12 +42,22 @@ def update_feature_instance_qr_code(sender, instance, **kwargs) -> None:
         instance.update_qr_code(skip_signal=True)
         instance.skip_qr_update = False
     else:
-        for feature_instance in FeatureInstance.objects.all():
+        for ind, feature_instance in enumerate(FeatureInstance.objects.all()):
             # print(f'created QR code for feature instance {feature_instance}')
 
             feature_instance.skip_qr_update = True
             feature_instance.update_qr_code(skip_signal=True)
             feature_instance.skip_qr_update = False
+
+            length = FeatureInstance.objects.all().count()
+            per = int(20 * (1 + ind) / length)  # how many # to draw
+            if progress_bar:
+                sys.stdout.write(  # draw a progress bar
+                    f'\r[{"#" * per}{" " * (20 - per)}] {(1 + ind)}/{length}')
+                sys.stdout.flush()
+        if progress_bar:
+            sys.stdout.write('\r\n')
+            sys.stdout.flush()
 
 
 @receiver(post_save, sender=Map3DChunk)
