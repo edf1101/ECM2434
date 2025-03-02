@@ -15,6 +15,11 @@
         .vertical-divider {
             border-right: 2px solid rgba(37, 46, 42, 0.32);
         }
+
+        img.rounded {
+            border-radius: 10px;
+        }
+
     </style>
 {% endblock %}
 
@@ -24,11 +29,12 @@
         <div class="row">
             <div class="col-12 text-center">
                 {% if in_range %}
-                <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
-                <h4>You have gained points for getting here!</h4>
+                    <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
+                    <h4>You have gained points for getting here!</h4>
                 {% else %}
-                <h1>✨The {{ feature_instance.name }}✨</h1>
-                <h4>We don't think you are actually in range... Try reloading or getting closer?</h4>
+                    <h1>✨The {{ feature_instance.name }}✨</h1>
+                    <h4>We don't think you are actually in range... Try reloading or getting
+                        closer?</h4>
                 {% endif %}
             </div>
         </div>
@@ -40,7 +46,7 @@
                     {{ feature_instance.longitude|floatformat:"3" }}</h3>
                 <h3>Code: {{ feature_instance.slug }}</h3>
                 <img src="{{ feature_instance.image.url }}"
-                     alt="Image of {{ feature_instance.name }}" class="img-fluid"/>
+                     alt="Image of {{ feature_instance.name }}" class="img-fluid rounded"/>
             </div>
             {# Show feature instance info if there is any otherwise just show feature type info #}
             <div class="col-md-6 pl-md-3 text-center">

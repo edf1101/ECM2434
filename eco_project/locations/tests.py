@@ -56,16 +56,6 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, "locations/location_home.html")
         self.assertIn("feature_type_list", response.context)
 
-    def test_test_map(self) -> None:
-        """
-        Test the test map view
-
-        @return: None
-        """
-        response = self.client.get(reverse("locations:map"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/test_map.html")
-
     def test_individual_feature_page_has_question(self) -> None:
         """
         Test if the page displays a feature instance with a question
@@ -123,19 +113,6 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "locations/feature_type_list.html")
         self.assertIn("feature_type_list", response.context)
-
-    def test_generic_feature_list(self) -> None:
-        """
-        Test the generic feature list view
-
-        @return: None
-        """
-        # Test if it returns a page with the list of all the generic features types with hyperlinks
-        response = self.client.get(reverse("locations:generic-feature-list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/feature_type_list.html")
-        self.assertIn("feature_type_list", response.context)
-
 
 class SignalsTests(TestCase):
     """

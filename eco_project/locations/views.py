@@ -6,8 +6,8 @@ This module contains the views for the locations app.
 from challenges.challenge_helpers import user_reached_feature, user_in_range_of_feature
 from django.http import HttpResponse
 from django.shortcuts import render
-
-from .models import FeatureInstance, FeatureType, QuestionFeature
+from challenges.challenge_helpers import get_features_near
+from .models import FeatureInstance, FeatureType, QuestionFeature, LocationsAppSettings
 
 
 def base_locations(request) -> HttpResponse:
@@ -20,18 +20,6 @@ def base_locations(request) -> HttpResponse:
     generic_features = FeatureType.objects.all()
     context = {"feature_type_list": generic_features}
     return render(request, "locations/location_home.html", context=context)
-
-
-def test_map(request) -> HttpResponse:
-    """
-    This function returns a test map page for the locations app.
-
-    @param request: The request object that gets passed to the view.
-    @return: An HTTP webpage to render to the user.
-    """
-
-    # no context required as the tile data is loaded with GET requests
-    return render(request, "locations/test_map.html")
 
 
 def individual_feature_page(request, slug) -> HttpResponse:
@@ -79,17 +67,18 @@ def generic_feature_page(request, id_arg) -> HttpResponse:
     @return: The HTTP webpage to render to the user.
     """
     feature_type: FeatureType = FeatureType.objects.get(id=id_arg)
-    context = {"feature_type": feature_type}
+
+    # Get nearby feature instances of this type to display on the page
+
+    # get user location if logged in else get default locations
+    lat = LocationsAppSettings.get_instance().default_lat
+    lon = LocationsAppSettings.get_instance().default_lon
+    if request.user.is_authenticated:
+        lat = request.user.profile.latitude
+        lon = request.user.profile.longitude
+
+    nearby_feature_instances = list(get_features_near(lat, lon, specific_feature=feature_type))
+
+    context = {"feature_type": feature_type, 'nearby_features': nearby_feature_instances}
+
     return render(request, "locations/feature_type.html", context)
-
-
-def generic_feature_list(request) -> HttpResponse:
-    """
-    This function returns a webpage that lists all the generic features with hyperlinks.
-
-    @param request:  The request object that gets passed to the view.
-    @return: An HTTP webpage to render to the user.
-    """
-    generic_features = FeatureType.objects.all()
-    context = {"feature_type_list": generic_features}
-    return render(request, "locations/feature_type_list.html", context)
