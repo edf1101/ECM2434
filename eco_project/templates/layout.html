@@ -240,16 +240,28 @@
 
         if (localStorage.getItem("theme") === "dark") {
             body.classList.add("dark-mode");
+            if (toggle) {
+                toggle.textContent = "Light Mode"; 
+                toggle.classList.add("btn-dark"); 
+                toggle.classList.remove("btn-outline-light");
+            }
         }
 
-        if (toggle) {
+        if (toggle) { // Ensure button exists
             toggle.addEventListener("click", function () {
                 body.classList.toggle("dark-mode");
 
+                // Check and save the theme in localStorage
                 if (body.classList.contains("dark-mode")) {
                     localStorage.setItem("theme", "dark");
+                    toggle.textContent = "Light Mode";
+                    toggle.classList.add("btn-dark");
+                    toggle.classList.remove("btn-outline-light");
                 } else {
                     localStorage.setItem("theme", "light");
+                    toggle.textContent = "Dark Mode";
+                    toggle.classList.add("btn-outline-light");
+                    toggle.classList.remove("btn-dark");
                 }
             });
         }
