@@ -21,6 +21,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--text-color);
 }
 
 .navbar .logo {
@@ -272,7 +273,7 @@ main.container {
 .dark-mode {
     --bg-color: #2f4b27;
     --text-color: #fff;
-    --navbar-bg: #253127;
+    --navbar-bg: #3e5141;
     --feature-bg: #333930;
     --btn-green: #165b33;
     --btn-green-hover: #1d2d24;
