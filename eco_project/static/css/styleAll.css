@@ -70,13 +70,13 @@ body {
 }
 
 .clickable-sections .section {
-    background-color: #B2E3A6;
+    background-color: var(--bg-color);
     padding: 20px;
     border-radius: 8px;
     width: 30%;
     text-align: center;
     text-decoration: none;
-    color: #333;
+    color: var(--text-color);
     cursor: pointer;
 }
 
@@ -93,7 +93,7 @@ body {
 }
 
 .pet-info {
-    background-color: #B2E3A6;
+    background-color: var(--bg-color);
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
