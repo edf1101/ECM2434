@@ -1,0 +1,4 @@
+eco_project/static/three/build/*
+eco_project/static/jsm/controls/*
+eco_project/static/jsm/loaders/*
+eco_project/static/jsm/utils/*
