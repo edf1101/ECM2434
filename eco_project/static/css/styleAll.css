@@ -1,10 +1,10 @@
 
 body {
-    background-color: #99D887;
+    background-color: var(--bg-color);
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .top-bar {
@@ -16,7 +16,7 @@ body {
 }
 
 .navbar {
-    background-color: #7ABD6E;
+    background-color: var(--navbar-bg);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -256,4 +256,24 @@ main.container {
 /* Override the default arrow icon to ensure it stays white */
 .accordion-button::after {
     filter: brightness(0) invert(1);
+}
+
+/* Light Mode */
+:root {
+    --bg-color: #99D887;
+    --text-color: #333;
+    --navbar-bg: #7ABD6E;
+    --feature-bg: #f8f9fa;
+    --btn-green: #30c46e;
+    --btn-green-hover: #1a673a;
+}
+
+/* Dark Mode */
+.dark-mode {
+    --bg-color: #2f4b27;
+    --text-color: #fff;
+    --navbar-bg: #253127;
+    --feature-bg: #333930;
+    --btn-green: #165b33;
+    --btn-green-hover: #1d2d24;
 }
