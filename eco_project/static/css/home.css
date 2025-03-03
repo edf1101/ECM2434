@@ -34,13 +34,13 @@
     padding: 20px;
     text-align: center;
     margin-bottom: 20px;
-    background-color: #f8f9fa;
+    background-color: var(--feature-bg);
     border-radius: 5px;
 }
 
 .btn-green {
-    background-color: #2ecc71;
-    border-color: #2ecc71;
+    background-color: var(--btn-green);
+    border-color: var(--btn-green);
     color: #fff;
     transition: background-color 0.2s, border-color 0.2s;
 }
@@ -48,8 +48,8 @@
 .btn-green:hover,
 .btn-green:focus,
 .btn-green:active {
-    background-color: #27ae60;
-    border-color: #27ae60;
+    background-color: var(--btn-green-hover);
+    border-color: var(--btn-green-hover);
     color: #fff;
 }
 
