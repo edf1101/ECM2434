@@ -83,7 +83,7 @@
 .features-carousel::-webkit-scrollbar-thumb {
     background: #555;
     border-radius: 4px;
-    border: 1px solid #444;
+    border: 1px solid #fff;
 }
 
 .features-carousel .feature-box {
@@ -134,23 +134,23 @@
 
 .map-header {
     padding: 1rem;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    background-color: var(--home-header);
+    border-bottom: 1px solid var(--home-header);
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
 }
 
 
 .pet-header {
-    padding: 1.55rem;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    padding: 1.1rem;
+    background-color: var(--home-header);
+    border-bottom: 1px solid var(--home-header);
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
 }
 
 .pet-content {
-    background-color: #d4fbd0;
+    background-color: var(--pet-color);
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -227,6 +227,8 @@
     --btn-green-hover: #1a673a;
     --footer-color: #f5f5f5;
     --feature-color: #cccccc;
+    --pet-color: #d4fbd0;
+    --home-header: #ffffff;
 }
 
 /* Dark Mode */
@@ -239,4 +241,6 @@
     --btn-green-hover: #1d2d24;
     --footer-color: #757373;
     --feature-color: #a19f9f;
+    --pet-color: #7dd673;
+    --home-header: #cecece;
 }

@@ -2,8 +2,8 @@
 .map-box {
   max-width: 100%;
   margin: 0 auto;
-  background: #fff;
-  border: 2px solid #fff;
+  background: var(--home-header);
+  border: 2px solid var(--home-header);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -11,8 +11,8 @@
 
 .map-header {
   padding: 0.5rem 1rem;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: var(--home-header);
+  border-bottom: 1px solid var(--home-header);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,7 +37,7 @@
 .map-container-small {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background-color: #eaeaea;
+  background-color: var(--home-header);
 }
 
 /* Fullscreen map container inside the modal */
@@ -71,4 +71,15 @@
 
 .feature-carousel::-webkit-scrollbar {
   display: none;
+}
+
+
+/* Light Mode */
+:root {
+  --home-header: #ffffff;
+}
+
+/* Dark Mode */
+.dark-mode {
+  --home-header: #cecece;
 }
