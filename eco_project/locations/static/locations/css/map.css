@@ -44,7 +44,7 @@
 .map-container-fullscreen {
   width: 100%;
   height: 100%;
-  background-color: #eaeaea;
+  background-color: var(--feature-color);
 }
 
 @media (max-width: 576px) {
@@ -66,6 +66,7 @@
 .feature-card {
   flex: 0 0 auto;
   width: 250px;
+  background-color: var(--feature-color);
 }
 
 .feature-carousel::-webkit-scrollbar {
