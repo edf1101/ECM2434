@@ -28,6 +28,15 @@ body {
     height: 40px;
 }
 
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
 .switch {
     position: relative;
     display: inline-block;
@@ -49,6 +58,10 @@ body {
     bottom: 0;
     background-color: #ccc;
     transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider.round {
     border-radius: 34px;
 }
 
