@@ -92,7 +92,10 @@
                 </li>
 
                 <li class="theme-toggle">
-                    <button id="dark-mode-toggle" class="btn btn-outline-light">Dark Mode</button>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider"></span>
+                    </label>
                 </li>
 
                 <li class="nav-item dropdown ">
@@ -238,33 +241,15 @@
         const toggle = document.getElementById("dark-mode-toggle");
         const body = document.body;
 
-        if (localStorage.getItem("theme") === "dark") {
-            body.classList.add("dark-mode");
-            if (toggle) {
-                toggle.textContent = "Light Mode"; 
-                toggle.classList.add("btn-dark"); 
-                toggle.classList.remove("btn-outline-light");
-            }
-        }
+        const isDarkMode = localStorage.getItem("theme") === "dark";
+        body.classList.toggle("dark-mode", isDarkMode);
+        toggle.checked = isDarkMode; // Sync switch position
 
-        if (toggle) { // Ensure button exists
-            toggle.addEventListener("click", function () {
-                body.classList.toggle("dark-mode");
-
-                // Check and save the theme in localStorage
-                if (body.classList.contains("dark-mode")) {
-                    localStorage.setItem("theme", "dark");
-                    toggle.textContent = "Light Mode";
-                    toggle.classList.add("btn-dark");
-                    toggle.classList.remove("btn-outline-light");
-                } else {
-                    localStorage.setItem("theme", "light");
-                    toggle.textContent = "Dark Mode";
-                    toggle.classList.add("btn-outline-light");
-                    toggle.classList.remove("btn-dark");
-                }
-            });
-        }
+        toggle.addEventListener("change", function () {
+            const darkModeEnabled = toggle.checked;
+            body.classList.toggle("dark-mode", darkModeEnabled);
+            localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
+        });
     });
 
 </script>

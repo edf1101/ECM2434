@@ -28,6 +28,50 @@ body {
     height: 40px;
 }
 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #39b443; 
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
 
 .container {
     padding: 20px;
@@ -271,9 +315,9 @@ main.container {
 
 /* Dark Mode */
 .dark-mode {
-    --bg-color: #2f4b27;
-    --text-color: #fff;
-    --navbar-bg: #3e5141;
+    --bg-color: #2e7e2d;
+    --text-color: #ffffff;
+    --navbar-bg: #235329;
     --feature-bg: #333930;
     --btn-green: #165b33;
     --btn-green-hover: #1d2d24;

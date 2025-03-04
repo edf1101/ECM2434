@@ -164,7 +164,7 @@
 
 .vertical-divider {
     width: 2px;
-    background-color: rgb(30, 99, 57);
+    background-color: var(--bg-color);
     margin: 0 1rem;
     height: 80%;
 }
@@ -229,9 +229,9 @@
 
 /* Dark Mode */
 .dark-mode {
-    --bg-color: #2f4b27;
-    --text-color: #fff;
-    --navbar-bg: #3e5141;
+    --bg-color: #2e7e2d;
+    --text-color: #ffffff;
+    --navbar-bg: #235329;
     --feature-bg: #333930;
     --btn-green: #165b33;
     --btn-green-hover: #1d2d24;
