@@ -83,6 +83,7 @@ class Pet(models.Model):
 
     health = models.IntegerField(default=100,
                                  validators=[MinValueValidator(0), MaxValueValidator(100)])
+    created_at = models.DateTimeField(default=timezone.now)
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
     owner = models.ForeignKey(
         User,
