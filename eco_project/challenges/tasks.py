@@ -63,10 +63,16 @@ def cleanup_user_feature_reaches() -> None:
 
 
 
-def update_pet_health():
+def update_pet_health() -> None:
+    """
+    Reduces the health of each Pet by 5% if created over 1 minute ago, ensuring health doesn't drop below zero.
+
+    @return: None
+    """
+        
     Pet = apps.get_model('pets', 'Pet')
     now = timezone.now()
-    time_threshold = now - timedelta(minutes=1)  # Set to 1 day; adjust as needed
+    time_threshold = now - timedelta(days=1)  # Set to 1 day; adjust as needed
 
     pets = Pet.objects.filter(created_at__lte=time_threshold)
     for pet in pets:
