@@ -65,7 +65,7 @@ def cleanup_user_feature_reaches() -> None:
 
 def update_pet_health() -> None:
     """
-    Reduces the health of each Pet by 5% if created over 1 minute ago, ensuring health doesn't drop below zero.
+    Reduces the health of each Pet by 5% if created over 1 day ago, ensuring health doesn't drop below zero.
 
     @return: None
     """
