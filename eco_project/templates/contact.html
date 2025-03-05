@@ -5,11 +5,47 @@
 
 {% block extrahead %}
   <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <style>
+    /* Container adjustments */
+    .contact-header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: inherit;
+    }
+    .contact-header p {
+      font-size: 1em;
+      margin-bottom: 20px;
+      color: inherit;
+    }
+    /* Card style for the form */
+    .contact-card {
+      background-color: inherit;
+      border: 1px solid #80CD27;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      padding: 20px;
+    }
+    /* Form element spacing */
+    .contact-card .form-label {
+      font-weight: 600;
+    }
+    .contact-card .btn-green-dark {
+      background-color: #106A1A;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .contact-card .btn-green-dark:hover {
+      background-color: #28963D;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
 <div class="container my-4">
-  <div class="row text-center">
+  <div class="row text-center contact-header">
     <div class="col-12">
       <h1>Contact Us</h1>
       <p>Have a question or feedback? Please let us know!</p>
@@ -17,22 +53,24 @@
   </div>
   <div class="row justify-content-center my-4">
     <div class="col-md-8">
-      <form action="{% url 'contact' %}" method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-        </div>
-        <div class="mb-3">
-          <label for="message" class="form-label">Message</label>
-          <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-green-dark">Send Message</button>
-      </form>
+      <div class="contact-card">
+        <form action="{% url 'contact' %}" method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your message..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-green-dark">Send Message</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>

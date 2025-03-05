@@ -4,138 +4,205 @@
 {% block title %}Ecopet - @{{ user.username }}{% endblock %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <style>
+    .profile-header {
+      background: linear-gradient(135deg, #106A1A, #28963D);
+      padding: 40px;
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-header h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .profile-header p {
+      font-size: 1.3em;
+      margin: 0;
+    }
+    .badge-custom {
+      font-size: 1.2em;
+      padding: 8px 16px;
+      border-radius: 20px;
+      margin: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .badge-custom:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    .pet-card {
+      background: rgba(255,255,255,0.08);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-around;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pet-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.45);
+    }
+    .pet-image-container, .pet-stats-container {
+      flex: 1 1 45%;
+      padding: 15px;
+      text-align: center;
+    }
+    .pet-image-container img {
+      border: 5px solid #80CD27;
+      border-radius: 50%;
+      max-width: 220px;
+      height: auto;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .pet-image-container img:hover {
+      transform: scale(1.1);
+      filter: brightness(1.1);
+    }
+    .vertical-divider {
+      width: 2px;
+      background-color: #80CD27;
+      margin: 0 20px;
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .vertical-divider {
+        display: block;
+      }
+    }
+
+    .progress {
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      background: linear-gradient(90deg, #99D887, #7ED08F);
+      font-weight: bold;
+      transition: width 0.3s;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.9; }
+      50% { opacity: 1; }
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
+<div class="container mt-4">
 
-        <div class="mb-4">
-            <h1 class="d-inline">
-                <h1 class="d-inline display-1"><u>   {{ user.first_name }} {{ user.last_name }}'s
-                    Profile</u></h1>
-                {% if user == request.user %}
-                    <a href="{% url 'users:edit' %}" class="ms-2 text-decoration-none"
-                       title="Edit Profile">
-                        <i class="bi bi-pencil-square fs-3 align-middle"></i>
-                    </a>
-                {% endif %}
-            </h1>
-            <p class="text-muted">{{ user.profile.bio }}</p>
-        </div>
-
-        {# Have points and streak badges on top #}
-        <div class="mb-3">
-            <span class="badge"
-                  style="background-color: #EFBF04; font-size: 1.2em;">✨Points: {{ user.profile.points }}✨</span>
-            <span class="badge"
-                  style="background-color: #f4573d; font-size: 1.2em;">🔥Streak: {{ user.streak.effective_streak }}🔥</span>
-        </div>
-        {# Then have normal badges here #}
-        <div class="mb-3">
-
-            {% for badge in badges %}
-                <span class="badge"
-                      style="background-color: {{ badge.colour }};">{{ badge.title }}</span>
-            {% endfor %}
-        </div>
+  <div class="profile-header">
+    <h1><u>{{ user.first_name }} {{ user.last_name }}'s Profile</u></h1>
+    {% if user == request.user %}
+      <a href="{% url 'users:edit' %}" class="text-decoration-none" title="Edit Profile">
+        <i class="bi bi-pencil-square fs-3 align-middle"></i>
+      </a>
+    {% endif %}
+    <p>{{ user.profile.bio }}</p>
+  </div>
+  
+  <div class="text-center mb-4">
+    <span class="badge-custom" style="background-color: #EFBF04;">✨ Points: {{ user.profile.points }} ✨</span>
+    <span class="badge-custom" style="background-color: #f4573d;">🔥 Streak: {{ user.streak.effective_streak }} 🔥</span>
+    {% for badge in badges %}
+      <span class="badge-custom" style="background-color: {{ badge.colour }};">{{ badge.title }}</span>
+    {% endfor %}
+  </div>
+  
+  <section class="pet-card">
+    <div class="pet-image-container">
+      {% if pet %}
+        <h4 id="petName">{{ pet.name }}</h4>
+        {% if pet.type.base_image %}
+          <img id="petImage" src="{{ pet.type.base_image.url }}" alt="{{ pet.name }}">
+        {% else %}
+          <img id="petImage" src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
+        {% endif %}
+      {% else %}
+        <h4 id="petName">Default Pet Name</h4>
+        <img id="petImage" src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
+      {% endif %}
     </div>
-
-    {# Pet info section for the user #}
-    <section class="hero-section">
-        <div class="hero-bg"></div>
-        <div class="hero-content d-flex flex-column justify-content-center align-items-left text-left text-white">
-            <div class="container">
-                <div class="pet-content d-flex flex-wrap align-items-center">
-                    {# Left side of the hero has pet name and photo #}
-                    <div class="w-50 d-flex flex-column align-items-center justify-content-center p-2">
-                        {% if pet %}
-                            <h4 id="petName">{{ pet.name }}</h4>
-                            {% if pet.type.base_image %}
-                                <img id="petImage" src="{{ pet.type.base_image.url }}"
-                                     alt="{{ pet.name }}"
-                                     class="img-fluid rounded"
-                                     style="max-width: 100%; height: auto;">
-                            {% else %}
-                                <img id="petImage" src="{% static 'media/demoPet.png' %}"
-                                     alt="Demo Pet"
-                                     class="img-fluid rounded"
-                                     style="max-width: 100%; height: auto;">
-                            {% endif %}
-                        {% else %}
-                            <h4 id="petName">Default Pet Name</h4>
-                            <img id="petImage" src="{% static 'media/demoPet.png' %}"
-                                 alt="Demo Pet"
-                                 class="img-fluid rounded"
-                                 style="max-width: 100%; height: auto;">
-                        {% endif %}
-                    </div>
-                    <div class="vertical-divider"></div>
-                    {# Pet stats on the right side of the screen #}
-                    <div class="w-50 d-flex align-items-center p-2">
-                        <div class="text-start">
-                            <h5>Scores</h5>
-                            <p class="mt-3">
-                                {{ pet.name }}'s score is:
-                                <span id="petPoints">{{ user.profile.points }}</span>
-
-                            </p>
-                            <br>
-                            <h5>Health</h5>
-                            <div class="progress w-100 mb-2">
-                                {% if pet %}
-                                    {% with health=pet.health %}
-                                        <div id="petHealthBar" class="progress-bar"
-                                             role="progressbar"
-                                             style="width: {{ health }}%;"
-                                             aria-valuenow="{{ health }}"
-                                             aria-valuemin="0" aria-valuemax="100">
-                                            {{ health }}%
-                                        </div>
-                                    {% endwith %}
-                                {% else %}
-                                    <div id="petHealthBar" class="progress-bar" role="progressbar"
-                                         style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
-                                         aria-valuemax="100">
-                                        50%
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <small id="petHealthText">
-                                {% if pet %}
-                                    {% if pet.health > 80 %}
-                                        {{ pet.name }}'s happy! Go find challenges to
-                                        keep it that way!
-                                    {% elif pet.health > 30 %}
-                                        {{ pet.name }}'s surviving, but not thriving.
-                                        Find challenges to improve its health!
-                                    {% else %}
-                                        {{ pet.name }}'s feeling sad, it doesn't want
-                                        to go extinct! Find challenges to save it!
-                                    {% endif %}
-                                {% else %}
-                                    The default pet is feeling fine, but it's not real!
-                                {% endif %}
-                            </small>
-                        </div>
-                    </div>
-                </div>
+    
+    <div class="vertical-divider"></div>
+    
+    <div class="pet-stats-container">
+      <h5>Scores</h5>
+      <p class="mt-3">
+        {% if pet %}
+          {{ pet.name }}'s score: <span id="petPoints">{{ user.profile.points }}</span>
+        {% else %}
+          Your score: <span id="petPoints">{{ user.profile.points }}</span>
+        {% endif %}
+      </p>
+      <br>
+      <h5>Health</h5>
+      <div class="progress">
+        {% if pet %}
+          {% with health=pet.health %}
+            <div id="petHealthBar" class="progress-bar" role="progressbar"
+                 style="width: {{ health }}%;"
+                 aria-valuenow="{{ health }}"
+                 aria-valuemin="0" aria-valuemax="100">
+              {{ health }}%
             </div>
-        </div>
-    </section>
-    <br><br><br>
-    {# Recent Challenges Section #}
-    <div class="mb-4">
-        <h1 class="display-5">Recently Completed Challenges</h1>
-        {% for challenge in challenges %}
-            <div class="alert alert-success" role="alert">
-                They reached the {{ challenge.feature_instance.name }} at
-                {{ challenge.reached_at|date:"F j, Y, g:i a" }}!
-            </div>
-            {% empty %}
-            <p class="text-muted">No challenges completed recently, encourage them to get back
-                going!</p>
-        {% endfor %}
+          {% endwith %}
+        {% else %}
+          <div id="petHealthBar" class="progress-bar" role="progressbar"
+               style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
+               aria-valuemax="100">
+            50%
+          </div>
+        {% endif %}
+      </div>
+      <small id="petHealthText">
+        {% if pet %}
+          {% if pet.health > 80 %}
+            {{ pet.name }} is in excellent condition – keep conquering challenges!
+          {% elif pet.health > 30 %}
+            {{ pet.name }} is holding on – earn more points to boost its health.
+          {% else %}
+            {{ pet.name }} is in critical condition – urgent care required!
+          {% endif %}
+        {% else %}
+          Your default pet is performing well.
+        {% endif %}
+      </small>
     </div>
+  </section>
+  
+  <!-- Recent challenges section -->
+  <div class="mb-4">
+    <h1 class="display-5 text-center">Recently Completed Challenges</h1>
+    {% for challenge in challenges %}
+      <div class="alert alert-success" role="alert">
+        They reached the {{ challenge.feature_instance.name }} on
+        {{ challenge.reached_at|date:"F j, Y, g:i a" }}!
+      </div>
+    {% empty %}
+      <p class="text-muted text-center">No challenges completed recently – get out there and earn those points!</p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

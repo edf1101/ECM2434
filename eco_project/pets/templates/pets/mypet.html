@@ -3,7 +3,73 @@
 
 {% block title %}My Pet - EcoPet{% endblock %}
 
+{% block extrahead %}
+  <style>
+    .pet-container {
+      background: #C3E684; 
+      border: 2px solid #28963D; 
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 20px auto;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .pet-header {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #106A1A;
+      text-shadow: 2px 2px #8FD8B7;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .pet-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      align-items: center;
+    }
+    .pet-image img {
+      max-width: 300px;
+      border-radius: 10px;
+      border: 3px solid #98DABA;
+      transition: transform 0.3s ease;
+    }
+    .pet-image img:hover {
+      transform: scale(1.05);
+    }
+    .pet-details {
+      font-size: 1.2em;
+      color: #106A1A;
+      line-height: 1.6;
+    }
+    .pet-details p {
+      margin: 10px 0;
+    }
+    .accessorise-btn {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background-color: #7ED08F;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1.2em;
+      text-align: center;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .accessorise-btn:hover {
+      background-color: #28963D;
+      transform: translateY(-3px);
+    }
+    .navbar-text {
+      font-family: Arial, sans-serif !important;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
+
     <link rel="stylesheet" href ="{% static 'pets/css/mypet.css' %}">
 
     <div class="pet-container">

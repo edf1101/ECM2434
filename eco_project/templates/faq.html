@@ -4,68 +4,230 @@
 {% block title %}FAQ - EcoPet{% endblock %}
 
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <style>
+    /* Search Box Styling */
+    #faqSearch {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 20px auto;
+      display: block;
+      padding: 8px 15px;
+      border: 2px solid #106A1A;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    /* Back-to-Top Button Styling */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: none;
+      background-color: #106A1A;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      padding: 10px 15px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      font-size: 1.2em;
+    }
+    #backToTop:hover {
+      background-color: #28963D;
+    }
+  </style>
+  <script>
+    // Back-to-top button functionality
+    window.addEventListener("scroll", function() {
+      var btn = document.getElementById("backToTop");
+      btn.style.display = window.scrollY > 200 ? "block" : "none";
+    });
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // FAQ search functionality
+    function searchFAQs() {
+      var input = document.getElementById('faqSearch');
+      var filter = input.value.toUpperCase();
+      var accordion = document.getElementById("faqAccordion");
+      var items = accordion.getElementsByClassName("accordion-item");
+      for (var i = 0; i < items.length; i++) {
+        var button = items[i].querySelector(".accordion-button");
+        var txtValue = button.textContent || button.innerText;
+        items[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+      }
+    }
+  </script>
 {% endblock %}
 
-
 {% block content %}
-    <div class="container my-4">
-        <div class="row text-center">
-            <div class="col-12">
-                <h1>Frequently Asked Questions</h1>
-                <p>Find answers to the most common questions about Ecopet below.</p>
-            </div>
-        </div>
-        <div class="row my-4">
-            <div class="col-12">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#faqCollapseOne" aria-expanded="true"
-                                    aria-controls="faqCollapseOne">
-                                What is EcoPet?
-                            </button>
-                        </h2>
-                        <div id="faqCollapseOne" class="accordion-collapse collapse show"
-                             aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Ecopet is an webapp designed to help you discover sustainablity around the University of Exeter campus.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingTwo">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo"
-                                    aria-expanded="false" aria-controls="faqCollapseTwo">
-                                How do I sign up?
-                            </button>
-                        </h2>
-                        <div id="faqCollapseTwo" class="accordion-collapse collapse"
-                             aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Simply click the "Register" link in the navbar and fill in your details.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeadingThree">
-                            <button class="accordion-button collapsed" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#faqCollapseThree"
-                                    aria-expanded="false" aria-controls="faqCollapseThree">
-                                How do I report an issue?
-                            </button>
-                        </h2>
-                        <div id="faqCollapseThree" class="accordion-collapse collapse"
-                             aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                If you encounter any issues, please get in touch with our team</a>.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container my-4">
+  <div class="row text-center">
+    <div class="col-12">
+      <h1>Frequently Asked Questions</h1>
+      <p>Find answers to the most common questions about EcoPet below.</p>
     </div>
+  </div>
+  <!-- Search Box -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <input type="text" id="faqSearch" placeholder="Search FAQs..." onkeyup="searchFAQs()">
+    </div>
+  </div>
+  <div class="row my-4">
+    <div class="col-12">
+      <div class="accordion" id="faqAccordion">
+        <!-- FAQ Item 1 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faqCollapseOne" aria-expanded="true"
+                    aria-controls="faqCollapseOne">
+              What is EcoPet?
+            </button>
+          </h2>
+          <div id="faqCollapseOne" class="accordion-collapse collapse show"
+               aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              EcoPet is an innovative web application that gamifies sustainability on campus. By completing eco‐friendly challenges, you earn points to care for your virtual pet—all while learning about sustainable practices at the University of Exeter.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 2 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingTwo">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo"
+                    aria-expanded="false" aria-controls="faqCollapseTwo">
+              How do I sign up?
+            </button>
+          </h2>
+          <div id="faqCollapseTwo" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Simply click the "Register" link in the navbar and fill in your details using your university email, username, and password.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 3 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingThree">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseThree"
+                    aria-expanded="false" aria-controls="faqCollapseThree">
+              How are points and rewards earned?
+            </button>
+          </h2>
+          <div id="faqCollapseThree" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Points are awarded when you complete sustainability challenges—whether by visiting eco‐friendly locations, scanning QR codes, or engaging with interactive quizzes.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 4 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingFour">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseFour"
+                    aria-expanded="false" aria-controls="faqCollapseFour">
+              What are sustainability challenges?
+            </button>
+          </h2>
+          <div id="faqCollapseFour" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingFour" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Sustainability challenges are interactive tasks designed to promote eco‐friendly behaviour. They may involve recycling initiatives, energy-saving practices, or educational quizzes that raise awareness about sustainable living.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 5 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingFive">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseFive"
+                    aria-expanded="false" aria-controls="faqCollapseFive">
+              How is my personal data managed?
+            </button>
+          </h2>
+          <div id="faqCollapseFive" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingFive" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              We take your privacy very seriously. EcoPet collects only the essential data to provide our service and processes it in strict accordance with GDPR guidelines. Your data is securely stored and is not shared with any third parties without your consent.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 6 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingSix">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseSix"
+                    aria-expanded="false" aria-controls="faqCollapseSix">
+              How do I report an issue or get support?
+            </button>
+          </h2>
+          <div id="faqCollapseSix" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingSix" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              If you encounter any issues, please <a href="{% url 'contact' %}">click here to contact</a> our support team.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 7 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingSeven">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseSeven"
+                    aria-expanded="false" aria-controls="faqCollapseSeven">
+              Can I update my profile and pet details later?
+            </button>
+          </h2>
+          <div id="faqCollapseSeven" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingSeven" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Yes, you can update your profile and pet details at any time through your account settings.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 8 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingEight">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseEight"
+                    aria-expanded="false" aria-controls="faqCollapseEight">
+              What features will be added in future updates?
+            </button>
+          </h2>
+          <div id="faqCollapseEight" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingEight" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Future updates will introduce additional gamification elements, new sustainability challenges, enhanced social features, and improved reward systems.
+            </div>
+          </div>
+        </div>
+        <!-- FAQ Item 9 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="faqHeadingNine">
+            <button class="accordion-button collapsed" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#faqCollapseNine"
+                    aria-expanded="false" aria-controls="faqCollapseNine">
+              How do I earn bonus rewards?
+            </button>
+          </h2>
+          <div id="faqCollapseNine" class="accordion-collapse collapse"
+               aria-labelledby="faqHeadingNine" data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+              Bonus rewards are awarded for sustained engagement, such as maintaining a long streak or participating in special events.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Extra Help Section -->
+  <div class="faq-extra">
+    <p>If you have any further queries, please <a href="{% url 'contact' %}">click here to contact</a> our support team.</p>
+  </div>
+</div>
+<button id="backToTop" onclick="scrollToTop()">&uarr;</button>
 {% endblock %}
