@@ -4,6 +4,7 @@ import django.core.validators
 import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -80,6 +81,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.PROTECT, to="pets.pettype"
                     ),
                 ),
+                ("created_at", models.DateTimeField(default=timezone.now)),
             ],
         ),
     ]
