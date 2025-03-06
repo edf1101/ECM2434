@@ -24,6 +24,14 @@ body {
     color: var(--text-color);
 }
 
+.navbar .navabar-text {
+    color: var(--text-color) !important;
+}
+
+.navbar .nav-link {
+    color: var(--text-color) !important;
+}
+
 .navbar .logo {
     height: 40px;
 }
@@ -313,7 +321,7 @@ main.container {
 /* Light Mode */
 :root {
     --bg-color: #99D887;
-    --text-color: #333;
+    --text-color: #333333;
     --navbar-bg: #7ABD6E;
     --feature-bg: #f8f9fa;
     --btn-green: #30c46e;

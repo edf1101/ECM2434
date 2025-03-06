@@ -126,8 +126,22 @@
 
 .feature-card .card {
     transition: transform 0.3s ease-in-out;
+    background-color: var(--feature-color);
+    color: var(--text-color);
 }
 
 .feature-card:hover .card {
     transform: scale(1.05);
+}
+
+/* Light Mode */
+:root {
+    --feature-color: #cccccc;
+    --text-color: #333333;
+}
+
+/* Dark Mode */
+.dark-mode {
+    --feature-color: #bababa;
+    --text-color: #ffffff;
 }

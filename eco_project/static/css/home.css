@@ -24,7 +24,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    color: #fff;
+    color: #ffffff;
     padding: 0 15px;
 }
 
@@ -220,7 +220,7 @@
 /* Light Mode */
 :root {
     --bg-color: #99D887;
-    --text-color: #333;
+    --text-color: #333333;
     --navbar-bg: #7ABD6E;
     --feature-bg: #f8f9fa;
     --btn-green: #30c46e;
