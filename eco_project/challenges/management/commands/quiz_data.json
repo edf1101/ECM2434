@@ -1,0 +1,84 @@
+[
+  {
+    "title": "Individual Sustainability Actions Quiz",
+    "total_points": 10,
+    "questions": [
+      {
+        "text": "Which of the following is a recommended action to reduce personal energy consumption?",
+        "choices": [
+          {"text": "Switching off appliances when not in use.", "is_correct": true},
+          {"text": "Keeping lights on in unoccupied rooms.", "is_correct": false}
+        ]
+      },
+      {
+        "text": "What is one way to minimize waste according to the University of Exeter?",
+        "choices": [
+          {"text": "Using disposable coffee cups.", "is_correct": false},
+          {"text": "Utilizing reusable water bottles.", "is_correct": true}
+        ]
+      },
+      {
+        "text": "How can individuals contribute to sustainable transportation?",
+        "choices": [
+          {"text": "Driving alone for short distances.", "is_correct": false},
+          {"text": "Cycling or walking for short journeys.", "is_correct": true}
+        ]
+      },
+      {
+        "text": "Which practice supports sustainable food consumption?",
+        "choices": [
+          {"text": "Purchasing locally sourced produce.", "is_correct": true},
+          {"text": "Buying imported fruits out of season.", "is_correct": false}
+        ]
+      },
+      {
+        "text": "What is a suggested method to conserve water?",
+        "choices": [
+          {"text": "Taking longer showers.", "is_correct": false},
+          {"text": "Fixing leaking taps promptly.", "is_correct": true}
+        ]
+      }
+    ]
+  },
+  {
+    "title": "University Sustainability Initiatives Quiz",
+    "total_points": 10,
+    "questions": [
+      {
+        "text": "What is the purpose of the Environment and Sustainability Institute (ESI) at the University of Exeter?",
+        "choices": [
+          {"text": "To conduct research on environmental change solutions.", "is_correct": true},
+          {"text": "To manage student accommodations.", "is_correct": false}
+        ]
+      },
+      {
+        "text": "Which initiative reflects the University's commitment to achieving carbon net zero?",
+        "choices": [
+          {"text": "Implementing an Environmental Management System (EMS).", "is_correct": true},
+          {"text": "Expanding parking facilities.", "is_correct": false}
+        ]
+      },
+      {
+        "text": "How does the University promote sustainable food practices?",
+        "choices": [
+          {"text": "By offering only imported food options.", "is_correct": false},
+          {"text": "By implementing a Sustainable Food Policy and Action Plan.", "is_correct": true}
+        ]
+      },
+      {
+        "text": "What is the University's target year to achieve carbon net zero across all scopes?",
+        "choices": [
+          {"text": "2030", "is_correct": true},
+          {"text": "2050", "is_correct": false}
+        ]
+      },
+      {
+        "text": "Which partnership aims to tackle global challenges related to sustainability and the environment?",
+        "choices": [
+          {"text": "The collaboration between the University of Exeter and Duke University.", "is_correct": true},
+          {"text": "The partnership between the University of Exeter and local restaurants.", "is_correct": false}
+        ]
+      }
+    ]
+  }
+]
