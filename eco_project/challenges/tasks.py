@@ -4,10 +4,13 @@ This module contains tasks that are called by the scheduler.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
+from datetime import timedelta
 from django.utils import timezone
+from django.apps import apps
 
 from .models import Streak, get_current_window, UserFeatureReach
 from .challenge_helpers import get_interval
+
 
 def update_challenges() -> None:
     """
@@ -56,3 +59,24 @@ def cleanup_user_feature_reaches() -> None:
 
     # Delete all records where reached_at is before the start of the current
     UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()
+
+
+def update_pet_health() -> None:
+    """
+    Reduces the health of each Pet by 5% if created over 1 day ago,
+     ensuring health doesn't drop below zero.
+
+    @return: None
+    """
+
+    pet_model = apps.get_model('pets', 'Pet')
+    now = timezone.now()
+    time_threshold = now - timedelta(days=1)  # Set to 1 day; adjust as needed
+
+    pets = pet_model.objects.filter(created_at__lte=time_threshold)
+    for pet in pets:
+        # Calculate new health by reducing current health by 5%
+        new_health = int(pet.health * 0.95)
+        # Ensure the health doesn't go below 0
+        pet.health = max(0, new_health)
+        pet.save()

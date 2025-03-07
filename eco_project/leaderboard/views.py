@@ -8,8 +8,6 @@ from django.shortcuts import render
 from pets.models import Pet
 from users.models import UserGroup
 
-from django.views.generic import DetailView
-
 User = get_user_model()
 
 

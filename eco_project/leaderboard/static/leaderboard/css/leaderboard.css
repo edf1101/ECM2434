@@ -1,17 +1,15 @@
 body {
-    background-color: #99D887;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    color: #ffffff;
     text-align: center;
 }
+
 .leaderboard-container {
-    background: rgba(30, 68, 33, 0.6);
+    background: var(--box-color);
     max-width: 800px;
     margin: 100px auto;
     padding: 20px;
     border-radius: 10px;
+    color: var(--text-color-l);
+    text-align: center;
 }
 table {
     width: 100%;
@@ -78,4 +76,16 @@ tr:nth-child(even) {
 .profileLink:hover {
     color: #81b89b;
     text-decoration: none;
+}
+
+/* Light Mode */
+:root {
+    --box-color: #1E4421;
+    --text-color-l: #ffffff;
+}
+
+/* Dark Mode */
+.dark-mode {
+    --box-color: #2f7935;
+    --text-color-l: #e0e0e0;
 }

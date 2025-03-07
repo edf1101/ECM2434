@@ -246,7 +246,7 @@ class ChallengesAPITests(TestCase):
         self.assertEqual(profile.points, 0)
 
     @patch("challenges.api.user_already_reached_in_window", return_value=False)
-    @patch("challenges.api.haversine", return_value=1500)
+    @patch("challenges.challenge_helpers.haversine", return_value=1500)
     def test_nearest_challenges_api_authenticated(
         self, mock_haversine: MagicMock, mock_already_reached: MagicMock
     ) -> None:

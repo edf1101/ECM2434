@@ -141,3 +141,63 @@ class UserFeatureReach(models.Model):
         return (
             f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
         )
+
+
+class Quiz(models.Model):
+    """
+    This model holds the quizzes that a user can complete.
+    """
+    title = models.CharField(max_length=200)
+    total_points = models.PositiveIntegerField(default=10)
+
+    def __str__(self) -> str:
+        """
+        The string representation of this model.
+        """
+        return self.title
+
+
+class Question(models.Model):
+    """
+    This model holds the questions for each quiz.
+    """
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    text = models.CharField(max_length=500)
+
+    def __str__(self) -> str:
+        """
+        The string representation of this model.
+        """
+        return self.text
+
+
+class Choice(models.Model):
+    """
+    This model holds the choices for each question.
+    """
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
+    text = models.CharField(max_length=200)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        """
+        The string representation of this model.
+        """
+        return self.text
+
+class QuizAttempt(models.Model):
+    """
+    This model holds the attempts of users on quizzes.
+    It is used so the site can determine if a user has already attempted a quiz.
+    """
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
+    answers = models.CharField(max_length=255) # This holds a users past answers ie ABB
+    score = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        """
+        The string representation of this model.
+        """
+        return f"{self.user} - {self.quiz} ({self.score})"

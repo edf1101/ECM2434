@@ -5,7 +5,8 @@
 
 {% block extrahead %}
 
-    <link rel="stylesheet" href="{% static 'styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
@@ -15,11 +16,8 @@
 
     <script type="module" src="{% static 'locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'updateChallenges.js' %}"></script>
-    <style>
 
-        body {
-            background-color: #99D887;
-        }
+    <style>
         .form-submit {
             margin-top: 20px;
             background-color: #8fbc8f;
@@ -28,11 +26,12 @@
             padding: 10px 20px;
             transition: background-color 0.3s ease;
         }
+        
         .form-submit:hover {
             background-color: #66cdaa;
         }
     </style>
-{% endblock %}
+    {% endblock %}
 
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
