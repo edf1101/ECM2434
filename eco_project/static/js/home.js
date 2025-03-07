@@ -148,5 +148,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI(); // Initial UI state
     setInterval(updatePetStats, 5000); // update pet stats every 5s
 
-
+    
 });

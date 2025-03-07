@@ -358,6 +358,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         event.target.value = ''; // Reset input
     });
+
+    //Dark Mode Listener
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("dark-mode-toggle");
+        const body = document.body;
+
+        const isDarkMode = localStorage.getItem("theme") === "dark";
+        body.classList.toggle("dark-mode", isDarkMode);
+        toggle.checked = isDarkMode; // Sync switch position
+
+        toggle.addEventListener("change", function () {
+            const darkModeEnabled = toggle.checked;
+            body.classList.toggle("dark-mode", darkModeEnabled);
+            localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
+        });
+    });
+
 });
 
   
