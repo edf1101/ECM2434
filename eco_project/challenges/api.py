@@ -213,7 +213,7 @@ def score_quiz(request: HttpRequest) -> Response:
 
     # If the user is logged in and the attempt is new, save the attempt and give the user points
     if request.user.is_authenticated:
-        attempt, created = QuizAttempt.objects.get_or_create(
+        _, created = QuizAttempt.objects.get_or_create(
             user=request.user,
             quiz=quiz,
             defaults={'answers': answers, 'score': percentage}

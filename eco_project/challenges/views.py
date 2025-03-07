@@ -4,7 +4,10 @@ This module contains the challenges views
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
+from locations.models import LocationsAppSettings
+from .challenge_helpers import get_features_near
 from .models import Quiz, QuizAttempt
 
 
@@ -16,7 +19,30 @@ def challenges_home(request) -> HttpResponse:
     @return: The rendered home page.
     """
 
-    return render(request, 'challenges/challenges_home.html')
+    # get nearby location features
+    # get user location if logged in else get default locations
+    lat = LocationsAppSettings.get_instance().default_lat
+    lon = LocationsAppSettings.get_instance().default_lon
+    if request.user.is_authenticated:
+        lat = request.user.profile.latitude
+        lon = request.user.profile.longitude
+
+    nearby_features = list(get_features_near(lat, lon))
+
+    # get all the quizzes
+    quizzes = []
+    for quiz in Quiz.objects.all():
+        quizzes.append({
+            'title': quiz.title,
+            'points': quiz.total_points,
+            'url': reverse('challenges:quiz_detail', kwargs={'quiz_id': quiz.id})  # Generate URL
+        })
+    context = {
+        "nearby_features": nearby_features,
+        "quizzes": quizzes,
+    }
+
+    return render(request, 'challenges/challenges_home.html', context=context)
 
 
 def quiz_detail(request: HttpRequest, quiz_id: int) -> HttpResponse:
