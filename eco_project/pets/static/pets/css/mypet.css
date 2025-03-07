@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
 
         /* Set full page background */
+        /*
         html, body {
             background: linear-gradient(135deg, #99D887, #7ED08F);
             min-height: 100vh;
             margin: 0;
             padding: 0;
         }
+        */
 
         /* Main Container */
         .pet-container {
@@ -94,3 +96,4 @@
             background: #8FD8B7;
             transform: scale(1.05);
         }
+

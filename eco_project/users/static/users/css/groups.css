@@ -12,6 +12,15 @@ body {
     overflow: hidden;
 }
 
+.profileLink:link, .profileLink:visited, .profileLink:active {
+    color: #121212;
+    transition: color 0.3s ease;
+}
+
+.profileLink:hover {
+    color: #1c9a58;
+}
+
 .hero::before {
     content: "";
     position: absolute;
@@ -37,4 +46,8 @@ body {
     border-color: #1d2d24;
     color: #fff;
     transition: background-color 0.2s, border-color 0.2s;
+}
+.btn-green-dark:hover {
+    color: #ffffff;
+    background-color: #267e48;
 }

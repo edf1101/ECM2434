@@ -6,16 +6,7 @@
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'locations/css/locationStyle.css' %}">
     <link rel="stylesheet" href="{% static 'locations/css/map.css' %}">
-
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://unpkg.com/three@v0.163.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@v0.163.0/examples/jsm/"
-          }
-        }
-    </script>
+    <link rel="stylesheet" href="{% static '/css/styleAll.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -64,8 +55,7 @@
         </div>
     </div>
 
-    <!-- Feature Cards Section -->
-    <!-- Feature Cards Section (Horizontal Scroll) -->
+    <!-- Feature Cards Carousel -->
     <div class="container my-4">
         <div class="row mb-4">
             <div class="col text-center">

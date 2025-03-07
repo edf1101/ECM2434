@@ -12,6 +12,8 @@ from .models import (
     LocationsAppSettings,
     QuestionFeature,
     QuestionAnswer,
+    Map3DChunk,
+    FeatureInstanceTileMap
 )
 
 
@@ -26,8 +28,8 @@ class FeatureTypeAdmin(admin.ModelAdmin):
         ("Feature Info", {
             "fields": [
                 "name", "description"]}), ("Display information", {
-                    "fields": [
-                        "colour", "generic_img", "feature_mesh"]}), ]
+            "fields": [
+                "colour", "generic_img", "feature_mesh"]}), ]
     search_fields = ["name"]
     list_display = ["name", "description"]
 
@@ -46,7 +48,7 @@ class FeatureInstanceAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Feature Info", {"fields": ["name", "feature", "slug"]}),
         ("Location", {"fields": ["longitude", "latitude"]}),
-        ("Display information", {"fields": ["specific_img"]}),
+        ("Display information", {"fields": ["specific_img","instance_description"]}),
         ("Challenge Info", {"fields": ["has_challenge", "has_question"]}),
         ("QR Code", {"fields": ["qr_code"]}),
     ]
@@ -180,6 +182,6 @@ admin.site.register(FeatureInstance, FeatureInstanceAdmin)
 
 admin.site.register(QuestionFeature, QuestionFeatureAdmin)
 
-# admin.site.register(Map3DChunk, Map3DChunkAdmin)  # Only for dev Gamekeeper doesn't need
-# admin.site.register(FeatureInstanceTileMap)  # Only for dev Gamekeeper
+admin.site.register(Map3DChunk, Map3DChunkAdmin)  # Only for dev Gamekeeper doesn't need
+admin.site.register(FeatureInstanceTileMap)  # Only for dev Gamekeeper
 # doesn't need
