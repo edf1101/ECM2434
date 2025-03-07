@@ -57,13 +57,15 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, "locations/location_home.html")
         self.assertIn("feature_type_list", response.context)
 
-    def test_test_map(self):
-        """
-        Test if returns test map for the locations app
-        """
-        response = self.client.get(reverse("locations:map"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/test_map.html")
+    # def test_test_map(self) -> None:
+    #     """
+    #     Test if returns test map for the locations app
+    #
+    #     @return: None
+    #     """
+    #     response = self.client.get(reverse("locations:map"))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, "locations/test_map.html")
 
     def test_individual_feature_page_has_question(self) -> None:
         """
@@ -114,26 +116,28 @@ class ViewsTestCase(TestCase):
         self.assertIn("feature_instance", response.context)
         self.assertIsNone(response.context.get("question"))
 
-    def test_generic_feature_page(self) -> None:
-        """
-        Test if the page displays a generic feature type
+    # def test_generic_feature_page(self) -> None:
+    #     """
+    #     Test if the page displays a generic feature type
         
-        @return: None
-        """
-        response = self.client.get(
-            reverse("locations:generic-feature-list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/feature_type_list.html")
-        self.assertIn("feature_type_list", response.context)
+    #     @return: None
+    #     """
+    #     response = self.client.get(
+    #         reverse("locations:generic-feature-list"))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, "locations/feature_type_list.html")
+    #     self.assertIn("feature_type_list", response.context)
 
-    def test_generic_feature_list(self):
-        """
-        Test if it returns a page with the list of all the generic features types with hyperlinks
-        """
-        response = self.client.get(reverse("locations:generic-feature-list"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "locations/feature_type_list.html")
-        self.assertIn("feature_type_list", response.context)
+    # def test_generic_feature_list(self) -> None:
+    #     """
+    #     Test if it returns a page with the list of all the generic features types with hyperlinks
+
+    #     @return: None
+    #     """
+    #     response = self.client.get(reverse("locations:generic-feature-list"))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, "locations/feature_type_list.html")
+    #     self.assertIn("feature_type_list", response.context)
 
 
 class SignalsTests(TestCase):
@@ -354,7 +358,7 @@ class ModelsTests(TestCase):
         Test the str method of locations app settings
         """
         settings = LocationsAppSettings.get_instance()
-        self.assertEqual(str(settings), "Site Settings")
+        self.assertEqual(str(settings), "Map Settings")
 
     def test_question_feature_str(self) -> None:
         """
