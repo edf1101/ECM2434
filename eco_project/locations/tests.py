@@ -251,6 +251,7 @@ class ModelsTests(TestCase):
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
                                            content_type="image/jpeg")
+        )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
             name="Test Feature Instance",
