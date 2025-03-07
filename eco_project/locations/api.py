@@ -212,26 +212,42 @@ def get_feature_instances(request) -> Response:
 @require_POST
 def validate_qr(request):
     """
-    This function validates a qr link to a feature and if it is valid redirects to that page.
+    Validates a QR code link to a feature and redirects to its page if valid.
     """
-    try:  # Check JSON daat has the qr_code in it
-        data = json.loads(request.body)
-        qr_code = data.get("qr_code", "")
-    except json.JSONDecodeError:  # else return an error
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-
-    # get the slug (end bit) from the qr code
-    strip_qr = list(filter(None, qr_code.split("/")))[-1]
-
-    # Find if any featureInstance has this slug and get it
     try:
-        FeatureInstance.objects.get(slug=strip_qr)
-    except FeatureInstance.DoesNotExist:  # invalid slug, don't do anything
-        return JsonResponse({"error": "INVALID_QR"}, status=400)
+        # Parse the JSON data
+        data = json.loads(request.body)
+        qr_code = data.get("qr_code", "").strip()
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "INVALID_REQUEST", "message": "Invalid JSON"}, status=400)
 
-    # If valid go to to the page using reverse
-    target_url = reverse(
-        "locations:individual-feature",
-        kwargs={
-            "slug": strip_qr})
-    return redirect(target_url)
+    # If no QR code is provided
+    if not qr_code:
+        return JsonResponse({"error": "INVALID_QR", "message": "Empty QR code"}, status=400)
+
+    # Try to extract the last part of the QR code
+    try:
+        # Split by '/' and get the last non-empty part
+        strip_qr = list(filter(None, qr_code.split("/")))[-1] if '/' in qr_code else qr_code
+    except IndexError:
+        strip_qr = qr_code
+
+    # Try to find the feature instance
+    try:
+        feature_instance = FeatureInstance.objects.get(slug=strip_qr)
+
+        # If found, redirect to the feature's page
+        target_url = reverse(
+            "locations:individual-feature",
+            kwargs={"slug": strip_qr}
+        )
+        return redirect(target_url)
+
+    except FeatureInstance.DoesNotExist:
+        # Log the unsuccessful QR code for debugging
+        print(f"QR Code validation failed for: {strip_qr}")
+        return JsonResponse({
+            "error": "INVALID_QR",
+            "message": "No matching location found",
+            "attempted_slug": strip_qr
+        }, status=404)
