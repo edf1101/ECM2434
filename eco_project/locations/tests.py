@@ -31,7 +31,7 @@ class ViewsTestCase(TestCase):
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                           content_type="image/jpeg")
+                                            content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -57,11 +57,9 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, "locations/location_home.html")
         self.assertIn("feature_type_list", response.context)
 
-    def test_test_map(self) -> None:
+    def test_test_map(self):
         """
         Test if returns test map for the locations app
-        
-        @return: None
         """
         response = self.client.get(reverse("locations:map"))
         self.assertEqual(response.status_code, 200)
@@ -128,16 +126,15 @@ class ViewsTestCase(TestCase):
         self.assertTemplateUsed(response, "locations/feature_type_list.html")
         self.assertIn("feature_type_list", response.context)
 
-    def test_generic_feature_list(self) -> None:
+    def test_generic_feature_list(self):
         """
         Test if it returns a page with the list of all the generic features types with hyperlinks
-        
-        @return: None
         """
         response = self.client.get(reverse("locations:generic-feature-list"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "locations/feature_type_list.html")
         self.assertIn("feature_type_list", response.context)
+
 
 class SignalsTests(TestCase):
     """
@@ -250,7 +247,7 @@ class ModelsTests(TestCase):
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                           content_type="image/jpeg")
+                                            content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -342,7 +339,7 @@ class ModelsTests(TestCase):
         @return: None
         """
         self.assertEqual(str(self.map_chunk), self.map_chunk.file_original_name)
-          
+
     def test_locations_app_settings_get_instance(self) -> None:
         """
         Test the get instance method of locations app settings
@@ -351,8 +348,8 @@ class ModelsTests(TestCase):
         """
         settings = LocationsAppSettings.get_instance()
         self.assertEqual(settings, LocationsAppSettings.objects.first())
-          
-    def test_locations_app_settings_str(self) -> None:
+
+    def test_locations_app_settings_str(self):
         """
         Test the str method of locations app settings
         """
