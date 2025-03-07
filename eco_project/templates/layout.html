@@ -7,10 +7,8 @@
     <title>{% block title %}EcoPet{% endblock %}</title>
     <!-- Import bootstraps css -->
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet"/>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
@@ -18,8 +16,36 @@
     </script>
     <script type="module" src="{% static 'js/locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'js/updateChallenges.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     {% block extrahead %}{% endblock %} <!-- extra head block for additional code here -->
 
+    <style>
+        #qr-scanner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #qr-video {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 3px solid white;
+            border-radius: 10px;
+        }
+        #qr-scanner-close {
+            color: white;
+            font-size: 2rem;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -50,8 +76,6 @@
     </nav>
 {% endblock %}
 
-
-
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="{% url 'homepage' %}">
@@ -68,6 +92,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'homepage' %}">Home</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'challenges:home' %}">Challenges</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'locations:base' %}">Locations</a>
                 </li>
@@ -83,25 +111,13 @@
                     <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
 
-                <li class="nav-item ms-4">
-
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="qrScannerIcon" onclick="triggerFileInput()">
+                    <a class="nav-link" href="#" id="qrScannerIcon">
                         <i class="bi bi-qr-code-scan"></i>
                     </a>
                 </li>
 
-                <li class="theme-toggle">
-                    <label class="toggle-container">
-                        <span class="toggle-label">Dark Mode</span>
-                        <label class="switch">
-                            <input type="checkbox" id="dark-mode-toggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </label>
-                </li>
-
-                <li class="nav-item dropdown ">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person"></i>
@@ -126,6 +142,9 @@
                             </li>
                             {% if user.is_staff %}
                                 <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="/admin">Admin</a>
                                 </li>
                             {% endif %}
@@ -137,6 +156,19 @@
                                 <a class="dropdown-item" href="{% url 'users:registration' %}">Register</a>
                             </li>
                         {% endif %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-item">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-black">Dark Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </li>
+
                     </ul>
                 </li>
             </ul>
@@ -171,27 +203,29 @@
     </div>
 </footer>
 
-{# Code below is for QR scanning #}
+<!-- QR Scanner Overlay -->
+<div id="qr-scanner-overlay">
+    <video id="qr-video" playsinline></video>
+    <div id="qr-scanner-close" class="text-center">✕ Close Scanner</div>
+</div>
 
+<!-- Hidden file input for image upload QR scanning -->
 <input type="file" accept="image/*" capture="environment" id="qrFileInput" style="display: none;">
 
-{# Use the zxing lib as its better at reading complex qr codes like ours #}
 <script src="https://unpkg.com/@zxing/library@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    /**
-     * This triggers the file input
-     */
-    function triggerFileInput() {
-        document.getElementById('qrFileInput').click();
-    }
 
-    /**
-     * This function takes a qr url and sends it to the server to possibly redirect
-     *
-     * @param qrString The string to send
-     */
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const qrScannerIcon = document.getElementById('qrScannerIcon');
+    const qrScannerOverlay = document.getElementById('qr-scanner-overlay');
+    const qrVideo = document.getElementById('qr-video');
+    const qrScannerClose = document.getElementById('qr-scanner-close');
+    const qrFileInput = document.getElementById('qrFileInput');
+
+    // QR Code Validation Function
     function sendQRToServer(qrString) {
+        console.log("Sending QR code:", qrString);
         fetch("{% url 'locations:validate_qr' %}", {
             method: "POST",
             headers: {
@@ -200,61 +234,133 @@
             },
             body: JSON.stringify({qr_code: qrString})
         })
-            .then(response => {
-                // If the response is a redirect, use its URL
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    return response.json().then(data => {
-                        if (data.error && data.error === 'INVALID_QR') {
-                            alert('The QR is not in the database or was misread');
-                            console.error("Error:", data.error);
-                        }
-                    });
-                }
-            })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.json().then(data => {
+                    console.log("Server response:", data);
+                    alert(data.message || 'Invalid QR code');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('QR validation error:', error);
+            alert('Error validating QR code: ' + error.message);
+        });
     }
 
-    // Listen for changes on the file input to process and decode the QR code
-    document.getElementById('qrFileInput').addEventListener('change', function (event) {
-        var file = event.target.files[0];
-        if (file) { // if there is a file to read
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const dataURL = e.target.result;
+    // Open Camera Scanner
+    async function startCameraScanner() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment'
+                }
+            });
+            qrVideo.srcObject = stream;
+            qrVideo.play();
+            qrScannerOverlay.style.display = 'flex';
 
-                // Instantiate the ZXing BrowserQRCodeReader
-                const codeReader = new ZXing.BrowserQRCodeReader();
-                codeReader.decodeFromImageUrl(dataURL)
-                    .then(result => {
-                        console.log("QR code scanned:", result.text);
+            const canvasElement = document.createElement('canvas');
+            const canvas = canvasElement.getContext('2d');
 
-                        sendQRToServer(result.text); // make the API req to the server
-                    })
-                    .catch(err => {
-                        console.error("QR code decode error:", err);
+            function tick() {
+                if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+                    canvasElement.height = qrVideo.videoHeight;
+                    canvasElement.width = qrVideo.videoWidth;
+                    canvas.drawImage(qrVideo, 0, 0, canvasElement.width, canvasElement.height);
+
+                    const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
                     });
-            };
-            reader.readAsDataURL(file);
+
+                    if (code) {
+                        // Stop video stream
+                        stream.getTracks().forEach(track => track.stop());
+                        qrScannerOverlay.style.display = 'none';
+
+                        // Send QR code to server
+                        sendQRToServer(code.data);
+                        return; // Stop scanning
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+
+        } catch (err) {
+            console.error("Camera access error:", err);
+            alert('Could not access camera. Please check permissions.');
         }
-        event.target.value = ''; // Reset the file input so it works again
+    }
+
+    // Image Upload QR Scanning
+    function scanQRFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvasElement = document.createElement('canvas');
+                const canvas = canvasElement.getContext('2d');
+                canvasElement.width = img.width;
+                canvasElement.height = img.height;
+                canvas.drawImage(img, 0, 0, img.width, img.height);
+
+                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                if (code) {
+                    sendQRToServer(code.data);
+                } else {
+                    alert('No QR code found in the image');
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Event Listeners
+    qrScannerIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Offer both camera and file upload options
+        const choice = confirm('Would you like to scan with your camera?');
+
+        if (choice) {
+            // Camera scanning
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                startCameraScanner();
+            } else {
+                alert('Camera not supported on this device.');
+            }
+        } else {
+        }
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggle = document.getElementById("dark-mode-toggle");
-        const body = document.body;
-
-        const isDarkMode = localStorage.getItem("theme") === "dark";
-        body.classList.toggle("dark-mode", isDarkMode);
-        toggle.checked = isDarkMode; // Sync switch position
-
-        toggle.addEventListener("change", function () {
-            const darkModeEnabled = toggle.checked;
-            body.classList.toggle("dark-mode", darkModeEnabled);
-            localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
-        });
+    // Close scanner overlay
+    qrScannerClose.addEventListener('click', function() {
+        qrScannerOverlay.style.display = 'none';
+        if (qrVideo.srcObject) {
+            qrVideo.srcObject.getTracks().forEach(track => track.stop());
+        }
     });
 
+    // File input change event
+    qrFileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            scanQRFromFile(file);
+        }
+        event.target.value = ''; // Reset input
+    });
+});
+
+  
 </script>
 </body>
 </html>

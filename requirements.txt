@@ -1,6 +1,7 @@
 Django
 pillow
 djangorestframework
+django-nested-admin
 thefuzz
 qrcode
 pylint

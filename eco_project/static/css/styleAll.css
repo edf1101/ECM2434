@@ -6,6 +6,12 @@ body {
     padding: 0;
     color: var(--text-color);
 }
+.correct_option{
+    color: var(--correct-color);
+}
+.incorrect_option{
+    color: var(--incorrect-color);
+}
 
 .top-bar {
     background-color: #000;
@@ -328,6 +334,8 @@ main.container {
     --btn-green-hover: #1a673a;
     --footer-color: #f5f5f5;
     --feature-color: #cccccc;
+    --correct-color: #106724;
+    --incorrect-color: #6a0e0e;
 }
 
 /* Dark Mode */
@@ -340,4 +348,6 @@ main.container {
     --btn-green-hover: #1d2d24;
     --footer-color: #757373;
     --feature-color: #a19f9f;
+    --correct-color: #4dcc6a;
+    --incorrect-color: #da4545;
 }
