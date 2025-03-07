@@ -16,9 +16,9 @@ def get_pet_data(request, username) -> JsonResponse:
     """
     This function is used to get the data for a pet.
 
-    @param request: The request object.
-    @param username: The username of the user to get the pet data for.
-    @return: A JsonResponse containing the pet data.
+    :param request: The request object.
+    :param username: The username of the user to get the pet data for.
+    :return: A JsonResponse containing the pet data.
     """
     try:
         target_user = User.objects.get(username=username)
@@ -45,3 +45,15 @@ def get_pet_data(request, username) -> JsonResponse:
         "pet_image": pet_image_url,
     }
     return JsonResponse(data)
+
+@require_POST
+def buy_cosmetic(request, username, cosmetic):
+    """
+    This function buys an item for a user
+
+    :param request: The request object.
+    :param username: The user to buy the item for.
+    :param cosmetic: The cosmetic to buy.
+    :return: A JsonResponse
+    """
+    pass

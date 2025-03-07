@@ -8,6 +8,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from django.contrib.auth import get_user_model
+from numpy.ma.core import minimum
+
 User = get_user_model()
 
 class PetType(models.Model):
@@ -56,6 +58,7 @@ class Cosmetic(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
+    price = models.IntegerField(validators=[MinValueValidator(0)])
     type = models.ForeignKey(CosmeticType, on_delete=models.PROTECT)
     fits = models.ManyToManyField(PetType, blank=False)
 

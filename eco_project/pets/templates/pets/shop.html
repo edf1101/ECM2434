@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Shop - EcoPet{% endblock %}
+
+{% block content %}
+    <h1>Shop</h1>
+    <p>You have {{ profile.points }} to spend</p>
+    {% for item in items %}
+        <h2>{{ item.name }}</h2>
+        <p>{{ item.description }}</p>
+        <p><em>{{ item.price }}</em></p>
+        {% if item in profile.owned_accessories.all %}
+            <p>You already own this item</p>
+        {% else %}
+            {% if item.price > profile.points %}
+                <button disabled="disabled">Buy</button>
+            {% else %}
+                <button>Buy</button>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
