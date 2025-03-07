@@ -46,4 +46,14 @@ def faq(request: HttpRequest) -> HttpResponse:
     @param request: HttpRequest object
     @return: HttpResponse object
     """
-    return render(request, "faq.html")
+    return render(request, 'faq.html')
+
+
+def gdpr(request: HttpRequest) -> HttpResponse:
+    """
+    Renders the gdpr page.
+
+    @param request: HttpRequest object
+    @return: HttpResponse object
+    """
+    return render(request, "gdpr.html")

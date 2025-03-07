@@ -3,11 +3,14 @@ This module contains tasks that are called by the scheduler.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from datetime import timedelta
 
 from django.utils import timezone
+from datetime import timedelta
+from .models import Streak, get_current_window, UserFeatureReach
+from .challenge_helpers import get_interval
+from django.apps import apps
 
-from .models import Streak, get_current_window, ChallengeSettings, UserFeatureReach
+
 
 
 def update_challenges() -> None:
@@ -29,12 +32,7 @@ def reset_missed_streaks() -> None:
     """
     now_time = timezone.now()
 
-    # get the interval
-    try:
-        settings_obj = ChallengeSettings.objects.first()
-        interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except ChallengeSettings.DoesNotExist:
-        interval = timedelta(days=1)
+    interval = get_interval()
 
     # get current window
     current_window_start, _ = get_current_window(now_time, interval)
@@ -57,13 +55,29 @@ def cleanup_user_feature_reaches() -> None:
     @return: None
     """
     now_time = timezone.now()
-    try:
-        settings_obj = ChallengeSettings.objects.first()
-        interval = settings_obj.interval if settings_obj else timedelta(days=1)
-    except ChallengeSettings.DoesNotExist:
-        interval = timedelta(days=1)
 
-    current_window_start, _ = get_current_window(now_time, interval)
+    current_window_start, _ = get_current_window(now_time, get_interval())
 
     # Delete all records where reached_at is before the start of the current
     UserFeatureReach.objects.filter(reached_at__lt=current_window_start).delete()
+
+
+
+def update_pet_health() -> None:
+    """
+    Reduces the health of each Pet by 5% if created over 1 day ago, ensuring health doesn't drop below zero.
+
+    @return: None
+    """
+        
+    Pet = apps.get_model('pets', 'Pet')
+    now = timezone.now()
+    time_threshold = now - timedelta(days=1)  # Set to 1 day; adjust as needed
+
+    pets = Pet.objects.filter(created_at__lte=time_threshold)
+    for pet in pets:
+        # Calculate new health by reducing current health by 5%
+        new_health = int(pet.health * 0.95)
+        # Ensure the health doesn't go below 0
+        pet.health = max(0, new_health)
+        pet.save()

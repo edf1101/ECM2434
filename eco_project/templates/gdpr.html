@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - GDPR{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+
+    <style>
+    .centered-list {
+            display: inline-block;
+            text-align: left;
+            list-style-position: inside;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="row text-center">
+            <div class="col-12">
+                <h1>Our Privacy Policy</h1>
+
+                <p><strong>Effective Date:</strong> 2025-02-24</p>
+
+                <h2>1. Data Controller</h2>
+                <p>
+                    EcoPets<br>
+                    ecopets@example.com<br>
+                    University of Exeter, EX4 4QJ
+                </p>
+
+                <h2>2. Data Collection</h2>
+                <p>We collect the following types of personal data:</p>
+                <ul class="centered-list">
+                    <li><strong>Identity Data:</strong> First and last names.</li>
+                    <li><strong>Contact Data:</strong> Email addresses.</li>
+                    <li><strong>Location Data:</strong> Your location when using the app.</li>
+                    <li><strong>Technical Data:</strong> Access times when you log in.</li>
+                </ul>
+
+                <h2>3. Purpose of Processing</h2>
+                <p>We process your personal data for the following purposes:</p>
+                <ul class="centered-list">
+                    <li>To provide our service.</li>
+                    <li>To personalize your experience.</li>
+                    <li>To communicate with you about your account or our services.</li>
+                </ul>
+
+                <h2>4. Legal Basis for Processing</h2>
+                <p>We process your personal data based on the following legal basis:</p>
+                <ul class="centered-list">
+                    <li><strong>Contract:</strong> For providing our services.</li>
+                </ul>
+
+                <h2>5. Data Sharing</h2>
+                <p>We do not share any personal data with any third parties.</p>
+
+                <h2>6. Data Retention</h2>
+                <p>
+                    We will retain your personal data for as long as necessary to fulfill the purposes for which it was collected, including any legal or regulatory requirements.
+                </p>
+                <p>
+                    We will typically retain account information for as long as your account is active.
+                </p>
+
+                <h2>7. Data Subject Rights</h2>
+                <p>You have the following rights regarding your personal data:</p>
+                <ul class="centered-list">
+                    <li><strong>Access:</strong> You can request access to your personal data.</li>
+                    <li><strong>Rectification:</strong> You can request that inaccurate data be corrected.</li>
+                    <li><strong>Erasure:</strong> You can request that your data be deleted (under certain circumstances).</li>
+                    <li><strong>Restriction of Processing:</strong> You can request that the processing of your data be restricted (under certain circumstances).</li>
+                    <li><strong>Data Portability:</strong> You can request to receive your data in a portable format.</li>
+                </ul>
+                <p>
+                    <em>To exercise these rights, please contact us at the contact information provided above.</em>
+                </p>
+
+                <h2>8. Data Security</h2>
+                <p>
+                    We take reasonable measures to protect your personal data from unauthorized access, use, or disclosure. These methods include encrypted transfer of data and secure password hashing.
+                </p>
+                <p>
+                    However, no method of transmission over the Internet, or method of electronic storage, is 100% secure.
+                </p>
+
+                <h2>9. Contact Information</h2>
+                <p>
+                    EcoPets<br>
+                    ecopets@example.com<br>
+                    University of Exeter, EX4 4QJ
+                </p>
+
+                <h2>10. Changes to this Privacy Policy</h2>
+                <p>We may update this Privacy Policy from time to time.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

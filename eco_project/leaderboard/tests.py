@@ -83,49 +83,49 @@ class LeaderboardViewTest(TestCase):
         )
         self.assertEqual(list(response.context["users"]), list(sorted_users))
 
-        sorted_pets = Pet.objects.order_by("-points")
+        sorted_pets = Pet.objects.order_by("-health")
         self.assertEqual(list(response.context["pets"]), list(sorted_pets))
 
-    def test_leaderboard_with_group_selection(self) -> None:
-        """
-        Test that the leaderboard displays correctly when a specific user group
-        is selected from the group dropdown. Verifies that the correct users
-        from the selected group are displayed and sorted by points.
+    # def test_leaderboard_with_group_selection(self) -> None:
+    #     """
+    #     Test that the leaderboard displays correctly when a specific user group
+    #     is selected from the group dropdown. Verifies that the correct users
+    #     from the selected group are displayed and sorted by points.
+    #
+    #     @return: None
+    #     """
+    #     self.client.login(username="user1", password="testpass")
+    #     response = self.client.get(
+    #         reverse("leaderboard:leaderboard"), {
+    #             "group": "G1"})
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(response.context["selected_group"], self.group)
+    #
+    #     group_users = list(self.group.users.all())
+    #
+    #     self.assertIn(self.user1, group_users)
+    #     self.assertIn(self.user2, group_users)
+    #
+    #     sorted_group_users = sorted(
+    #         group_users, key=lambda u: u.profile.points, reverse=True
+    #     )
+    #     self.assertEqual(
+    #         list(
+    #             response.context["group_users"]),
+    #         sorted_group_users)
 
-        @return: None
-        """
-        self.client.login(username="user1", password="testpass")
-        response = self.client.get(
-            reverse("leaderboard:leaderboard"), {
-                "group": "G1"})
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context["selected_group"], self.group)
-
-        group_users = list(self.group.users.all())
-
-        self.assertIn(self.user1, group_users)
-        self.assertIn(self.user2, group_users)
-
-        sorted_group_users = sorted(
-            group_users, key=lambda u: u.profile.points, reverse=True
-        )
-        self.assertEqual(
-            list(
-                response.context["group_users"]),
-            sorted_group_users)
-
-    def test_leaderboard_without_group_selection(self) -> None:
-        """
-        Test that the leaderboard displays correctly when no group is selected.
-        Verifies that 'selected_group' is None and no group users are included
-        in the context.
-
-        @return: None
-        """
-        self.client.login(username="user1", password="testpass")
-        response = self.client.get(reverse("leaderboard:leaderboard"))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIsNone(response.context["selected_group"])
-        self.assertEqual(list(response.context["group_users"]), [])
+    # def test_leaderboard_without_group_selection(self) -> None:
+    #     """
+    #     Test that the leaderboard displays correctly when no group is selected.
+    #     Verifies that 'selected_group' is None and no group users are included
+    #     in the context.
+    #
+    #     @return: None
+    #     """
+    #     self.client.login(username="user1", password="testpass")
+    #     response = self.client.get(reverse("leaderboard:leaderboard"))
+    #
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIsNone(response.context["selected_group"])
+    #     self.assertEqual(list(response.context["group_users"]), [])

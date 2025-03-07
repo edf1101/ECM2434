@@ -32,7 +32,7 @@ class ChallengesConfig(AppConfig):
         if os.environ.get("RUN_MAIN") != "true":
             return
 
-        from .tasks import update_challenges
+        from .tasks import update_challenges,update_pet_health
 
         # Schedule the job for a 1m interval
         scheduler.add_job(
@@ -42,5 +42,15 @@ class ChallengesConfig(AppConfig):
             id="update_challenges_job",
             replace_existing=True,
         )
+
+          # Schedule the pet health update job to run every 24 hours.
+        scheduler.add_job(
+            update_pet_health,
+            "interval",
+            seconds=86400,  
+            id="update_pet_health_job",
+            replace_existing=True,
+        )
+        
         scheduler.start()
         atexit.register(lambda: scheduler.shutdown())

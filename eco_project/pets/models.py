@@ -6,9 +6,11 @@ This module contains the models for the pets app.
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-
+from django.utils import timezone
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
+
 
 class PetType(models.Model):
     """
@@ -79,7 +81,9 @@ class Pet(models.Model):
         PetType, on_delete=models.PROTECT
     )  # Reference to global PetType
 
-    health = models.IntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    health = models.IntegerField(default=100,
+                                 validators=[MinValueValidator(0), MaxValueValidator(100)])
+    created_at = models.DateTimeField(default=timezone.now)
     cosmetics = models.ManyToManyField(Cosmetic, blank=True)
     owner = models.ForeignKey(
         User,

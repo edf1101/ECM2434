@@ -54,13 +54,16 @@ class Command(BaseCommand):
             update_feature_instance_qr_code,
             sender=FeatureInstance)
 
+        self.stdout.write(self.style.SUCCESS("Starting saving QR codes"))
         # Now trigger an update of QR codes for all FeatureInstances.
         update_feature_instance_qr_code(
             sender=LocationsAppSettings,
-            instance=LocationsAppSettings.get_instance())
-        post_save.connect(
-            update_feature_instance_qr_code,
-            sender=FeatureInstance)
+            instance=LocationsAppSettings.get_instance(),
+            progress_bar=True
+        )
+        post_save.connect(update_feature_instance_qr_code, sender=FeatureInstance)
+        self.stdout.write(self.style.SUCCESS("Saved QR codes to database"))
+
 
     def import_feature_types(self) -> None:
         """
@@ -117,7 +120,6 @@ class Command(BaseCommand):
                 [choice("1234567890ABCDEF") for i in range(5)])
 
             # create image file
-            img_file = None
             mesh_file = None
 
             with open(image_path, "rb") as f:
