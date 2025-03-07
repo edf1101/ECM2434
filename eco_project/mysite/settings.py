@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ["192.168.0.168", "localhost", "127.0.0.1", "192.168.5.31"]
 # Application definition
 
 INSTALLED_APPS = [
+    'nested_admin',
     "locations.apps.LocationsConfig",
     "pets.apps.PetsConfig",
     "django.contrib.admin",
@@ -130,7 +131,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "/users/login/"
 
 LOGIN_REDIRECT_URL = "/pets/mypet/"
-
 
 CHECK_USER_CHALLENGE_RANGE = True
 USER_CHALLENGE_RANGE = 500
