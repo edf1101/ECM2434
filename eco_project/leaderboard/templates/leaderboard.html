@@ -10,7 +10,6 @@
 {% block content %}
     <h1>Leaderboard</h1>
     <div class="leaderboard-container">
-
         <h2>Global Top Users</h2>
         <table>
             <thead>
@@ -44,6 +43,35 @@
             </tbody>
         </table>
     </div>
+
+    <div class="leaderboard-container">
+        <h2>Global Top Groups</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Group Name</th>
+                <th>Members</th>
+                <th>Total Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for group_entry in top_groups %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ group_entry.group.name }}</td>
+                    <td>{{ group_entry.member_count }}</td>
+                    <td>{{ group_entry.total_points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No groups available</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
     <div class="leaderboard-container">
         <h2>Global Top Pets</h2>
         <table>
@@ -145,11 +173,4 @@
             }
         }
     </script>
-
-
-
-
-
-
 {% endblock %}
-
