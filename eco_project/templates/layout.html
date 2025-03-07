@@ -68,6 +68,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'homepage' %}">Home</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'challenges:home' %}">Challenges</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'locations:base' %}">Locations</a>
                 </li>
@@ -91,15 +95,6 @@
                     </a>
                 </li>
 
-                <li class="theme-toggle">
-                    <label class="toggle-container">
-                        <span class="toggle-label">Dark Mode</span>
-                        <label class="switch">
-                            <input type="checkbox" id="dark-mode-toggle">
-                            <span class="slider round"></span>
-                        </label>
-                    </label>
-                </li>
 
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -126,6 +121,9 @@
                             </li>
                             {% if user.is_staff %}
                                 <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="/admin">Admin</a>
                                 </li>
                             {% endif %}
@@ -137,6 +135,19 @@
                                 <a class="dropdown-item" href="{% url 'users:registration' %}">Register</a>
                             </li>
                         {% endif %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-item">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-black">Dark Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </li>
+
                     </ul>
                 </li>
             </ul>
@@ -254,6 +265,7 @@
             localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
         });
     });
+
 
 </script>
 </body>
