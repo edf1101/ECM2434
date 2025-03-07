@@ -135,7 +135,7 @@ class FeatureInstance(models.Model):
         Returns whether this feature instance has a question or not.
         """
         return self.questionfeature_set.exists()
-
+    
     def has_challenge(self) -> bool:
         """
         Returns whether this feature instance has a challenge or not.
