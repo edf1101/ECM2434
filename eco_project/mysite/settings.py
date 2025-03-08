@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "leaderboard.apps.LeaderboardConfig",
-    "petreal.apps.PetrealConfig",
+    "petReal.apps.PetrealConfig",
 ]
 
 MIDDLEWARE = [
