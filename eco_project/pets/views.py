@@ -3,9 +3,11 @@ This module contains the views for the pets app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 
 from pets.models import Cosmetic
 
@@ -35,3 +37,23 @@ def shop(request) -> HttpResponse:
     all_items = Cosmetic.objects.all()
 
     return render(request, "pets/shop.html", { "profile": profile, "items": all_items })
+
+@login_required
+def buy_cosmetic(request, cosmetic_id):
+    cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
+    profile = request.user.profile
+
+    if cosmetic in profile.owned_accessories.all():
+        messages.error(request, "You already own this cosmetic.")
+        return redirect('pets:shop')
+
+    if profile.pet_bucks < cosmetic.price:
+        messages.error(request, "Not enough pet bucks.")
+        return redirect('pets:shop')
+
+    profile.pet_bucks -= cosmetic.price
+    profile.owned_accessories.add(cosmetic)
+    profile.save()
+
+    messages.success(request, f"You have successfully purchased {cosmetic.name}.")
+    return redirect('pets:shop')

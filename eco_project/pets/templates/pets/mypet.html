@@ -4,8 +4,8 @@
 {% block title %}My Pet - EcoPet{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href ="{% static 'pets/css/mypet.css' %}">
-    <link rel="stylesheet" href ="{% static 'css/styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'pets/css/mypet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
     <div class="pet-container">
         <div class="pet-header">
             {% if pet %}
@@ -47,6 +47,17 @@
 
             </div>
         </div>
-        <a href="#" class="accessorise-btn">Accessorise Here</a>
+        <div class="pet-accessories" style="flex-direction: row">
+        <h1>Cosmetics</h1>
+            {% for cosmetic in pet.cosmetics.all %}
+                <div class="cosmetic">
+                    <p><strong>{{ cosmetic.name }}</strong></p>
+                    <p>{{ cosmetic.description }}</p>
+                    <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
+                </div>
+                <a href="#">Remove</a>
+            {% endfor %}
+        </div>
+        {#        <a href="#" class="accessorise-btn">Accessorise Here</a>#}
     </div>
 {% endblock %}

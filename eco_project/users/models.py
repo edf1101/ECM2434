@@ -22,6 +22,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
 
     points = models.PositiveIntegerField(default=0, blank=False, null=False)
+    pet_bucks = models.PositiveIntegerField(default=0, blank=False, null=False)
     bio = models.TextField(blank=True, null=False)
 
     longitude = models.FloatField(blank=False, null=False, default=0)

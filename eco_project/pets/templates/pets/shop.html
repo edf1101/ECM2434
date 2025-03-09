@@ -5,18 +5,28 @@
 
 {% block content %}
     <h1>Shop</h1>
-    <p>You have {{ profile.points }} to spend</p>
+    <p>You have {{ profile.pet_bucks }} pet bucks</p>
     {% for item in items %}
         <h2>{{ item.name }}</h2>
         <p>{{ item.description }}</p>
-        <p><em>{{ item.price }}</em></p>
+        <p>Price: <em>{{ item.price }}</em> pet bucks</p>
         {% if item in profile.owned_accessories.all %}
             <p>You already own this item</p>
         {% else %}
-            {% if item.price > profile.points %}
+            {% if item.price > profile.pet_bucks %}
                 <button disabled="disabled">Buy</button>
             {% else %}
-                <button>Buy</button>
+                <form method="post" action="{% url 'pets:buy_cosmetic' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Buy</button>
+                </form>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <p class="{{ message.tags }}">{{ message }}</p>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             {% endif %}
         {% endif %}
     {% endfor %}

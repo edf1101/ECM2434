@@ -45,15 +45,3 @@ def get_pet_data(request, username) -> JsonResponse:
         "pet_image": pet_image_url,
     }
     return JsonResponse(data)
-
-@require_POST
-def buy_cosmetic(request, username, cosmetic):
-    """
-    This function buys an item for a user
-
-    :param request: The request object.
-    :param username: The user to buy the item for.
-    :param cosmetic: The cosmetic to buy.
-    :return: A JsonResponse
-    """
-    pass
