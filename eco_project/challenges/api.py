@@ -222,6 +222,15 @@ def score_quiz(request: HttpRequest) -> Response:
             request.user.profile.points += points
             request.user.profile.save()
 
+            if percentage > 80:
+                reward_health = 20  
+                pet = request.user.pets.first() 
+                if pet:
+                    pet.health = min(pet.health + reward_health, 100)
+                    pet.save()
+
+            
+
     return Response({
         "message": f"You got {percentage}% correct. Total points awarded: {points}",
     })
