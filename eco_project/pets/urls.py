@@ -15,8 +15,7 @@ urlpatterns = [
         "mypet/",
         views.view_pet,
         name="mypet"),
-    path(
-        "accessories/", 
+    path("accessories/", 
         views.accessories, 
         name="accessories"),
     path(
