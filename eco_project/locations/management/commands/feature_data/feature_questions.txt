@@ -1,4 +1,8 @@
 # lines are commented out.
 # format is each line: Question text, Feature instance slug, case sensitve (True or False),using fuzzy matching (True or False), Fuzzy matching threshold (0-100), remaining fields are answers
 #
-What colour is Water?,water-fountain-forum,False,True,65,Blue,Clear
+What War were these trees planted for?,innovation-center-poi,False,True,65,World War 2,WW2
+What type of recycling bins are these?,recycling-bin-lafrowda,False,True,50,Glass, Glass bins
+What is this tree called?, tree-business-school,False,True,50,Champion
+What is this statue made out of?,statue-multi-faith-center, False,True,50, Aluminium, Aluminium Composite,Composite
+What are these gardens Celebrating?, celebration-gardens, False,True,50,Jubilee,Queen

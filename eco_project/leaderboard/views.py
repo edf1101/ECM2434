@@ -1,41 +1,64 @@
+"""
+Views for the leaderboard app.
+"""
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Sum
-from django.contrib.auth.models import User
-from users.models import Profile, UserGroup
 from pets.models import Pet
-from django.contrib.auth.decorators import login_required
+from users.models import UserGroup
+
+User = get_user_model()
 
 
 @login_required
-def leaderboard_view(request):
-    top_users = User.objects.select_related('profile').order_by('-profile__points')[:10]
-    pets = Pet.objects.order_by('-points')[:10]
+def leaderboard_view(request) -> HttpResponse:
+    """
+    View to render the leaderboard page, showing the top users, pets, and groups.
+    """
+    top_users = User.objects.prefetch_related('pets').all()
+    # sort top_users by profile.points
+    top_users = sorted(top_users, key=lambda user: user.profile.points, reverse=True)
+
+    pets = Pet.objects.order_by("-health")[:10]
 
     user_groups = UserGroup.objects.filter(users=request.user)
-    selected_group = None
-    group_users = []
 
-    if user_groups.exists():
-        group_code = request.GET.get('group')
-        if group_code:
-            selected_group = user_groups.filter(code=group_code).first()
+    # Get all groups and calculate their total points
+    all_groups = UserGroup.objects.all().prefetch_related('users', 'users__pets', 'users__profile')
+    top_groups = []
 
-        if not selected_group:
-            selected_group = user_groups.first()
+    for group in all_groups:
+        group_users = User.objects.filter(usergroup=group).prefetch_related('pets', 'profile')
+        total_group_points = sum(user.profile.points for user in group_users)
+        top_groups.append({
+            'group': group,
+            'total_points': total_group_points,
+            'member_count': group_users.count()
+        })
 
+    # Sort groups by total points
+    top_groups = sorted(top_groups, key=lambda g: g['total_points'], reverse=True)[:10]
 
-        if selected_group:
-            group_users = User.objects.filter(
-                usergroup=selected_group
-            ).select_related('profile').order_by('-profile__points')
+    group_leaderboards = []
+    for group in user_groups:
+        group_users = User.objects.filter(usergroup=group).prefetch_related('pets')
+        for user in group_users:
+            user.total_pet_points = user.profile.points + sum(pet.points for pet in user.pets.all())
+        sorted_users = sorted(group_users, key=lambda u: u.total_pet_points, reverse=True)
+        group_leaderboards.append({
+            'group': group,
+            'users': sorted_users,
+        })
 
     context = {
-        'users': top_users,
-        'pets': pets,
-        'user_groups': user_groups,
-        'selected_group': selected_group,
-        'group_users': group_users,
-        'current_user': request.user
+        "users": top_users,
+        "pets": pets,
+        "user_groups": user_groups,
+        "group_leaderboards": group_leaderboards,
+        "current_user": request.user,
+        "top_groups": top_groups,
     }
 
-    return render(request, 'leaderboard.html', context)
+    return render(request, "leaderboard.html", context)

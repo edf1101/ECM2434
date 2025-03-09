@@ -3,38 +3,61 @@ Signals for the Locations app.
 Signals are an action that gets triggered when a certain event occurs.
 These signals are used to update the min and max values of the lat/lon and world x/y/z of the
 LocationsAppSettings singleton instance whenever a Map3DChunk instance is saved or deleted.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.db.models.signals import post_save, post_delete, post_init
-from django.dispatch import receiver
-from .models import Map3DChunk, LocationsAppSettings, FeatureInstance, FeatureInstanceTileMap, \
-    Map3DChunk
+import sys
 from django.db.models import Min, Max
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
+from .models import (
+    LocationsAppSettings,
+    FeatureInstance,
+    FeatureInstanceTileMap,
+    Map3DChunk,
+)
 
+# pylint: disable=unused-argument
 @receiver(post_save, sender=FeatureInstance)
 @receiver(post_save, sender=LocationsAppSettings)
-def update_feature_instance_qr_code(sender, instance, created, **kwargs) -> None:
+def update_feature_instance_qr_code(sender, instance, progress_bar=False, **kwargs) -> None:
     """
     Update the QR code of a FeatureInstance or all FeatureInstances.
 
     :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
     :param instance: The instance of the sender
-    :param created: Whether the instance was created or updated
+    :param progress_bar: Whether to display a progress bar
+    @param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
+    @param instance: The instance of the sender
     """
-    # If this save is triggered by an update_qr_code call skip to avoid infinite recursion.
-    if hasattr(instance, '_skip_qr_update') and instance._skip_qr_update:
+    # If this save is triggered by an update_qr_code call skip to avoid
+    # infinite recursion.
+    if hasattr(instance, "skip_qr_update") and instance.skip_qr_update:
         return
-
-    # If the sender is FeatureInstance, update only that instance this fixes infinite recursion
+    # If the sender is FeatureInstance, update only that instance this fixes
+    # infinite recursion
     if sender == FeatureInstance:
-        instance._skip_qr_update = True
+        instance.skip_qr_update = True
         instance.update_qr_code(skip_signal=True)
-        instance._skip_qr_update = False
+        instance.skip_qr_update = False
     else:
-        for feature_instance in FeatureInstance.objects.all():
-            feature_instance._skip_qr_update = True
+        for ind, feature_instance in enumerate(FeatureInstance.objects.all()):
+            # print(f'created QR code for feature instance {feature_instance}')
+
+            feature_instance.skip_qr_update = True
             feature_instance.update_qr_code(skip_signal=True)
-            feature_instance._skip_qr_update = False
+            feature_instance.skip_qr_update = False
+
+            length = FeatureInstance.objects.all().count()
+            per = int(20 * (1 + ind) / length)  # how many # to draw
+            if progress_bar:
+                sys.stdout.write(  # draw a progress bar
+                    f'\r[{"#" * per}{" " * (20 - per)}] {(1 + ind)}/{length}')
+                sys.stdout.flush()
+        if progress_bar:
+            sys.stdout.write('\r\n')
+            sys.stdout.flush()
 
 
 @receiver(post_save, sender=Map3DChunk)
@@ -59,34 +82,33 @@ def update_min_max_pos(sender, instance, **kwargs) -> None:
     else:
         # Calculate aggregates in one go to avoid multiple queries if possible.
         aggregates = Map3DChunk.objects.aggregate(
-            min_lat=Min('bottom_left_lat'),
-            max_lat=Max('top_right_lat'),
-            min_lon=Min('bottom_left_lon'),
-            max_lon=Max('top_right_lon'),
-            min_world_x=Min('bottom_left_x'),
-            max_world_x=Max('top_right_x'),
-            min_world_y=Min('bottom_left_y'),
-            max_world_y=Max('top_right_y'),
-            min_world_z=Min('bottom_left_z'),
-            max_world_z=Max('top_right_z'),
+            min_lat=Min("bottom_left_lat"),
+            max_lat=Max("top_right_lat"),
+            min_lon=Min("bottom_left_lon"),
+            max_lon=Max("top_right_lon"),
+            min_world_x=Min("bottom_left_x"),
+            max_world_x=Max("top_right_x"),
+            min_world_y=Min("bottom_left_y"),
+            max_world_y=Max("top_right_y"),
+            min_world_z=Min("bottom_left_z"),
+            max_world_z=Max("top_right_z"),
         )
         settings = LocationsAppSettings.get_instance()
-        settings.min_lat = aggregates['min_lat']
-        settings.max_lat = aggregates['max_lat']
-        settings.min_lon = aggregates['min_lon']
-        settings.max_lon = aggregates['max_lon']
-        settings.min_world_x = aggregates['min_world_x']
-        settings.max_world_x = aggregates['max_world_x']
-        settings.min_world_y = aggregates['min_world_y']
-        settings.max_world_y = aggregates['max_world_y']
-        settings.min_world_z = aggregates['min_world_z']
-        settings.max_world_z = aggregates['max_world_z']
+        settings.min_lat = aggregates["min_lat"]
+        settings.max_lat = aggregates["max_lat"]
+        settings.min_lon = aggregates["min_lon"]
+        settings.max_lon = aggregates["max_lon"]
+        settings.min_world_x = aggregates["min_world_x"]
+        settings.max_world_x = aggregates["max_world_x"]
+        settings.min_world_y = aggregates["min_world_y"]
+        settings.max_world_y = aggregates["max_world_y"]
+        settings.min_world_z = aggregates["min_world_z"]
+        settings.max_world_z = aggregates["max_world_z"]
 
     # Set the flag to skip QR code updates when saving the settings.
-    settings._skip_qr_update = True
+    settings.skip_qr_update = True
     settings.save()
-    # Optionally, remove the attribute so future saves behave normally.
-    del settings._skip_qr_update
+    del settings.skip_qr_update
 
 
 @receiver(post_save, sender=FeatureInstance)
@@ -104,7 +126,8 @@ def update_tile_feature_map(sender, instance, **kwargs) -> None:
     FeatureInstanceTileMap.objects.all().delete()
 
     for feature in FeatureInstance.objects.all():
-        # use filter not loop for speed. Check it is inside chunk geodesic bounds
+        # use filter not loop for speed. Check it is inside chunk geodesic
+        # bounds
         matching_chunks = Map3DChunk.objects.filter(
             bottom_left_lat__lte=feature.latitude,
             top_right_lat__gte=feature.latitude,
@@ -114,6 +137,5 @@ def update_tile_feature_map(sender, instance, **kwargs) -> None:
 
         for chunk in matching_chunks:  # add all matching pairs to the mapping
             FeatureInstanceTileMap.objects.create(
-                feature_instance=feature,
-                map_chunk=chunk
+                feature_instance=feature, map_chunk=chunk
             )

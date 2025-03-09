@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EcoPet{% endblock %}</title>
     <!-- Import bootstraps css -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
@@ -17,32 +16,66 @@
     </script>
     <script type="module" src="{% static 'js/locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'js/updateChallenges.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     {% block extrahead %}{% endblock %} <!-- extra head block for additional code here -->
 
+    <style>
+        #qr-scanner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #qr-video {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 3px solid white;
+            border-radius: 10px;
+        }
+        #qr-scanner-close {
+            color: white;
+            font-size: 2rem;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<!-- Top Bar to welcome users, as a block so it can be overridden out -->
 {% block topBar %}
-
-<div class="top-bar py-2">
-    <div class="container">
-        {% if user.is_authenticated %}
-            <p class="mb-0 text-center">
-                Hello {{ user.first_name|default:user.username }}! It's time to get [pet name]
-                moving!
-            </p>
-        {% else %}
-            <p class="mb-0 text-center">
-                Hello Guest, Please <a href="{% url 'users:login' %}">log in</a> or <a
-                    href="{% url 'users:registration' %}">register to see your pet!</a>
-            </p>
-        {% endif %}
-    </div>
-</div>
+    <nav class="navbar navbar-dark bg-dark py-2">
+        <div class="container-fluid">
+            {% if user.is_authenticated %}
+                {% with pet=user.pets.all|first %}
+                    <p class="mb-0 w-100 text-center navbar-text">
+                        Hello {{ user.first_name|default:user.username }}, it's time to get
+                        {% if pet %}
+                            {{ pet.name }}
+                        {% else %}
+                            your pet
+                        {% endif %}
+                        moving!
+                    </p>
+                {% endwith %}
+            {% else %}
+                <p class="mb-0 w-100 text-center navbar-text">
+                    Hello Guest, Please
+                    <a href="{% url 'users:login' %}" class="text-white">log in</a> or
+                    <a href="{% url 'users:registration' %}" class="text-white">register</a> to see
+                    your pet!
+                </p>
+            {% endif %}
+        </div>
+    </nav>
 {% endblock %}
-<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="{% url 'homepage' %}">
@@ -55,29 +88,94 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'homepage' %}">Home</a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'locations:map' %}">Map</a>
+                    <a class="nav-link" href="{% url 'challenges:home' %}">Challenges</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'locations:generic-feature-list' %}">Pet
-                        Challenges</a>
+                    <a class="nav-link" href="{% url 'locations:base' %}">Locations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/leaderboard">Leaderboard</a>
+                    <a class="nav-link" href="{% url 'leaderboard:leaderboard' %}">Leaderboard</a>
                 </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pets:mypet' %}">Your Pet</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="qrScannerIcon">
+                        <i class="bi bi-qr-code-scan"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        {% if user.is_authenticated %}
+                            <li>
+                                <a class="dropdown-item"
+                                   href="{% url 'users:user_profile' user.username %}">Profile</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="{% url 'users:group_home' %}">Groups</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:logout' %}">Sign
+                                    Out</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:password_change' %}">Change
+                                    Password</a>
+                            </li>
+                            {% if user.is_staff %}
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/admin">Admin</a>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:login' %}">Log in</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'users:registration' %}">Register</a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-item">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-black">Dark Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </li>
+
+                    </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Main Content -->
 <main class="container my-4 flex-grow-1">
     {% block content %}
     {% endblock %}
@@ -87,22 +185,16 @@
 <footer>
     <div class="footer-content">
         <div class="footer-logo">
-            <img src="{% static 'media/ecoPetLogo.png' %}" alt="EcoPet Logo" class="footer-logo-img">
+            <img src="{% static 'media/ecoPetLogo.png' %}" alt="EcoPet Logo"
+                 class="footer-logo-img">
         </div>
         <div class="footer-links">
             <div class="footer-column">
-                <h3>Help & Support</h3>
-                <a href="#">Help</a>
-                <a href="#">Other</a>
-                <a href="#">FAQ</a>
-                <a href="#">Customer service</a>
-            </div>
-            <div class="footer-column">
-                <h3>Resources</h3>
-                <a href="#">Sitemap</a>
-                <a href="#">How to guides</a>
-                <a href="#">Subscriptions</a>
-                <a href="#">Contact us</a>
+                <h3>Resources & Support</h3>
+                <a href="{% url 'faq' %}">Help & FAQ</a>
+                <a href="{% url 'contact' %}">Contact us</a>
+                <a href="{% url 'about' %}">About us</a>
+                <a href="{% url 'gdpr' %}">GDPR & Privacy Policy</a>
             </div>
         </div>
     </div>
@@ -111,6 +203,180 @@
     </div>
 </footer>
 
+<!-- QR Scanner Overlay -->
+<div id="qr-scanner-overlay">
+    <video id="qr-video" playsinline></video>
+    <div id="qr-scanner-close" class="text-center">✕ Close Scanner</div>
+</div>
+
+<!-- Hidden file input for image upload QR scanning -->
+<input type="file" accept="image/*" capture="environment" id="qrFileInput" style="display: none;">
+
+<script src="https://unpkg.com/@zxing/library@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    //Dark Mode Listener
+    document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("dark-mode-toggle");
+    const body = document.body;
+
+    const isDarkMode = localStorage.getItem("theme") === "dark";
+    body.classList.toggle("dark-mode", isDarkMode);
+    toggle.checked = isDarkMode; // Sync switch position
+
+    toggle.addEventListener("change", function () {
+        const darkModeEnabled = toggle.checked;
+        body.classList.toggle("dark-mode", darkModeEnabled);
+        localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const qrScannerIcon = document.getElementById('qrScannerIcon');
+    const qrScannerOverlay = document.getElementById('qr-scanner-overlay');
+    const qrVideo = document.getElementById('qr-video');
+    const qrScannerClose = document.getElementById('qr-scanner-close');
+    const qrFileInput = document.getElementById('qrFileInput');
+
+    // QR Code Validation Function
+    function sendQRToServer(qrString) {
+        console.log("Sending QR code:", qrString);
+        fetch("{% url 'locations:validate_qr' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({qr_code: qrString})
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.json().then(data => {
+                    console.log("Server response:", data);
+                    alert(data.message || 'Invalid QR code');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('QR validation error:', error);
+            alert('Error validating QR code: ' + error.message);
+        });
+    }
+
+    // Open Camera Scanner
+    async function startCameraScanner() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment'
+                }
+            });
+            qrVideo.srcObject = stream;
+            qrVideo.play();
+            qrScannerOverlay.style.display = 'flex';
+
+            const canvasElement = document.createElement('canvas');
+            const canvas = canvasElement.getContext('2d');
+
+            function tick() {
+                if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+                    canvasElement.height = qrVideo.videoHeight;
+                    canvasElement.width = qrVideo.videoWidth;
+                    canvas.drawImage(qrVideo, 0, 0, canvasElement.width, canvasElement.height);
+
+                    const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    if (code) {
+                        // Stop video stream
+                        stream.getTracks().forEach(track => track.stop());
+                        qrScannerOverlay.style.display = 'none';
+
+                        // Send QR code to server
+                        sendQRToServer(code.data);
+                        return; // Stop scanning
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+
+        } catch (err) {
+            console.error("Camera access error:", err);
+            alert('Could not access camera. Please check permissions.');
+        }
+    }
+
+    // Image Upload QR Scanning
+    function scanQRFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvasElement = document.createElement('canvas');
+                const canvas = canvasElement.getContext('2d');
+                canvasElement.width = img.width;
+                canvasElement.height = img.height;
+                canvas.drawImage(img, 0, 0, img.width, img.height);
+
+                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                if (code) {
+                    sendQRToServer(code.data);
+                } else {
+                    alert('No QR code found in the image');
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Event Listeners
+    qrScannerIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Offer both camera and file upload options
+        const choice = confirm('Would you like to scan with your camera?');
+
+        if (choice) {
+            // Camera scanning
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                startCameraScanner();
+            } else {
+                alert('Camera not supported on this device.');
+            }
+        } else {
+        }
+    });
+
+    // Close scanner overlay
+    qrScannerClose.addEventListener('click', function() {
+        qrScannerOverlay.style.display = 'none';
+        if (qrVideo.srcObject) {
+            qrVideo.srcObject.getTracks().forEach(track => track.stop());
+        }
+    });
+
+    // File input change event
+    qrFileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            scanQRFromFile(file);
+        }
+        event.target.value = ''; // Reset input
+    });
+});
+
+  
+</script>
 </body>
 </html>

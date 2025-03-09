@@ -1,2 +1,7 @@
 [MASTER]
 load-plugins=pylint_django
+ignore=migrations, settings.py, manage.py, __init__.py
+ignore-patterns=migrations/*.py
+
+
+[DJANGO]

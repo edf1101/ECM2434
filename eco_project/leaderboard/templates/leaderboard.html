@@ -5,124 +5,182 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'leaderboard/css/leaderboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
 {% endblock %}
 
 {% block content %}
-<h1>Leaderboard</h1>
+    <h1>Leaderboard</h1>
     <div class="leaderboard-container">
-
         <h2>Global Top Users</h2>
         <table>
             <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Username</th>
-                    <th>Points</th>
-                    <th>Badges</th>
-                </tr>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Points</th>
+                <th>Badges</th>
+            </tr>
             </thead>
             <tbody>
-                {% for user in users %}
+            {% for user in users %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ user.username }}</td>
+                    <td><a href="{% url 'users:user_profile' user.username %}"
+                           class="profileLink"> {{ user.username }}</a></td>
                     <td>{{ user.profile.points }}</td>
                     <td>
-                        {% for badge_instance in user.badgeinstance_set.all %}
-                            <span class="badge" title="{{ badge_instance.badge.hover_text }}"
-                                  style="background-color: {{ badge_instance.badge.colour }}; color: white;">
-                                {{ badge_instance.badge.title }}
-                            </span>
-                        {% endfor %}
+                        {% if user.badgeinstance_set.all.count %}
+                            {% for badge_instance in user.badgeinstance_set.all %}
+                                <span class="badge"
+                                      title="{{ badge_instance.badge.hover_text }}"
+                                      style="background-color: {{ badge_instance.badge.colour }}; color: white;"> {{ badge_instance.badge.title }} </span>
+                            {% endfor %}
+                        {% else %}
+                            No badges yet
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
                     <td colspan="4">No users available</td>
                 </tr>
-                {% endfor %}
+            {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="leaderboard-container">    
+
+    <div class="leaderboard-container">
+        <h2>Global Top Groups</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Group Name</th>
+                <th>Members</th>
+                <th>Total Points</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for group_entry in top_groups %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ group_entry.group.name }}</td>
+                    <td>{{ group_entry.member_count }}</td>
+                    <td>{{ group_entry.total_points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No groups available</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="leaderboard-container">
+        <h2>Global Top Pets</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Pet Name</th>
+                <th>Owner</th>
+                <th>Health</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pet in pets %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ pet.name }}</td>
+                    <td><a href="{% url 'users:user_profile' pet.owner.username %}"
+                           class="profileLink"> {{ pet.owner.username }}</a></td>
+                    <td>{{ pet.health }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No pets available</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="leaderboard-container">
         {% if user.is_authenticated %}
             {% if user_groups %}
                 <div class="group-selector">
-                    <form method="get">
-                        <select name="group" onchange="this.form.submit()">
-                            {% for group in user_groups %}
-                                <option value="{{ group.code }}" {% if selected_group.code == group.code %}selected{% endif %}>
-                                    Group {{ group.code }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </form>
+                    <label for="group-select">Select Group:</label>
+                    <select id="group-select" onchange="changeGroupLeaderboard()">
+                        {% for entry in group_leaderboards %}
+                            <option value="{{ entry.group.code }}">{{ entry.group.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
-                {% if selected_group %}
-                    <h2>Group Leaderboard - {{ selected_group.code }}</h2>
-                    <table>
-                        <thead>
+                {% for group in group_leaderboards %}
+                    <div id="group-leaderboard-{{ group.group.code }}" class="group-leaderboard"
+                         style="{% if forloop.first %}display:block;{% else %}display:none;{% endif %}">
+                        <h2>Group Leaderboard - {{ group.group.name }}</h2>
+                        <table>
+                            <thead>
                             <tr>
                                 <th>Rank</th>
                                 <th>Username</th>
                                 <th>Points</th>
                                 <th>Badges</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in group_users %}
-                            <tr {% if user == current_user %}class="current-user"{% endif %}>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.profile.points }}</td>
-                                <td>
-                                    {% for badge_instance in user.badgeinstance_set.all %}
-                                        <span title="{{ badge_instance.badge.hover_text }}"
-                                            style="color: {{ badge_instance.badge.colour }}">
-                                            {{ badge_instance.badge.title }}
-                                        </span>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="4">No users in this group</td>
-                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in group.users %}
+                                <tr {% if user == current_user %}class="current-user"{% endif %}>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><a href="{% url 'users:user_profile' user.username %}"
+                                           class="profileLink"> {{ user.username }}</a></td>
+                                    <td>{{ user.total_pet_points }}</td>
+                                    <td>
+                                        {% if user.badgeinstance_set.all.count %}
+                                            {% for badge_instance in user.badgeinstance_set.all %}
+                                                <span class="badge"
+                                                      title="{{ badge_instance.badge.hover_text }}"
+                                                      style="background-color: {{ badge_instance.badge.colour }}; color: white;"> {{ badge_instance.badge.title }} </span>
+                                            {% endfor %}
+                                        {% else %}
+                                            No badges yet
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4">No users in this group</td>
+                                </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
             {% else %}
                 <p>You are not a member of any groups</p>
             {% endif %}
         {% endif %}
-
-        <h2>Top Pets</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Pet Name</th>
-                    <th>Owner</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pet in pets %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ pet.name }}</td>
-                    <td>{{ pet.owner.username }}</td>
-                    <td>{{ pet.points }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">No pets available</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 
+    <script>
+        /**
+         * This function updates a group leaderboard when a group is switched.
+         */
+        function changeGroupLeaderboard() {
+            const select = document.getElementById('group-select');
+            const selectedGroup = select.value;
+            const leaderboards = document.getElementsByClassName('group-leaderboard');
+            for (let i = 0; i < leaderboards.length; i++) {
+                leaderboards[i].style.display = 'none';
+            }
+            const selectedDiv = document.getElementById('group-leaderboard-' + selectedGroup);
+            if (selectedDiv) {
+                selectedDiv.style.display = 'block';
+            }
+        }
+    </script>
 {% endblock %}

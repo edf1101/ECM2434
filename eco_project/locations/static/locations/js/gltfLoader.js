@@ -1,5 +1,5 @@
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from '../../three/jsm/loaders/DRACOLoader.js';
+import { GLTFLoader } from '../../three/jsm/loaders/GLTFLoader.js';
 
 
 export class GltfLoader {
@@ -21,7 +21,7 @@ export class GltfLoader {
      * Implements caching so that the model is only loaded once and then cloned.
      *
      * @param {string} url - The URL of the GLTF asset.
-     * @returns {Promise} Promise that resolves with the loaded GLTF object.
+     * @return {Promise} Promise that resolves with the loaded GLTF object.
      */
     loadGLTF(url) {
         return new Promise((resolve, reject) => {

@@ -1,22 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}EcoPet - {{ feature_type.name }}{% endblock %}
+
+{% block extrahead %}
     <meta charset="UTF-8">
-    <title>{{ feature_type.name }}</title>
-</head>
-<body>
-<h3><a href="{% url 'locations:generic-feature-list' %}">
-    Back to Feature List
-</a></h3>
-<h1>{{ feature_type.name }}</h1>
-<br>
-<img
-        src="{{ feature_type.generic_img.url }}"
-        alt="Image of {{ feature_type.name }}"
-/>
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'locations/css/features.css' %}">
+    <style>
+        .vertical-divider {
+            border-right: 2px solid rgba(37, 46, 42, 0.32);
+        }
 
-<p>{{ generic_feature.description }}</p>
+        img.rounded {
+            border-radius: 20px;
+        }
 
+        .alert-custom-green {
+            background-color: rgba(21, 90, 50, 0.6) !important;
+            color: #fff;
+            border: none;
+        }
+    </style>
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1>✨{{ feature_type.name }}s✨</h1>
+                <h4>Learn more about this sustainability feature!</h4>
+            </div>
+        </div>
+
+        <div class="row mt-4"> {# Have 2 columns one for image other for info #}
+            {# left col #}
+            <div class="col-md-6 vertical-divider pr-md-3 text-center">
+                <img src="{{ feature_type.generic_img.url }}" alt="Image of {{ feature_type.name }}"
+                     class="img-fluid rounded"/>
+            </div>
+            {# Right column have desc and nearby feature alerts #}
+            <div class="col-md-6 pl-md-3 text-center d-flex flex-column align-items-center justify-content-center">
+                <h2>About {{ feature_type.name }}s</h2>
+                <p>{{ feature_type.description }}</p>
+                <br><br>
+                <h2>Nearby features of this type</h2>
+                <div id="feature-alerts-container" class="w-100 mt-3"></div>
+                {# alerts container #}
+            </div>
+        </div>
+    </div>
+
+    {{ nearby_features|json_script:"nearby-features-data" }}
+    <script src="{% static 'locations/js/feature_types.js' %}"></script>
+{% endblock %}

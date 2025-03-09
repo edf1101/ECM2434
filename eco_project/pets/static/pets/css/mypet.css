@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+        /* Set full page background */
+        /*
+        html, body {
+            background: linear-gradient(135deg, #99D887, #7ED08F);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        */
+
+        /* Main Container */
+        .pet-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 3px solid #28963D;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(16, 106, 26, 0.5);
+            font-family: 'Bungee', cursive;
+            color: #106A1A;
+            text-align: center;
+        }
+
+        .pet-header {
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 15px;
+            background: #106A1A;
+            color: #fff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px #28963D;
+        }
+
+        .pet-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .pet-image {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .pet-image img {
+            max-width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .pet-image img:hover {
+            transform: scale(1.1);
+        }
+
+        .pet-details {
+            flex: 1;
+            min-width: 250px;
+            text-align: left;
+            font-size: 1.2rem;
+            color: #28963D;
+        }
+
+        .pet-details p {
+            margin: 10px 0;
+        }
+
+        .gamify-info {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .accessorise-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: #98DABA;
+            color: #106A1A;
+            border: 2px solid #28963D;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(16, 106, 26, 0.4);
+        }
+
+        .accessorise-btn:hover {
+            background: #8FD8B7;
+            transform: scale(1.05);
+        }
+

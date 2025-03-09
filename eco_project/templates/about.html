@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}About EcoPet{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="row text-center">
+            <div class="col-12">
+                <h1>About EcoPet!</h1>
+                <p>Welcome to EcoPet! We want to help you explore the University of Exeter campus
+                    while keeping your pet happy and healthy.</p>
+            </div>
+        </div>
+        <div class="row align-items-center my-4">
+            <div class="col-md-6">
+                <img src="{% static 'media/mapImage.jpg' %}" alt="About EcoPet"
+                     class="img-fluid rounded">
+            </div>
+            <div class="col-md-6">
+                <p>
+                    EcoPet is a platform designed to help pet owners discover new locations,
+                    challenges, and connect with your community.
+                    You can scan QR codes at sustainable locations around the campus to score points
+                    for your pet so you can keep them happy
+                    and earn them points!
+                </p>
+                <p>
+                    Points are spendable in the item shop so you can show off your pet to your
+                    friends and other users.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

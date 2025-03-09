@@ -1,18 +1,24 @@
 """
 This module contains the views for the users app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.shortcuts import redirect
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
-from .forms import UserCreationFormWithNames, ModifyUserForm, ModifyProfileForm
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.shortcuts import render, get_object_or_404
+from challenges.challenge_helpers import get_current_window
+from challenges.models import UserFeatureReach, ChallengeSettings
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
-from .models import UserGroup
+from django.contrib.auth import login, logout
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
+
+from .forms import ModifyUserForm, ModifyProfileForm, RegistrationForm
+from .models import UserGroup
 
 
 def registration_view(request) -> HttpResponse:
@@ -22,17 +28,20 @@ def registration_view(request) -> HttpResponse:
     @param request: The request object.
     @return: The response object.
     """
+
     # if the user is already logged in, redirect them to the homepage
     if request.user.is_authenticated:
         return redirect("homepage")
 
     if request.method == "POST":
-        form = UserCreationFormWithNames(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            login(request, form.save())
+            user, _ = form.save()
+            login(request, user)
             return redirect("homepage")
     else:
-        form = UserCreationFormWithNames()
+        form = RegistrationForm()
+
     return render(request, "users/registration.html", {"form": form})
 
 
@@ -47,22 +56,23 @@ def login_view(request) -> HttpResponse:
 
     # find out next url if there is one
     next_url = request.POST.get("next") or request.GET.get("next", "")
-    homepage_url = reverse('homepage')
+    homepage_url = reverse("homepage")
 
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
             return redirect(next_url or homepage_url)
-        else:
-            # If the login was tried from the homepage go to the homepage
-            if next_url == homepage_url:
-                return render(request, 'home.html', {'form': form})
-            else:
-                return render(request, "users/login.html", {'form': form, 'next': next_url})
-    else:
-        form = AuthenticationForm(request)
-        return render(request, "users/login.html", {'form': form, 'next': next_url})
+
+        # If the login was tried from the homepage go to the homepage
+        if next_url == homepage_url:
+            return render(request, "home.html", {"form": form})
+        return render(request, "users/login.html",
+                          {"form": form, "next": next_url})
+
+    form = AuthenticationForm(request)
+    return render(request, "users/login.html",
+                  {"form": form, "next": next_url})
 
 
 def logout_view(request) -> HttpResponse:
@@ -96,7 +106,29 @@ def profile_view(request, username) -> HttpResponse:
     # only show the first 5 badges
     badges = badges[:5]
 
-    context = {'user': user, 'badges': badges}
+    # Get the user's challenges completed in the current window
+    now_time = timezone.now()
+    interval = ChallengeSettings.get_solo().interval
+    window_start, window_end = get_current_window(now_time, interval)
+    user_feature_reaches = UserFeatureReach.objects.filter(
+        user=user, reached_at__gte=window_start, reached_at__lt=window_end, extra="")
+    # only take most recent 10
+    user_feature_reaches = user_feature_reaches.order_by("-reached_at")[:10]
+
+    pet = user.pets.first()  # assumes user only has one pet for sprint 1
+    # if there is no pet fill this in with a default pet
+    if not pet:
+        pet = {
+            "name": "Ellie the Elephant",
+            "health": 100,
+        }
+
+    context = {
+        "user": user,
+        "badges": badges,
+        "challenges": user_feature_reaches,
+        "pet": pet,
+    }
     return render(request, "users/profile.html", context=context)
 
 
@@ -113,23 +145,23 @@ def edit_profile(request) -> HttpResponse:
 
     profile = user.profile  # get the profile
 
-    if request.method == 'POST':  # if we have just received a completed form
+    if request.method == "POST":  # if we have just received a completed form
         user_form = ModifyUserForm(request.POST, instance=user)
         profile_form = ModifyProfileForm(request.POST, instance=profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
 
-            return redirect('users:user_profile', username=user.username)
+            return redirect("users:user_profile", username=user.username)
     else:  # if we are just displaying the form for the first time
         user_form = ModifyUserForm(instance=user)
         profile_form = ModifyProfileForm(instance=profile)
 
     context = {
-        'user_form': user_form,
-        'profile_form': profile_form,
+        "user_form": user_form,
+        "profile_form": profile_form,
     }
-    return render(request, 'users/edit_profile.html', context)
+    return render(request, "users/edit_profile.html", context)
 
 
 @login_required
@@ -144,17 +176,19 @@ def change_password(request) -> HttpResponse:
     if not request.user.is_authenticated:  # handle non-signed in users
         return redirect("users:login")
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save()  # This saves the new password
 
-            update_session_auth_hash(request, user)  # Prevents the user from being logged out
-            return redirect('homepage')  # redirect home
+            update_session_auth_hash(
+                request, user
+            )  # Prevents the user from being logged out
+            return redirect("homepage")  # redirect home
     else:
         form = PasswordChangeForm(user=request.user)
 
-    return render(request, 'users/change_password.html', {'form': form})
+    return render(request, "users/change_password.html", {"form": form})
 
 
 @login_required
@@ -172,26 +206,6 @@ def groups_home(request) -> HttpResponse:
 
     # get the UserGroups the user is a part of by their code
     user_groups = UserGroup.objects.all().filter(users=user)
-    context = {'user_groups': user_groups}
+    context = {"user_groups": user_groups}
 
-    return render(request, "users/groups_home.html", context=context)
-
-
-@login_required
-def group_detail(request, code):
-    """
-    Display the details of a group including its list of users.
-
-    @param request: The HTTP request object.
-    @param  code: The unique code of the group.
-    @return: HttpResponse with the rendered group detail page.
-    """
-
-    # Retrieve the group by its unique code, or throw 404 if not found.
-    group = get_object_or_404(UserGroup, code=code)
-
-    if request.user not in group.users.all():  # Check that the user is a member of group
-        return redirect("groups_home")
-
-    context = {"group": group}
-    return render(request, "users/group_detail.html", context=context)
+    return render(request, "users/groups.html", context=context)

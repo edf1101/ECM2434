@@ -1,1 +1,1 @@
-default_app_config = 'challenges.apps.ChallengesConfig'
+default_app_config = "challenges.apps.ChallengesConfig"

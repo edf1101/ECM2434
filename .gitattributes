@@ -1,0 +1,4 @@
+eco_project/static/three/build/* linguist-vendored
+eco_project/static/jsm/controls/* linguist-vendored
+eco_project/static/jsm/loaders/* linguist-vendored
+eco_project/static/jsm/utils/* linguist-vendored

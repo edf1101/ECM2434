@@ -52,37 +52,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * This function just contains dummy data for now but will update the pet widget on the
-     * home page with the current pet stats
+     * This function updates the home page with the current pet stats
      */
     function updatePetStats() {
-        // dummy values
-        const health = 50;
-        const points = 100;
-
-        // Set progress bar width and text
-        const healthBar = document.getElementById('petHealthBar');
-        healthBar.style.width = health + '%';
-        healthBar.ariaValueNow = health;
-        healthBar.textContent = health + '%';
-
-        // Update health description
-        const healthText = document.getElementById('petHealthText');
-        if (health > 80) {
-            healthText.textContent = 'Your pet is happy! Go find challenges to keep it that way!';
-        } else if (health > 30) {
-            healthText.textContent = 'Your pet is surviving, but not thriving. Find challenges to improve its health!';
-        } else {
-            healthText.textContent = 'Your pet is feeling sad, it doesnt want to go extinct! Find challenges to save it!';
+        // If the user is not signed in, keep the default values.
+        if (!currentUsername) {
+            console.log("User not signed in, using default pet data.");
+            return;
         }
 
-        // Update points display
-        document.getElementById('petPoints').textContent = points;
+        // Helper function to retrieve the CSRF token (required for POST requests in Django)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Use the apiBaseUrl variable provided from the template and append the username.
+        const apiUrl = baseApiUrlPet;
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        })
+            .then(response => {
+                if (response.status === 404) {
+                    console.log("No pet found for this user, using default values.");
+                    // Return null so the following then block can skip UI updates.
+                    return null;
+                } else if (!response.ok) {
+                    throw new Error("Error fetching pet data");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // If data is null, exit the function.
+                if (!data) {
+                    console.log("No pet data found, using default values.");
+                    return;
+                }
+
+                // Update pet points
+                document.getElementById('petPoints').textContent = data.user_points;
+
+                // Update pet name
+                document.getElementById('petName').textContent = data.pet_name;
+
+                // Update health bar and text
+                const health = data.pet_health;
+                const healthBar = document.getElementById('petHealthBar');
+                healthBar.style.width = health + '%';
+                healthBar.setAttribute('aria-valuenow', health);
+                healthBar.textContent = health + '%';
+
+                const healthText = document.getElementById('petHealthText');
+                if (health > 80) {
+                    healthText.textContent = 'Your pet is happy! Go find challenges to keep it that way!';
+                } else if (health > 30) {
+                    healthText.textContent = 'Your pet is surviving, but not thriving. Find challenges to improve its health!';
+                } else {
+                    healthText.textContent = 'Your pet is feeling sad, it doesn\'t want to go extinct! Find challenges to save it!';
+                }
+
+                // Update pet image
+                document.getElementById('petImage').src = data.pet_image;
+            })
+            .catch(error => {
+                console.error('Error fetching pet data:', error);
+            });
     }
+
+// Run the update function when the DOM is fully loaded.
+    document.addEventListener("DOMContentLoaded", updatePetStats);
+
+
+// Run the update function when the DOM is fully loaded.
+    document.addEventListener("DOMContentLoaded", updatePetStats);
+
 
     updatePetStats(); // set initial values for pet stats
     updateUI(); // Initial UI state
     setInterval(updatePetStats, 5000); // update pet stats every 5s
 
-
+    
 });
