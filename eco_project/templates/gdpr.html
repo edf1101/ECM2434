@@ -1,100 +1,154 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet - GDPR{% endblock %}
+{% block title %}EcoPet - Privacy Policy{% endblock %}
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
-
     <style>
-    .centered-list {
-            display: inline-block;
+        /* Container styling for a professional appearance */
+        .privacy-container {
+            border: 2px solid #99D887;
+            border-radius: 8px;
+            padding: 40px;
+            margin: 40px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: inherit;
+            max-width: 900px;
+        }
+        .privacy-container h1,
+        .privacy-container h2 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .privacy-container p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .centered-list {
+            margin: 20px 0;
+            padding-left: 20px;
             text-align: left;
-            list-style-position: inside;
+            list-style-type: disc;
+        }
+        .section {
+            margin-bottom: 30px;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4">
-        <div class="row text-center">
-            <div class="col-12">
-                <h1>Our Privacy Policy</h1>
-
-                <p><strong>Effective Date:</strong> 2025-02-24</p>
-
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 privacy-container">
+            <h1>Our Privacy Policy</h1>
+            <p><strong>Effective Date:</strong> 24 February 2025</p>
+            
+            <div class="section">
                 <h2>1. Data Controller</h2>
                 <p>
                     EcoPets<br>
-                    ecopets@example.com<br>
-                    University of Exeter, EX4 4QJ
+                    <a href="mailto:ecopets@example.com" style="color:inherit;">ecopets@example.com</a><br>
+                    University of Exeter, EX4 4QJ, United Kingdom
                 </p>
-
+            </div>
+            
+            <div class="section">
                 <h2>2. Data Collection</h2>
-                <p>We collect the following types of personal data:</p>
+                <p>We collect the following categories of personal data:</p>
                 <ul class="centered-list">
-                    <li><strong>Identity Data:</strong> First and last names.</li>
-                    <li><strong>Contact Data:</strong> Email addresses.</li>
-                    <li><strong>Location Data:</strong> Your location when using the app.</li>
-                    <li><strong>Technical Data:</strong> Access times when you log in.</li>
+                    <li><strong>Identity Data:</strong> For example, first and last names.</li>
+                    <li><strong>Contact Data:</strong> Such as email addresses.</li>
+                    <li><strong>Location Data:</strong> Including your location when you use our app.</li>
+                    <li><strong>Technical Data:</strong> Such as access times, IP addresses and device details.</li>
                 </ul>
-
+            </div>
+            
+            <div class="section">
                 <h2>3. Purpose of Processing</h2>
-                <p>We process your personal data for the following purposes:</p>
+                <p>Your personal data is processed for the following purposes:</p>
                 <ul class="centered-list">
-                    <li>To provide our service.</li>
-                    <li>To personalize your experience.</li>
-                    <li>To communicate with you about your account or our services.</li>
+                    <li>To provide and maintain the EcoPets service.</li>
+                    <li>To personalise your user experience.</li>
+                    <li>To communicate with you regarding your account and our services.</li>
+                    <li>To comply with legal and regulatory requirements.</li>
                 </ul>
-
+            </div>
+            
+            <div class="section">
                 <h2>4. Legal Basis for Processing</h2>
-                <p>We process your personal data based on the following legal basis:</p>
+                <p>We process your personal data on the following legal basis:</p>
                 <ul class="centered-list">
-                    <li><strong>Contract:</strong> For providing our services.</li>
+                    <li><strong>Contract:</strong> Processing is necessary to deliver our service.</li>
+                    <li><strong>Legal Obligation:</strong> To comply with applicable laws and regulations.</li>
                 </ul>
-
+            </div>
+            
+            <div class="section">
                 <h2>5. Data Sharing</h2>
-                <p>We do not share any personal data with any third parties.</p>
-
+                <p>
+                    We do not share your personal data with any third parties, except where required by law or with your explicit consent.
+                </p>
+            </div>
+            
+            <div class="section">
                 <h2>6. Data Retention</h2>
                 <p>
-                    We will retain your personal data for as long as necessary to fulfill the purposes for which it was collected, including any legal or regulatory requirements.
+                    We will retain your personal data for as long as necessary to fulfil the purposes for which it was collected, including for the purposes of satisfying any legal, accounting, or reporting requirements.
                 </p>
                 <p>
-                    We will typically retain account information for as long as your account is active.
+                    Typically, account information is retained for as long as your account remains active.
                 </p>
-
-                <h2>7. Data Subject Rights</h2>
-                <p>You have the following rights regarding your personal data:</p>
+            </div>
+            
+            <div class="section">
+                <h2>7. Your Rights</h2>
+                <p>
+                    Under the General Data Protection Regulation (GDPR), you have the right to:
+                </p>
                 <ul class="centered-list">
-                    <li><strong>Access:</strong> You can request access to your personal data.</li>
-                    <li><strong>Rectification:</strong> You can request that inaccurate data be corrected.</li>
-                    <li><strong>Erasure:</strong> You can request that your data be deleted (under certain circumstances).</li>
-                    <li><strong>Restriction of Processing:</strong> You can request that the processing of your data be restricted (under certain circumstances).</li>
-                    <li><strong>Data Portability:</strong> You can request to receive your data in a portable format.</li>
+                    <li><strong>Access:</strong> Request a copy of the personal data we hold about you.</li>
+                    <li><strong>Rectification:</strong> Request correction of any inaccurate or incomplete data.</li>
+                    <li><strong>Erasure:</strong> Request deletion of your data under certain conditions.</li>
+                    <li><strong>Restriction of Processing:</strong> Request limitations on how your data is processed.</li>
+                    <li><strong>Data Portability:</strong> Request that your data be transferred to you or another service provider.</li>
+                    <li><strong>Objection:</strong> Object to the processing of your personal data under certain circumstances.</li>
                 </ul>
                 <p>
-                    <em>To exercise these rights, please contact us at the contact information provided above.</em>
+                    To exercise any of these rights, please contact us using the details provided below.
                 </p>
-
+            </div>
+            
+            <div class="section">
                 <h2>8. Data Security</h2>
                 <p>
-                    We take reasonable measures to protect your personal data from unauthorized access, use, or disclosure. These methods include encrypted transfer of data and secure password hashing.
+                    We take all reasonable steps to safeguard your personal data against unauthorised access, alteration, disclosure, or destruction. Our measures include secure data transfer protocols and robust password hashing.
                 </p>
                 <p>
-                    However, no method of transmission over the Internet, or method of electronic storage, is 100% secure.
+                    Please note, however, that no method of electronic data transmission or storage is entirely secure.
                 </p>
-
+            </div>
+            
+            <div class="section">
                 <h2>9. Contact Information</h2>
                 <p>
-                    EcoPets<br>
-                    ecopets@example.com<br>
-                    University of Exeter, EX4 4QJ
+                    If you have any questions about this Privacy Policy or our data practices, please contact us at:
                 </p>
-
-                <h2>10. Changes to this Privacy Policy</h2>
-                <p>We may update this Privacy Policy from time to time.</p>
+                <p>
+                    EcoPets<br>
+                    <a href="mailto:ecopets@example.com" style="color:inherit;">ecopets@example.com</a><br>
+                    University of Exeter, EX4 4QJ, United Kingdom
+                </p>
+            </div>
+            
+            <div class="section">
+                <h2>10. Amendments to This Policy</h2>
+                <p>
+                    We may revise this Privacy Policy from time to time. Any amendments will be posted on this page, and the revised policy will be effective immediately upon posting.
+                </p>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
