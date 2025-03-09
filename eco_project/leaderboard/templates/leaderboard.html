@@ -9,8 +9,18 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Leaderboard</h1>
-    <div class="leaderboard-container">
+    <h1>Leaderboards</h1>
+    <br>
+    <div class="leaderboard-tabs">
+        <button class="tab-button active" onclick="showLeaderboard('users')">Top Users</button>
+        <button class="tab-button" onclick="showLeaderboard('groups')">Top Groups</button>
+        <button class="tab-button" onclick="showLeaderboard('pets')">Top Pets</button>
+        {% if user_groups %}
+            <button class="tab-button" onclick="showLeaderboard('your-groups')">Your Groups</button>
+        {% endif %}
+        </div>
+
+    <div id="leaderboard-users" class="leaderboard-container">
         <h2>Global Top Users</h2>
         <table>
             <thead>
@@ -23,7 +33,7 @@
             </thead>
             <tbody>
             {% for user in users %}
-                <tr>
+                <tr class="{% if forloop.counter == 1 %}top-1{% elif forloop.counter == 2 %}top-2{% elif forloop.counter == 3 %}top-3{% endif %}">
                     <td>{{ forloop.counter }}</td>
                     <td><a href="{% url 'users:user_profile' user.username %}"
                            class="profileLink"> {{ user.username }}</a></td>
@@ -49,7 +59,7 @@
         </table>
     </div>
 
-    <div class="leaderboard-container">
+    <div id="leaderboard-groups" class="leaderboard-container hidden">
         <h2>Global Top Groups</h2>
         <table>
             <thead>
@@ -62,7 +72,7 @@
             </thead>
             <tbody>
             {% for group_entry in top_groups %}
-                <tr>
+                <tr class="{% if forloop.counter == 1 %}top-1{% elif forloop.counter == 2 %}top-2{% elif forloop.counter == 3 %}top-3{% endif %}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ group_entry.group.name }}</td>
                     <td>{{ group_entry.member_count }}</td>
@@ -77,7 +87,7 @@
         </table>
     </div>
 
-    <div class="leaderboard-container">
+    <div id="leaderboard-pets" class="leaderboard-container hidden">
         <h2>Global Top Pets</h2>
         <table>
             <thead>
@@ -90,7 +100,7 @@
             </thead>
             <tbody>
             {% for pet in pets %}
-                <tr>
+                <tr class="{% if forloop.counter == 1 %}top-1{% elif forloop.counter == 2 %}top-2{% elif forloop.counter == 3 %}top-3{% endif %}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ pet.name }}</td>
                     <td><a href="{% url 'users:user_profile' pet.owner.username %}"
@@ -107,7 +117,7 @@
     </div>
 
 
-    <div class="leaderboard-container">
+    <div id="leaderboard-your-groups" class="leaderboard-container hidden">
         {% if user.is_authenticated %}
             {% if user_groups %}
                 <div class="group-selector">
@@ -134,7 +144,8 @@
                             </thead>
                             <tbody>
                             {% for user in group.users %}
-                                <tr {% if user == current_user %}class="current-user"{% endif %}>
+                                <tr class="{% if forloop.counter == 1 %}top-1{% elif forloop.counter == 2 %}top-2{% elif forloop.counter == 3 %}top-3{% endif %}"
+                                    {% if user == current_user %}class="current-user"{% endif %} >
                                     <td>{{ forloop.counter }}</td>
                                     <td><a href="{% url 'users:user_profile' user.username %}"
                                            class="profileLink"> {{ user.username }}</a></td>
@@ -182,5 +193,23 @@
                 selectedDiv.style.display = 'block';
             }
         }
+
+        /**
+         * This function updates leaderboard buttons
+         */
+        function showLeaderboard(type) {
+
+        document.querySelectorAll('.leaderboard-container').forEach(el => {
+            el.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        document.getElementById('leaderboard-' + type).classList.remove('hidden');
+
+        event.target.classList.add('active');
+    }
     </script>
 {% endblock %}

@@ -2,6 +2,36 @@ body {
     text-align: center;
 }
 
+.hidden {
+    display: none;
+}
+
+.leaderboard-tabs {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background: var(--btn-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.tab-button:hover {
+    background: #3da94f;
+}
+
+.tab-button.active {
+    background: #81b89b;
+    font-weight: bold;
+}
+
 .leaderboard-container {
     background: var(--box-color);
     max-width: 800px;
@@ -36,6 +66,7 @@ tr:nth-child(even) {
 }
 .group-selector {
     margin: 20px 0;
+    font-size: 20px;
 }
 .group-selector select {
     padding: 8px;
@@ -43,6 +74,7 @@ tr:nth-child(even) {
     background: white;
     color: #1E4421;
     border: none;
+    font-size: 16px;
 }
 .current-user {
     background-color: rgba(255, 255, 255, 0.3) !important;
@@ -68,7 +100,7 @@ tr:nth-child(even) {
 }
 
 .profileLink:link, .profileLink:visited, .profileLink:active {
-    color: #ffffff;
+    color: black;
     transition: color 0.3s ease;
     text-decoration: none;
 }
@@ -78,14 +110,31 @@ tr:nth-child(even) {
     text-decoration: none;
 }
 
+.top-1 {
+    background: gold !important;
+    color: black;
+}
+
+.top-2 {
+    background: silver !important;
+    color: black;
+}
+
+.top-3 {
+    background: #cd7f32 !important; 
+    color: black;
+}
+
 /* Light Mode */
 :root {
     --box-color: #1E4421;
     --text-color-l: #ffffff;
+    --btn-color: #2f7935;
 }
 
 /* Dark Mode */
 .dark-mode {
     --box-color: #2f7935;
     --text-color-l: #e0e0e0;
+    --btn-color: #73c47a;
 }
