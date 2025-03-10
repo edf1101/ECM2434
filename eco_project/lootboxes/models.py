@@ -19,7 +19,7 @@ class LootBox(models.Model):
 
         # Define possible outcomes and their probabilities
         outcomes = ["win", "losesmall", "losebig", "loseall"]
-        probabilities = [0.7, 0.15, 0.1, 0.05]
+        probabilities = [0.6, 0.3, 0.05, 0.05]
 
         # Spin the wheel and choose an outcome based on the specified probabilities
         outcome = random.choices(outcomes, weights=probabilities, k=1)[0]
