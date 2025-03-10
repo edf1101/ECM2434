@@ -18,15 +18,20 @@ class LootBox(models.Model):
         profile.points -= 10
 
         # Define possible outcomes and their probabilities
-        outcomes = ["win", "losesmall", "losebig", "loseall"]
-        probabilities = [0.6, 0.3, 0.05, 0.05]
+        outcomes = ["winbig", "winsmall", "losesmall", "losebig", "loseall"]
+        probabilities = [0.2, 0.4, 0.3, 0.05, 0.05]
 
         # Spin the wheel and choose an outcome based on the specified probabilities
         outcome = random.choices(outcomes, weights=probabilities, k=1)[0]
 
-        if outcome == "win":
-            # Win between 10 and 100 points
-            winnings = random.randint(10, 100)
+        if outcome == "winbig":
+            # Win between 30 and 100 points
+            winnings = random.randint(30, 100)
+            profile.points += winnings
+            result = f"Congratulations! You won {winnings} points! Total points: {profile.points}"
+        elif outcome == "winsmall":  # Corrected here
+            # Win between 10 and 30 points
+            winnings = random.randint(10, 30)
             profile.points += winnings
             result = f"Congratulations! You won {winnings} points! Total points: {profile.points}"
         elif outcome == "losesmall":
@@ -35,7 +40,7 @@ class LootBox(models.Model):
             profile.points -= losings
             result = f"Sorry! You lost {losings} points! Total points: {profile.points}"
         elif outcome == "losebig":
-            # Lose alot of points
+            # Lose a lot of points
             losings = random.randint(20, 60)
             profile.points -= losings
             result = f"Sorry! You lost {losings} points! Total points: {profile.points}"
