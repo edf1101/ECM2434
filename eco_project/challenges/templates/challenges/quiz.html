@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+
+{% endblock %}
+
+{% block title %}Quiz: {{ quiz.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ quiz.title }}</h1>
+    <h3>This quiz is worth {{ quiz.total_points }} points</h3>
+    <br>
+    {% if not user_is_authenticated %}
+        <p class = "incorrect_option">You are not signed in. Your points won't be added.</p>
+    {% endif %}
+
+    {% if attempt %}
+        <p>You have completed this quiz before. Your previous answers are shown below.</p>
+    {% endif %}
+
+    <form id="quiz-form">
+        {% csrf_token %} {# For security so attackers cant fake answers #}
+        <ul>
+        {# List out all the Questions and answers #}
+            {% for item in quiz_data %}
+                <li>
+                    <strong>{{ item.question.text }}</strong>
+                    <ul>
+                        {% for option in item.choices %}
+                            <li class="{% if attempt and option.choice.is_correct %}correct_option{% elif attempt and item.user_answer == option.letter and not option.choice.is_correct %}incorrect_option{% endif %}">
+                                <label>
+                                    <input type="radio"
+                                           name="question_{{ item.question.id }}"
+                                           value="{{ option.letter }}"
+                                           {# Render button differently depending on if attempted #}
+                                            {% if attempt and item.user_answer == option.letter %}
+                                           checked {% endif %}
+                                            {% if attempt %} disabled {% endif %}>
+                                    {{ option.letter }}. {{ option.choice.text }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if not attempt %} {# Only show submit button if not completed #}
+            <button type="submit">Submit</button>
+        {% endif %}
+    </form>
+
+    <script>
+        document.getElementById('quiz-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // Create the answer string from the user choices
+            let answerString = "";
+            {% for item in quiz_data %}
+                {
+                    let radios = document.getElementsByName("question_{{ item.question.id }}");
+                    let answered = false;
+                    for (let radio of radios) {
+                        if (radio.checked) {
+                            answerString += radio.value;
+                            answered = true;
+                            break;
+                        }
+                    }
+                    if (!answered) {
+                        answerString += "_"; // unanswered
+                    }
+                }
+            {% endfor %}
+
+            // send the response to the server
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            try {
+                const response = await fetch("{% url 'challenges:score_quiz' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        quiz_id: {{ quiz.id }},
+                        answers: answerString
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                alert(data.message);
+            } catch (error) {
+                alert("Error submitting quiz: " + error.message);
+            }
+
+            window.location.reload();
+
+        });
+    </script>
+{% endblock %}

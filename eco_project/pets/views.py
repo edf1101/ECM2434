@@ -57,3 +57,12 @@ def buy_cosmetic(request, cosmetic_id):
 
     messages.success(request, f"You have successfully purchased {cosmetic.name}.")
     return redirect('pets:shop')
+
+@login_required
+def accessories(request) -> HttpResponse:
+    """
+    Display the accessories page for the logged in user's pet.
+    Currently a placeholder for future accessory functionality with backend.
+    """
+    pet = request.user.pets.first()
+    return render(request, "pets/accessories.html", {"pet": pet})
