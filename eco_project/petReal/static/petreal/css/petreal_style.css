@@ -1,0 +1,86 @@
+.photo-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 10px;
+    gap: 10px;
+    scrollbar-width: none;
+}
+
+.photo-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.photo-card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.photo-card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-footer {
+    background: #f8f9fa;
+    padding: 10px;
+}
+
+.reaction-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.reaction-icon {
+    position: relative;
+    display: inline-block;
+    font-size: 2em;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.reaction-count {
+    position: absolute;
+    bottom: -13px;
+    right: -5px;
+    background: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.5em;
+    border: 1px solid #ddd;
+}
+
+.add-reaction {
+    background: #e9ecef;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reaction-popup {
+    background: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.reaction-option {
+    display: inline-block;
+    font-size: 2em;
+    margin: 0 5px;
+    cursor: pointer;
+    padding: 5px;
+}

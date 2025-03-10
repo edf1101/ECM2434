@@ -1,1 +1,74 @@
-Test
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}PetReal - Home{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'petreal/css/petreal_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+{% endblock %}
+
+{% block content %}
+    {# Take photo button #}
+    <div class="container text-center my-4">
+        <button class="btn btn-primary">Take Photo</button>
+    </div>
+
+    {# Display the PetReal photos in here #}
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2>Recent PetReal Photos</h2>
+                <p>Swipe to see the latest photos and reactions.</p>
+            </div>
+        </div>
+
+        <div class="photo-carousel">
+            {% for photo in photos %}
+                <div class="photo-card" data-photo-user="{{ photo.user }}">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">{{ photo.user }}'s Photo</h4>
+                            <img src="{{ photo.photo_url }}" alt="{{ photo.user }}'s photo"
+                                 class="card-img-top">
+                        </div>
+                        {# Display reactions in here #}
+                        <div class="card-footer text-center">
+                            <div class="reaction-container" data-photo-user="{{ photo.user }}">
+                                {% for icon, count in photo.reactions.items %}
+                                    <div class="reaction-icon">
+                                        <span class="emoji">{{ icon }}</span>
+                                        <span class="reaction-count">{{ count }}</span>
+                                    </div>
+                                {% endfor %}
+                                <div class="reaction-icon add-reaction">
+                                    <span class="emoji">+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center">
+                    <p>No photos to display.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# This section is to display the reaction selector popup #}
+    <div id="reaction-popup" class="reaction-popup">
+        <div class="reaction-options">
+            {% for icon in reaction_icons %}
+                <div class="reaction-option" data-reaction="{{ icon }}">
+                    <span class="emoji">{{ icon }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        window.addReactionUrl = "{% url 'petreal:add_reaction' %}";
+    </script>
+    <script src="{% static 'petreal/js/petreal.js' %}"></script>
+{% endblock %}

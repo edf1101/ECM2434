@@ -9,8 +9,8 @@ class ReactionType(models.Model):
     This class represents the reaction type model.
     This is a reaction to a petReal post.
     """
-    name = models.CharField(max_length=50, primary_key=True, blank=False, null=False)
-    icon = models.CharField(max_length=3, blank=False, null=False)  # cant only be 1 as emojis are 2
+    name = models.CharField(max_length=50, blank=False, null=False)
+    icon = models.CharField(max_length=3, blank=False, null=False, primary_key=True, unique=True)
 
     def __str__(self) -> str:
         """
@@ -24,7 +24,8 @@ class UserPhoto(models.Model):
     This class represents the photo that a user takes as their PetReal.
     """
     photo = models.ImageField(upload_to='petReal/photos/', blank=True, null=True)
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name='UserPhoto')
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name='UserPhoto',
+                                   primary_key=True, blank=False, null=False, unique=True)
     expiration_date = models.DateTimeField(blank=False, null=False)
 
     def __str__(self) -> str:
@@ -38,10 +39,8 @@ class UserPhotoReaction(models.Model):
     """
     This class represents the reaction to a user photo.
     """
-    reactor = models.OneToOneField(User, on_delete=models.CASCADE,
-                                   related_name='UserPhotoReaction')
-    reacted_photo = models.OneToOneField(UserPhoto, on_delete=models.CASCADE,
-                                         related_name='UserPhotoReaction')
+    reactor = models.ForeignKey(User, on_delete=models.CASCADE)
+    reacted_photo = models.ForeignKey(UserPhoto, on_delete=models.CASCADE)
     reaction_type_id = models.ForeignKey('ReactionType', on_delete=models.CASCADE, blank=False,
                                          null=False)
 

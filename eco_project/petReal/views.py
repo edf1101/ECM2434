@@ -1,15 +1,44 @@
+"""
+This module holds the views for the petReal app.
+"""
+from django.http import HttpResponse
 from django.http.request import HttpRequest
-from django.http.response import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from .models import UserPhoto, UserPhotoReaction, ReactionType
 
-# Create your views here.
 
-def petreal_home(request:HttpRequest) -> HttpResponse:
+@login_required
+def petreal_home(request: HttpRequest) -> HttpResponse:
     """
-    This function renders the home page for the petreal app.
+    Renders the petReal home page with all the photos and reactions.
 
-    @param request: HttpRequest object
-    @return: HttpResponse object
+    @param request: The HTTP request.
+    @return: The HTTP response.
     """
+    now = timezone.now()
+    photos = UserPhoto.objects.filter(expiration_date__gt=now)
 
-    return render(request, 'petreal/petreal_home.html')
+    # get all the PetReal photos and their reactions
+    photos_data = []
+    for photo in photos:
+        reactions_qs = UserPhotoReaction.objects.filter(reacted_photo=photo)
+        reaction_summary = {}
+        for reaction in reactions_qs:
+            icon = reaction.reaction_type_id.icon
+            reaction_summary[icon] = reaction_summary.get(icon, 0) + 1
+
+        photos_data.append({
+            'user': photo.user_id.username,
+            'photo_url': photo.photo.url if photo.photo else '',
+            'reactions': reaction_summary,
+        })
+
+    # Get all available reaction types and their icons.
+    reaction_types = ReactionType.objects.all()
+    reaction_icons = [reaction.icon for reaction in reaction_types]
+
+    context = {'photos': photos_data, 'reaction_icons': reaction_icons}
+
+    return render(request, 'petreal/petreal_home.html', context)
