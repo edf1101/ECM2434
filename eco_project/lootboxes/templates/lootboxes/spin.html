@@ -16,7 +16,7 @@
     </div>
 
     {% if messages %}
-        <div class="alert alert-info" role="alert">
+        <div class="alert" role="alert" style="background-color: #90EE90; color: black;">
             {% for message in messages %}
                 <p>{{ message }}</p>
             {% endfor %}
@@ -26,9 +26,10 @@
     <div class="spin-container text-center">
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Spin the Wheel for 10 Points</button>
+            <button type="submit" class="btn" style="background-color: #228B22; color: white;">Spin the Wheel for 10 Points</button>
         </form>
     </div>
+
 
     <div class="spin-results text-center mt-4">
         {% if spin_result %}

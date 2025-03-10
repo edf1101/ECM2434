@@ -45,6 +45,26 @@
             margin-top: 20px;
             cursor: pointer;
         }
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+
+        @keyframes shiny {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff0000, 0 0 20px #ff0000, 0 0 25px #ff0000; }
+            100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff7300, 0 0 20px #ff7300, 0 0 25px #ff7300; }
+        }
+
+        .lootbox-link {
+            font-weight: bold;
+            animation: rainbow 3s infinite, shiny 1.5s infinite alternate;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -92,7 +112,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'homepage' %}">Home</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'challenges:home' %}">Challenges</a>
                 </li>
@@ -112,11 +131,14 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link lootbox-link" href="http://127.0.0.1:8000/lootboxes/spin/">Lootboxes</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link" href="#" id="qrScannerIcon">
                         <i class="bi bi-qr-code-scan"></i>
                     </a>
                 </li>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -168,13 +190,14 @@
                                 </label>
                             </div>
                         </li>
-
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+
 
 <main class="container my-4 flex-grow-1">
     {% block content %}
