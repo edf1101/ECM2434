@@ -18,3 +18,12 @@ def view_pet(request) -> HttpResponse:
     """
     pet = request.user.pets.first()
     return render(request, "pets/mypet.html", {"pet": pet})
+
+@login_required
+def accessories(request) -> HttpResponse:
+    """
+    Display the accessories page for the logged in user's pet.
+    Currently a placeholder for future accessory functionality with backend.
+    """
+    pet = request.user.pets.first()
+    return render(request, "pets/accessories.html", {"pet": pet})

@@ -230,17 +230,53 @@
 <script>
     //Dark Mode Listener
     document.addEventListener("DOMContentLoaded", function () {
-        const toggle = document.getElementById("dark-mode-toggle");
-        const body = document.body;
 
-        const isDarkMode = localStorage.getItem("theme") === "dark";
-        body.classList.toggle("dark-mode", isDarkMode);
-        toggle.checked = isDarkMode; // Sync switch position
+    const toggle = document.getElementById("dark-mode-toggle");
+    const body = document.body;
 
-        toggle.addEventListener("change", function () {
-            const darkModeEnabled = toggle.checked;
-            body.classList.toggle("dark-mode", darkModeEnabled);
-            localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
+    const isDarkMode = localStorage.getItem("theme") === "dark";
+    body.classList.toggle("dark-mode", isDarkMode);
+    toggle.checked = isDarkMode; // Sync switch position
+
+    toggle.addEventListener("change", function () {
+        const darkModeEnabled = toggle.checked;
+        body.classList.toggle("dark-mode", darkModeEnabled);
+        localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const qrScannerIcon = document.getElementById('qrScannerIcon');
+    const qrScannerOverlay = document.getElementById('qr-scanner-overlay');
+    const qrVideo = document.getElementById('qr-video');
+    const qrScannerClose = document.getElementById('qr-scanner-close');
+    const qrFileInput = document.getElementById('qrFileInput');
+
+    // QR Code Validation Function
+    function sendQRToServer(qrString) {
+        console.log("Sending QR code:", qrString);
+        fetch("{% url 'locations:validate_qr' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({qr_code: qrString})
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.json().then(data => {
+                    console.log("Server response:", data);
+                    alert(data.message || 'Invalid QR code');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('QR validation error:', error);
+            alert('Error validating QR code: ' + error.message);
+
         });
     });
 
