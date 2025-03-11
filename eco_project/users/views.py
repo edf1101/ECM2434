@@ -3,10 +3,11 @@ This module contains the views for the users app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from django.http.request import HttpRequest
 
 from challenges.challenge_helpers import get_current_window
 from challenges.models import UserFeatureReach, ChallengeSettings
+
+from django.http.request import HttpRequest
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.contrib.auth import update_session_auth_hash
@@ -216,7 +217,13 @@ def groups_home(request) -> HttpResponse:
 
 
 @login_required
-def friends_view(request):
+def friends_view(request: HttpRequest) -> HttpResponse:
+    """
+    View to display a user's friends and search for new friends.
+
+    @param request: The request object.
+    @return: The response object.
+    """
     profile = request.user.profile
     # Get current friends (the ManyToManyField on Profile)
     current_friends = profile.friends.all()
