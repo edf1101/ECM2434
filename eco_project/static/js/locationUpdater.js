@@ -12,7 +12,7 @@ let locationTrackingStarted = false;
 function sendLocation(lat, lon) {
     const currentTime = Date.now();
 
-    if (currentTime - lastSentTime >= 5000) {  // Ensure updates every 5 seconds
+    if (currentTime - lastSentTime >= 30* 1000) {  // Ensure updates every 30 seconds
         const absoluteLocURL = window.location.origin + updateLocURL;
 
         fetch(absoluteLocURL, {
@@ -28,12 +28,15 @@ function sendLocation(lat, lon) {
             .then(data => {
                 console.log('Location updated:', data);
                 lastSentTime = currentTime;
+                // Dispatch an event to notify other scripts of the updated location
+                document.dispatchEvent(new CustomEvent("locationUpdated", { detail: { lat, lon } }));
             })
             .catch(error => {
                 console.error('Error updating location:', error);
             });
     }
 }
+
 
 /**
  * Start watching user's location
