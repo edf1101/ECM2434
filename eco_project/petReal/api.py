@@ -1,7 +1,13 @@
 """
 This page handles the API endpoints for the petReal app.
 """
+import base64
 import json
+import uuid
+from datetime import timedelta
+
+from django.core.files.base import ContentFile
+from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
 from django.http.request import HttpRequest
@@ -56,3 +62,39 @@ def add_reaction(request: HttpRequest) -> HttpResponse:
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+@login_required
+def add_pet_real(request: HttpRequest) -> HttpResponse:
+    """
+    Adds a petReal photo.
+
+    @param request: The HTTP request.
+    @return: The HTTP response.
+    """
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        photo_data = data.get('photo')
+
+        # Decode the received photo
+        if photo_data and ';base64,' in photo_data:
+            header, img_str = photo_data.split(';base64,')
+
+            ext = header.split('/')[-1]  # Get the file extension
+            photo_file = ContentFile(base64.b64decode(img_str), name=f"{uuid.uuid4()}.{ext}")
+        else:
+            return JsonResponse({'error': 'Invalid image data'}, status=400)
+
+        # Set exp date for photo
+        expiration_date = timezone.now() + timedelta(days=1)
+
+        # Create object
+        UserPhoto.objects.create(
+            user_id=request.user,
+            photo=photo_file,
+            expiration_date=expiration_date
+        )
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)  # error

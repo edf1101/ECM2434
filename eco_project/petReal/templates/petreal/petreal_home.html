@@ -10,9 +10,14 @@
 
 {% block content %}
     {# Take photo button #}
-    <div class="container text-center my-4">
-        <button class="btn btn-primary">Take Photo</button>
-    </div>
+    {% if not has_photo %}
+        <div class="container text-center my-4">
+            <button class="btn btn-primary" id="takePhotoBtn">Take Photo</button>
+        </div>
+    {% endif %}
+
+    {# Hidden file input for uploading a photo #}
+    <input type="file" id="photoInput" accept="image/*" style="display: none;">
 
     {# Display the PetReal photos in here #}
     <div class="container">
@@ -67,8 +72,11 @@
         </div>
     </div>
 
+    {# Global variable for the reaction API endpoint #}
     <script>
+        window.has_photo = {{ has_photo|yesno:"true,false" }};
         window.addReactionUrl = "{% url 'petreal:add_reaction' %}";
+        window.addPhotoUrl = "{% url 'petreal:add_photo' %}";
     </script>
     <script src="{% static 'petreal/js/petreal.js' %}"></script>
 {% endblock %}

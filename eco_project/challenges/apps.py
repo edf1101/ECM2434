@@ -9,7 +9,8 @@ import os
 
 from django.apps import AppConfig
 
-from .scheduler import scheduler
+from mysite.scheduler import scheduler
+from apscheduler.schedulers.base import SchedulerAlreadyRunningError
 
 
 # pylint errors are wrong here, the import is needed in the ready method
@@ -32,7 +33,7 @@ class ChallengesConfig(AppConfig):
         if os.environ.get("RUN_MAIN") != "true":
             return
 
-        from .tasks import update_challenges,update_pet_health
+        from .tasks import update_challenges, update_pet_health
 
         # Schedule the job for a 1m interval
         scheduler.add_job(
@@ -43,7 +44,7 @@ class ChallengesConfig(AppConfig):
             replace_existing=True,
         )
 
-          # Schedule the pet health update job to run every 24 hours.
+        # Schedule the pet health update job to run every 24 hours.
         scheduler.add_job(
             update_pet_health,
             "interval",
@@ -51,5 +52,8 @@ class ChallengesConfig(AppConfig):
             id="update_pet_health_job",
             replace_existing=True,
         )
-        scheduler.start()
+        try:
+            scheduler.start()
+        except SchedulerAlreadyRunningError:
+            pass
         atexit.register(lambda: scheduler.shutdown())

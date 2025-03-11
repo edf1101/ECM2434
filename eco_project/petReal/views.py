@@ -39,6 +39,9 @@ def petreal_home(request: HttpRequest) -> HttpResponse:
     reaction_types = ReactionType.objects.all()
     reaction_icons = [reaction.icon for reaction in reaction_types]
 
-    context = {'photos': photos_data, 'reaction_icons': reaction_icons}
+    # get if the user has already posted a photo
+    user_has_photo = UserPhoto.objects.filter(user_id=request.user).exists()
+
+    context = {'photos': photos_data, 'reaction_icons': reaction_icons, 'has_photo': user_has_photo}
 
     return render(request, 'petreal/petreal_home.html', context)
