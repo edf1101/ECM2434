@@ -16,9 +16,6 @@ urlpatterns = [
         "mypet/",
         views.view_pet,
         name="mypet"),
-    path("accessories/", 
-        views.accessories, 
-        name="accessories"),
     path(
         "shop/",
         views.shop,

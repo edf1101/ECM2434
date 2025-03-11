@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from pets.models import Cosmetic
+from pets.models import Cosmetic, CosmeticType
 
 
 @login_required
@@ -33,10 +33,21 @@ def shop(request) -> HttpResponse:
     @return: HttpResponse object
     """
 
-    profile = request.user.profile
-    all_items = Cosmetic.objects.all()
+    all_cosmetics = Cosmetic.objects.all()
+    cosmetic_types = CosmeticType.objects.all()
 
-    return render(request, "pets/shop.html", { "profile": profile, "items": all_items })
+    # Create dictionary of categories (including 'All') and the cosmetics in that category
+    categories = [{ 'name': 'All', 'cosmetics': all_cosmetics }]
+    categories += [
+        { 'name': category.name, 'cosmetics': category.cosmetic_set.all() }
+        for category in cosmetic_types
+    ]
+
+    return render(request, "pets/shop.html", {
+        "profile": request.user.profile,
+        "pet": request.user.pets.first(),
+        "categories": categories,
+    })
 
 @login_required
 def buy_cosmetic(request, cosmetic_id):
@@ -58,11 +69,3 @@ def buy_cosmetic(request, cosmetic_id):
     messages.success(request, f"You have successfully purchased {cosmetic.name}.")
     return redirect('pets:shop')
 
-@login_required
-def accessories(request) -> HttpResponse:
-    """
-    Display the accessories page for the logged in user's pet.
-    Currently a placeholder for future accessory functionality with backend.
-    """
-    pet = request.user.pets.first()
-    return render(request, "pets/accessories.html", {"pet": pet})
