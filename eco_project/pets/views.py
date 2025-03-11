@@ -20,26 +20,28 @@ def view_pet(request) -> HttpResponse:
     @param request: HttpRequest object
     @return: HttpResponse object
     """
-
     pet = request.user.pets.first()
-    return render(request, "pets/mypet.html", { "pet": pet })
+    return render(request, "pets/mypet.html", {"pet": pet})
 
 
 @login_required
 def shop(request) -> HttpResponse:
     """
     View for the pet accessories shop
+
     @param request: HttpRequest object
     @return: HttpResponse object
     """
-
     profile = request.user.profile
     all_items = Cosmetic.objects.all()
+    return render(request, "pets/shop.html", {"profile": profile, "items": all_items})
 
-    return render(request, "pets/shop.html", { "profile": profile, "items": all_items })
 
 @login_required
-def buy_cosmetic(request, cosmetic_id):
+def buy_cosmetic(request, cosmetic_id) -> HttpResponse:
+    """
+    Handle the purchase of a cosmetic item.
+    """
     cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
     profile = request.user.profile
 
@@ -57,3 +59,12 @@ def buy_cosmetic(request, cosmetic_id):
 
     messages.success(request, f"You have successfully purchased {cosmetic.name}.")
     return redirect('pets:shop')
+
+
+@login_required
+def accessories(request) -> HttpResponse:
+    """
+    Display the accessories page for the logged in user's pet.
+    """
+    pet = request.user.pets.first()
+    return render(request, "pets/accessories.html", {"pet": pet})

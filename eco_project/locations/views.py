@@ -3,10 +3,10 @@ This module contains the views for the locations app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-from challenges.challenge_helpers import user_reached_feature, user_in_range_of_feature
+from challenges.challenge_helpers import user_reached_feature, user_in_range_of_feature, \
+    get_features_near
 from django.http import HttpResponse
 from django.shortcuts import render
-from challenges.challenge_helpers import get_features_near
 from .models import FeatureInstance, FeatureType, QuestionFeature, LocationsAppSettings
 
 

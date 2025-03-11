@@ -4,12 +4,12 @@ This file contains the API endpoints for the challenges app.
 """
 
 from django.http import JsonResponse
+from django.http.request import HttpRequest
 from django.utils import timezone
-from locations.chunk_handling import haversine
-from locations.models import QuestionFeature, FeatureInstance
+from locations.models import QuestionFeature
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework import status
 from .challenge_helpers import (
     get_current_window,
     streak_to_points,
@@ -19,7 +19,7 @@ from .challenge_helpers import (
     get_features_near
 )
 
-from .models import Streak, ChallengeSettings
+from .models import Streak, ChallengeSettings, Quiz, QuizAttempt
 
 
 @api_view(["POST"])
@@ -158,3 +158,79 @@ def nearest_challenges_api(request) -> JsonResponse:
     current_user_long = request.user.profile.longitude
     challenges = get_features_near(current_user_lat, current_user_long, request.user)
     return JsonResponse({"challenges": challenges})
+
+
+@api_view(['POST'])
+def score_quiz(request: HttpRequest) -> Response:
+    """
+    This API endpoint handles when a quiz is submitted and grades it.
+
+    @param request: The POST request object.
+    @return: A response with a message to the front end.
+    """
+
+    # Get the quiz id and the user's answers
+    quiz_id = request.data.get('quiz_id')
+    answers = request.data.get('answers')
+
+    if quiz_id is None or answers is None:  # Error check bad answers
+        return Response(
+            {"error": "Both 'quiz_id' and 'answers' are required."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        quiz = Quiz.objects.get(pk=quiz_id) # Get the quiz
+    except Quiz.DoesNotExist:
+        return Response(
+            {"error": "Quiz not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    questions = quiz.questions.order_by('id').all()  # get the user answers and the questions
+    if len(answers) != questions.count():
+        return Response(
+            {"error": "The number of answers provided does not match the number of questions."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # go through each question and check if the answer is correct
+    correct_count = 0
+    for idx, question in enumerate(questions):
+        choices = list(question.choices.order_by('id').all())
+        correct_letter = None
+        for i, choice in enumerate(choices):
+            if choice.is_correct:
+                correct_letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i]
+                break
+        if answers[idx] == correct_letter:
+            correct_count += 1
+
+    # calculate the score
+    total_questions = questions.count()
+    percentage = int(correct_count / total_questions * 100)
+    points = int(correct_count / total_questions * quiz.total_points)
+
+    # If the user is logged in and the attempt is new, save the attempt and give the user points
+    if request.user.is_authenticated:
+        _, created = QuizAttempt.objects.get_or_create(
+            user=request.user,
+            quiz=quiz,
+            defaults={'answers': answers, 'score': percentage}
+        )
+        if created:
+            request.user.profile.points += points
+            request.user.profile.save()
+
+            if percentage > 80:
+                reward_health = 20  
+                pet = request.user.pets.first() 
+                if pet:
+                    pet.health = min(pet.health + reward_health, 100)
+                    pet.save()
+
+            
+
+    return Response({
+        "message": f"You got {percentage}% correct. Total points awarded: {points}",
+    })

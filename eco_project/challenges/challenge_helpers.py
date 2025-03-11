@@ -153,6 +153,12 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
 
     user.profile.points += points_for_feature
     user.profile.save()
+    reward_health = 20
+    pet = user.pets.first()  
+    if pet:
+        pet.health = min(pet.health + reward_health, 100)
+        pet.save()
+
 
 
 def get_features_near(lat:float,lon:float,user =None, specific_feature=None) -> list[dict[str,str]]:
