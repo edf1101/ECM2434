@@ -62,7 +62,6 @@ def streak_to_points(streak_count: int) -> int:
 def user_in_range_of_feature(
         user: User, feature_inst: FeatureInstance,
         range_dist: int = settings.USER_CHALLENGE_RANGE) -> bool:
-
     """
     Checks if a user is within the range of a feature.
 
@@ -154,14 +153,14 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     user.profile.points += points_for_feature
     user.profile.save()
     reward_health = 20
-    pet = user.pets.first()  
+    pet = user.pets.first()
     if pet:
         pet.health = min(pet.health + reward_health, 100)
         pet.save()
 
 
-
-def get_features_near(lat:float,lon:float,user =None, specific_feature=None) -> list[dict[str,str]]:
+def get_features_near(lat: float, lon: float, user=None, specific_feature=None) -> list[
+    dict[str, str]]:
     """
     Returns a list of dictionaries representing the challenges near the given location.
     Dicts are in format {directions:"1km away",description:"East park pond"}
