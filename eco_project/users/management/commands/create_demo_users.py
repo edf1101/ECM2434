@@ -97,7 +97,6 @@ class Command(BaseCommand):
                         type=default_pettype,
                         owner=user_obj,
                         health=100,
-                        points=0
                     )
                 except IntegrityError as _:
                     self.stdout.write(self.style.ERROR("Error making gamekeeper demo user's pet"))
