@@ -11,6 +11,9 @@ from apscheduler.schedulers.base import SchedulerAlreadyRunningError
 
 
 class PetrealConfig(AppConfig):
+    """
+    This class is used to configure the petReal app.
+    """
     default_auto_field = "django.db.models.BigAutoField"
     name = "petReal"
 
@@ -19,8 +22,8 @@ class PetrealConfig(AppConfig):
         if os.environ.get("RUN_MAIN") != "true":
             return
 
-        from .tasks import remove_expired_photos
         # pylint: disable=import-outside-toplevel,unused-import
+        from .tasks import remove_expired_photos
         from .signals import delete_user_photo_file
 
         scheduler.add_job(
@@ -36,4 +39,4 @@ class PetrealConfig(AppConfig):
             scheduler.start()
         except SchedulerAlreadyRunningError:
             pass
-        atexit.register(lambda: scheduler.shutdown())
+        atexit.register(scheduler.shutdown)

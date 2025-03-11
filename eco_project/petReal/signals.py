@@ -7,6 +7,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from .models import UserPhoto
 
+# pylint: disable=unused-argument
 @receiver(pre_delete, sender=UserPhoto)
 def delete_user_photo_file(sender, instance, **kwargs):
     """
@@ -20,5 +21,5 @@ def delete_user_photo_file(sender, instance, **kwargs):
             if os.path.isfile(file_path):
                 os.remove(file_path)
                 print(f"Deleted file: {file_path}")
-        except Exception as e:
+        except OSError as e:
             print(f"Error deleting file {instance.photo.path}: {e}")

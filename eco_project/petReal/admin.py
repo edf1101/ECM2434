@@ -1,3 +1,6 @@
+"""
+This file is used to register the models in the Django admin interface.
+"""
 from django.contrib import admin
 
 from .models import ReactionType, UserPhoto, UserPhotoReaction
