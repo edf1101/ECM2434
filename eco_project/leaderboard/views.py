@@ -14,7 +14,7 @@ User = get_user_model()
 @login_required
 def leaderboard_view(request) -> HttpResponse:
     """
-    View to render the leaderboard page, showing the top users, pets, and groups.
+    View to render the leaderboard page, showing the top users, pets, groups, and friends.
     """
     top_users = User.objects.prefetch_related('pets').all()
     # sort top_users by profile.points
@@ -51,6 +51,13 @@ def leaderboard_view(request) -> HttpResponse:
             'users': sorted_users,
         })
 
+    # Build the friend leaderboard: include yourself and your friends
+    friend_profiles = request.user.profile.friends.all()
+    # Convert friend profiles to User objects and add the current user
+    friend_list = [request.user] + [friend.user for friend in friend_profiles]
+    # Sort by profile.points (highest first)
+    friend_leaderboard = sorted(friend_list, key=lambda u: u.profile.points, reverse=True)
+
     context = {
         "users": top_users,
         "pets": pets,
@@ -58,6 +65,7 @@ def leaderboard_view(request) -> HttpResponse:
         "group_leaderboards": group_leaderboards,
         "current_user": request.user,
         "top_groups": top_groups,
+        "friend_leaderboard": friend_leaderboard,
     }
 
     return render(request, "leaderboard.html", context)
