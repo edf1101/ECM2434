@@ -1,0 +1,290 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Shop - EcoPet{% endblock %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <style>
+        .accessories-page {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #C3E684;
+            border: 2px solid #28963D;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .accessories-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .pet-display {
+            flex: 1 1 300px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .pet-display img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 50%;
+            border: 3px solid #98DABA;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-display img:hover {
+            transform: scale(1.05);
+        }
+
+        .accessories-content {
+            flex: 2 1 600px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .accessories-page h1 {
+            text-align: center;
+            color: #106A1A;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+        }
+
+        .accessories-page p.subheading {
+            text-align: center;
+            color: #28963D;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .accessories-nav {
+            margin-bottom: 15px;
+        }
+
+        .accessories-nav .nav-link {
+            color: #106A1A;
+            font-weight: bold;
+            font-size: 1em;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .accessories-nav .nav-link.active {
+            background-color: #7ED08F;
+            color: #fff;
+        }
+
+        /* Sort Options */
+        .sort-options {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sort-options select {
+            padding: 8px 12px;
+            border: 1px solid #80CD27;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        /* accessories grid */
+        .accessories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .accessory-card {
+            background: #F9F9F9;
+            border: 1px solid #80CD27;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .accessory-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .accessory-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .accessory-card h3 {
+            font-size: 1.1em;
+            color: #106A1A;
+            margin-bottom: 5px;
+        }
+
+        .accessory-card p {
+            font-size: 0.9em;
+            color: #28963D;
+            margin-bottom: 8px;
+        }
+
+        .buy-btn {
+            background-color: #7ED08F;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .buy-btn:hover {
+            background-color: #28963D;
+            transform: translateY(-2px);
+        }
+
+        .back-to-pet {
+            display: block;
+            text-align: center;
+            margin: 30px auto 0;
+            padding: 10px 20px;
+            background-color: #7ED08F;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: fit-content;
+        }
+
+        .back-to-pet:hover {
+            background-color: #28963D;
+            transform: translateY(-3px);
+        }
+    </style>
+    <script>
+        // sort functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            const sortSelect = document.getElementById("sortSelect");
+            sortSelect.addEventListener("change", function () {
+                const sortValue = this.value;
+                const grid = document.querySelector(".accessories-grid");
+                // get accessory cards as an array
+                let cards = Array.from(grid.getElementsByClassName("accessory-card"));
+                cards.sort((a, b) => {
+                    let aValue, bValue;
+                    if (sortValue === "price-asc") {
+                        aValue = parseFloat(a.getAttribute("data-price") || 0);
+                        bValue = parseFloat(b.getAttribute("data-price") || 0);
+                        return aValue - bValue;
+                    } else if (sortValue === "price-desc") {
+                        aValue = parseFloat(a.getAttribute("data-price") || 0);
+                        bValue = parseFloat(b.getAttribute("data-price") || 0);
+                        return bValue - aValue;
+                    } else if (sortValue === "popular") {
+                        aValue = parseFloat(a.getAttribute("data-popular") || 0);
+                        bValue = parseFloat(b.getAttribute("data-popular") || 0);
+                        return bValue - aValue;
+                    } else if (sortValue === "newest") {
+                        aValue = new Date(a.getAttribute("data-newest") || "1970-01-01");
+                        bValue = new Date(b.getAttribute("data-newest") || "1970-01-01");
+                        return bValue - aValue;
+                    }
+                });
+                // clear current cards
+                cards.forEach(card => grid.removeChild(card));
+                // append cards in sorted order
+                cards.forEach(card => grid.appendChild(card));
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="accessories-page">
+        <h1>Shop</h1>
+        <p class="subheading">Dress up your pet and express your style! Spend your coins to unlock and equip
+            accessories.</p>
+        <div class="accessories-layout">
+            <div class="pet-display">
+                <h2>Your Pet</h2>
+                <video id="petVideo" autoplay loop playsinline muted
+                       style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                    <source src="{{ pet.type.video.url }}" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+                <h3>{% if pet %}{{ pet.name }}{% else %}Default Pet{% endif %}</h3>
+                <p>{{ profile.pet_bucks }} Pet Bucks</p>
+            </div>
+
+            <!-- navbar -->
+            <div class="accessories-content">
+                <ul class="nav nav-tabs accessories-nav" id="accessoriesTab" role="tablist">
+                    {% for category in categories %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if forloop.first %}active{% endif %}"
+                                    id="{{ category.name }}-tab" data-bs-toggle="tab"
+                                    data-bs-target="#{{ category.name }}" type="button" role="tab"
+                                    aria-controls="{{ category.name }}" aria-selected="false">{{ category.name }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- sort by options -->
+                <div class="sort-options">
+                    <label for="sortSelect">Sort by: </label>
+                    <select id="sortSelect">
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+
+                <!-- display the items in their categories -->
+                <div class="tab-content" id="accessoriesTabContent" style="margin-top: 20px;">
+                    {% for category in categories %}
+                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                             id="{{ category.name }}" role="tabpanel"
+                             aria-labelledby="{{ category.name }}-tab">
+                            <div class="accessories-grid">
+                                {% for cosmetic in category.cosmetics %}
+                                    <div class="accessory-card" data-price="{{ cosmetic.price }}"
+                                         data-newest="{{ cosmetic.created_at }}">
+                                        <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
+                                        <h3>{{ cosmetic.name }}</h3>
+                                        <p>{{ cosmetic.description }}</p>
+                                        <p><strong>Price:</strong> {{ cosmetic.price }} Pet Bucks</p>
+
+                                        {% if cosmetic in profile.owned_accessories.all %}
+                                            <p>You already own this item</p>
+                                        {% else %}
+                                            <form method="post" action="{% url 'pets:buy_cosmetic' cosmetic.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="buy-btn"
+                                                        {% if cosmetic.price > profile.pet_bucks %}disabled{% endif %}>
+                                                    Buy
+                                                </button>
+                                            </form>
+                                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'pets:mypet' %}" class="back-to-pet">Back to My Pet</a>
+    </div>
+{% endblock %}

@@ -124,7 +124,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 STATIC_ROOT = BASE_DIR / "assets"
-MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 

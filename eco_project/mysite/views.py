@@ -16,7 +16,16 @@ def homepage(request: HttpRequest) -> HttpResponse:
     @return: HttpResponse object
     """
     form = AuthenticationForm(request)
-    return render(request, "home.html", {"form": form})
+    context = { "form": form }
+
+    if request.user:
+        context = {
+            "form": form,
+            "profile": request.user.profile,
+            "pet": request.user.pets.first(),
+        }
+
+    return render(request, "home.html", context)
 
 
 def about(request: HttpRequest) -> HttpResponse:
