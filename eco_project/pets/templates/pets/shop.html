@@ -270,7 +270,7 @@
                                         {% else %}
                                             <form method="post" action="{% url 'pets:buy_cosmetic' cosmetic.id %}">
                                                 {% csrf_token %}
-                                                <button type="submit"
+                                                <button type="submit" class="buy-btn"
                                                         {% if cosmetic.price > profile.pet_bucks %}disabled{% endif %}>
                                                     Buy
                                                 </button>

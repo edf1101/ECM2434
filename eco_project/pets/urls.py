@@ -7,7 +7,7 @@ from django.urls import path
 
 from . import api
 from . import views
-from .views import buy_cosmetic
+from .views import buy_cosmetic, equip_cosmetic
 
 app_name = "pets"
 
@@ -22,6 +22,7 @@ urlpatterns = [
         name="shop",
     ),
     path('buy/<int:cosmetic_id>/', buy_cosmetic, name='buy_cosmetic'),
+    path('equip/<int:cosmetic_id>/<int:equip>', equip_cosmetic, name='equip_cosmetic'),
     path(
         "api/get_pet_data/<str:username>/",
         api.get_pet_data,
