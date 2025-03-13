@@ -1,5 +1,7 @@
 """
-Test suite for the locations app.
+This module contains the test suite for the locations app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
