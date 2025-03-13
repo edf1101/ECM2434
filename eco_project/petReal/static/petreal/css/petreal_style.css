@@ -26,6 +26,7 @@
     border-bottom: 1px solid #ddd;
 }
 
+
 .card-footer {
     background: #f8f9fa;
     padding: 10px;
@@ -33,18 +34,28 @@
 
 .reaction-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    margin-top: 10px;
+    gap: 10px;
 }
+
 
 .reaction-icon {
     position: relative;
     display: inline-block;
-    font-size: 2em;
+    font-size: 1.5em;  
     margin: 0 5px;
     cursor: pointer;
+    transition: transform 0.2s;
 }
+.reaction-icon:hover {
+    transform: scale(1.1);
+}
+
+.reaction-icon .emoji {
+    font-size: 1em; 
+}
+
 
 .reaction-count {
     position: absolute;
@@ -58,29 +69,17 @@
 }
 
 .add-reaction {
-    background: #e9ecef;
-    border-radius: 50%;
-    width: 2em;
-    height: 2em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.reaction-popup {
-    background: white;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: none;
-    z-index: 1000;
 }
 
-.reaction-option {
-    display: inline-block;
-    font-size: 2em;
-    margin: 0 5px;
-    cursor: pointer;
+.caption-input {
+    margin-top: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 5px;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

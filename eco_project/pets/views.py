@@ -27,3 +27,8 @@ def accessories(request) -> HttpResponse:
     """
     pet = request.user.pets.first()
     return render(request, "pets/accessories.html", {"pet": pet})
+
+@login_required
+def home(request):
+    pet = request.user.pets.first()
+    return render(request, "home.html", {"pet": pet})
