@@ -69,4 +69,4 @@ class Command(BaseCommand):
                     choice.save()
             successes += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully imported {successes} quiz(zes)."))
+        self.stdout.write(self.style.SUCCESS(f"Successfully imported {successes} quizzes."))

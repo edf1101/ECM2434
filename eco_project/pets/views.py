@@ -122,3 +122,8 @@ def buy_cosmetic(request, cosmetic_id: int):
 
     messages.success(request, f"You have successfully purchased {cosmetic.name}.")
     return redirect('pets:shop')
+
+@login_required
+def home(request):
+    pet = request.user.pets.first()
+    return render(request, "home.html", {"pet": pet})

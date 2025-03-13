@@ -5,13 +5,14 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from challenges.models import ChallengeSettings
 from .models import FeatureInstance, FeatureType, QuestionAnswer, QuestionFeature, Map3DChunk, \
     LocationsAppSettings, FeatureInstanceTileMap
 
 User = get_user_model()
+
+
 class ViewsTestCase(TestCase):
     """
     Test suite for the views of the locations app.
@@ -31,7 +32,7 @@ class ViewsTestCase(TestCase):
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                            content_type="image/jpeg")
+                                           content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -119,7 +120,7 @@ class ViewsTestCase(TestCase):
     # def test_generic_feature_page(self) -> None:
     #     """
     #     Test if the page displays a generic feature type
-        
+
     #     @return: None
     #     """
     #     response = self.client.get(
@@ -251,7 +252,7 @@ class ModelsTests(TestCase):
             colour="#ffffff",
             description="A dummy feature type",
             generic_img=SimpleUploadedFile("generic.jpg", b"generic content",
-                                            content_type="image/jpeg")
+                                           content_type="image/jpeg")
         )
         self.feature_instance = FeatureInstance.objects.create(
             slug="test-feature-instance",
@@ -334,7 +335,7 @@ class ModelsTests(TestCase):
         @return: None
         """
         self.assertEqual(str(self.feature_instance),
-                        f'{self.feature_type.name} "test-feature-instance"')
+                         f'{self.feature_type.name} "test-feature-instance"')
 
     def test_map_chunk_str(self) -> None:
         """
@@ -382,7 +383,7 @@ class ModelsTests(TestCase):
             question_text="Test question",
             feature=self.feature_instance,
         )
-        answer = QuestionAnswer.objects.create(
+        QuestionAnswer.objects.create(
             question=question,
             choice_text="Test answer",
         )
@@ -401,6 +402,6 @@ class ModelsTests(TestCase):
         answer = QuestionAnswer.objects.create(
             question=question,
             choice_text="Test answer",
-            
+
         )
         self.assertEqual(str(answer), "Test answer")

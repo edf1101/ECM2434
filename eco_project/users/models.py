@@ -31,20 +31,25 @@ class Profile(models.Model):
     owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
 
     def update_points(self) -> None:
-        """
-        Recalculates and updates the user's points based on all owned pets.
+    friends = models.ManyToManyField("self", symmetrical=False, blank=True)
 
-        :return: None
+    def add_friend(self, profile) -> None:
         """
-        # total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
-        # self.points = total_points
-        # self.save()
+        Add a profile to the friends list.
+
+        @param profile: the profile to add
+        @return: None
+        """
+        if profile != self:
+            self.friends.add(profile)
+        else:
+            raise ValueError("Cannot add yourself as a friend")
 
     def __str__(self) -> str:
         """
-        Return a string representation of the profile
+        Return a string representation of the profile.
 
-        :return: a string representation of the profile
+        @return: a string representation of the profile
         """
         return f"{self.user.username}'s Profile"
 
@@ -72,7 +77,7 @@ class Badge(models.Model):
         """
         Return a string representation of the badge
 
-        :return: a string representation of the badge
+        @return: a string representation of the badge
         """
         return self.title
 
@@ -90,7 +95,7 @@ class BadgeInstance(models.Model):
         """
         Return a string representation of the badge instance
 
-        :return: a string representation of the badge instance
+        @return: a string representation of the badge instance
         """
 
         user: User = self.user
@@ -108,9 +113,9 @@ class BadgeInstance(models.Model):
 
 def generate_unique_code() -> str:
     """
-    Generate a unique 6-character code for a UserGroup
+    Generate a unique 6-character code for a UserGroup.
 
-    :return: a unique 6-character code
+    @return: a unique 6-character code
     """
     length = 6
     while True:
@@ -147,9 +152,9 @@ class UserGroup(models.Model):
     @property
     def users_in_group(self) -> str:
         """
-        Returns a string listing the users in the group
+        Returns a string listing the users in the group.
 
-        :return: a string listing the users in the group
+        @return: a string listing the users in the group
         """
         return ", ".join(user.username for user in self.users.all())
 
@@ -157,18 +162,18 @@ class UserGroup(models.Model):
         """
         Add a user to the group.
 
-        :param user: the user to add
-        :return: None
+        @param user: the user to add
+        @return: None
         """
         self.users.add(user)
 
     def remove_user(self, user: User) -> None:
         """
         Remove a user from the group.
-        Cannot remove the group admin
+        Cannot remove the group admin.
 
-        :param user: the user to remove
-        :return: None
+        @param user: the user to remove
+        @return: None
         """
         if self.group_admin == user:
             raise ValueError("Cannot remove the group admin")
@@ -176,8 +181,8 @@ class UserGroup(models.Model):
 
     def __str__(self) -> str:
         """
-        Return a string representation of the group
+        Return a string representation of the group.
 
-        :return: a string representation of the group
+        @return: a string representation of the group
         """
         return f"{self.name} ({self.code})"
