@@ -11,4 +11,5 @@ python manage.py clear_badge_data
 python manage.py import_badges
 python manage.py create_pets
 python manage.py create_gamekeeper_group
+python manage.py import_quizzes
 pause

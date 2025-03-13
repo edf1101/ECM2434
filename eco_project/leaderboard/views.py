@@ -43,9 +43,9 @@ def leaderboard_view(request) -> HttpResponse:
     group_leaderboards = []
     for group in user_groups:
         group_users = User.objects.filter(usergroup=group).prefetch_related('pets')
-        for user in group_users:
-            user.total_pet_points = user.profile.points
-        sorted_users = sorted(group_users, key=lambda u: u.total_pet_points, reverse=True)
+
+        sorted_users = sorted(group_users, key=lambda u: u.profile.points, reverse=True)
+
         group_leaderboards.append({
             'group': group,
             'users': sorted_users,
