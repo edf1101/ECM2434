@@ -214,7 +214,6 @@
         <h1>Shop</h1>
         <p class="subheading">Dress up your pet and express your style! Spend your coins to unlock and equip
             accessories.</p>
-
         <div class="accessories-layout">
             <div class="pet-display">
                 <h2>Your Pet</h2>
@@ -224,6 +223,7 @@
                     <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
                 {% endif %}
                 <h3>{% if pet %}{{ pet.name }}{% else %}Default Pet{% endif %}</h3>
+                <p>{{ profile.pet_bucks }} Pet Bucks</p>
             </div>
 
             <!-- navbar -->
@@ -231,7 +231,8 @@
                 <ul class="nav nav-tabs accessories-nav" id="accessoriesTab" role="tablist">
                     {% for category in categories %}
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link {% if forloop.first %}active{% endif %}" id="{{ category.name }}-tab" data-bs-toggle="tab"
+                            <button class="nav-link {% if forloop.first %}active{% endif %}"
+                                    id="{{ category.name }}-tab" data-bs-toggle="tab"
                                     data-bs-target="#{{ category.name }}" type="button" role="tab"
                                     aria-controls="{{ category.name }}" aria-selected="false">{{ category.name }}
                             </button>
@@ -263,10 +264,19 @@
                                         <h3>{{ cosmetic.name }}</h3>
                                         <p>{{ cosmetic.description }}</p>
                                         <p><strong>Price:</strong> {{ cosmetic.price }} Pet Bucks</p>
-                                        <form method="post" action="{% url 'pets:buy_cosmetic' cosmetic.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" {% if cosmetic in profile.owned_accessories %}disabled{% endif %}>Buy</button>
-                                        </form>
+
+                                        {% if cosmetic in profile.owned_accessories.all %}
+                                            <p>You already own this item</p>
+                                        {% else %}
+                                            <form method="post" action="{% url 'pets:buy_cosmetic' cosmetic.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        {% if cosmetic.price > profile.pet_bucks %}disabled{% endif %}>
+                                                    Buy
+                                                </button>
+                                            </form>
+                                        {% endif %}
+
                                     </div>
                                 {% endfor %}
                             </div>
