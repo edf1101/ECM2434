@@ -20,7 +20,9 @@ class PetType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)  # Single definition
     description = models.TextField()
+
     base_image = models.ImageField(upload_to="pets/base_imgs/", blank=False)
+    video = models.FileField(upload_to="pets/videos/", blank=False)
 
     def __str__(self) -> str:
         """

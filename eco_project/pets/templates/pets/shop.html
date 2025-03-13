@@ -217,11 +217,11 @@
         <div class="accessories-layout">
             <div class="pet-display">
                 <h2>Your Pet</h2>
-                {% if pet and pet.type.base_image %}
-                    <img src="{{ pet.type.base_image.url }}" alt="{{ pet.name }}">
-                {% else %}
-                    <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
-                {% endif %}
+                <video id="petVideo" autoplay loop playsinline muted
+                       style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                    <source src="{{ pet.type.video.url }}" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
                 <h3>{% if pet %}{{ pet.name }}{% else %}Default Pet{% endif %}</h3>
                 <p>{{ profile.pet_bucks }} Pet Bucks</p>
             </div>
