@@ -15,9 +15,9 @@ urlpatterns = [
         "mypet/",
         views.view_pet,
         name="mypet"),
-    path("accessories/", 
-        views.accessories, 
-        name="accessories"),
+    path("accessories/",
+         views.accessories,
+         name="accessories"),
     path(
         "api/get_pet_data/<str:username>/",
         api.get_pet_data,

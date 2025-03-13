@@ -1,0 +1,85 @@
+.photo-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 10px;
+    gap: 10px;
+    scrollbar-width: none;
+}
+
+.photo-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.photo-card {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.photo-card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.card-footer {
+    background: #f8f9fa;
+    padding: 10px;
+}
+
+.reaction-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.reaction-icon {
+    position: relative;
+    display: inline-block;
+    font-size: 1.5em;  
+    margin: 0 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.reaction-icon:hover {
+    transform: scale(1.1);
+}
+
+.reaction-icon .emoji {
+    font-size: 1em; 
+}
+
+
+.reaction-count {
+    position: absolute;
+    bottom: -13px;
+    right: -5px;
+    background: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.5em;
+    border: 1px solid #ddd;
+}
+
+.add-reaction {
+    display: none;
+}
+
+.caption-input {
+    margin-top: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

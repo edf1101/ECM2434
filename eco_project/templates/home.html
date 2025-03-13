@@ -11,223 +11,202 @@
     <link rel="stylesheet" href="{% static 'locations/css/locationStyle.css' %}">
     <link rel="stylesheet" href="{% static 'locations/css/map.css' %}">
 
-    <script type="module"> {# Initialise the two maps in this script #}
-    import {UniversityMap} from "{% static 'locations/js/map.js' %}";
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const inlineContainer = document.getElementById("map"); // import inline map
-        if (inlineContainer) {
-            inlineContainer.innerHTML = "";
-            new UniversityMap("map");
-        }
-
-        let fullscreenMapInstance = null; // import fullscreen map
-        const fullscreenModal = document.getElementById('fullscreenMapModal');
-        fullscreenModal.addEventListener('shown.bs.modal', () => {
-            const modalContainer = document.getElementById("modalMap");
-            if (modalContainer) {
-                modalContainer.innerHTML = "";
-                if (!fullscreenMapInstance) {
-                    fullscreenMapInstance = new UniversityMap("modalMap");
-                } else {
-                    window.dispatchEvent(new Event('resize'));
-                }
-            }
-        });
-    });
+    <script type="module">
+      {# Initialise the maps #}
+      import {UniversityMap} from "{% static 'locations/js/map.js' %}";
+      document.addEventListener('DOMContentLoaded', () => {
+          const inlineContainer = document.getElementById("map");
+          if (inlineContainer) {
+              inlineContainer.innerHTML = "";
+              new UniversityMap("map");
+          }
+          let fullscreenMapInstance = null;
+          const fullscreenModal = document.getElementById('fullscreenMapModal');
+          fullscreenModal.addEventListener('shown.bs.modal', () => {
+              const modalContainer = document.getElementById("modalMap");
+              if (modalContainer) {
+                  modalContainer.innerHTML = "";
+                  if (!fullscreenMapInstance) {
+                      fullscreenMapInstance = new UniversityMap("modalMap");
+                  } else {
+                      window.dispatchEvent(new Event('resize'));
+                  }
+              }
+          });
+      });
     </script>
     <script>
-        var currentUsername = "{{ user.username|default:'' }}";
-        {% if user.is_authenticated %}
-            var baseApiUrlPet = "{% url 'pets:get_pet_data' user.username%}";
-        {% else %}
-            var baseApiUrlPet = "";
-        {% endif %}
+      var currentUsername = "{{ user.username|default:'' }}";
+      {% if user.is_authenticated %}
+          var baseApiUrlPet = "{% url 'pets:get_pet_data' user.username %}";
+      {% else %}
+          var baseApiUrlPet = "";
+      {% endif %}
     </script>
-    <script src="{% static 'js/home.js' %}"></script> {# Import carousel logic #}
+    <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
-    {# HERO SECTION #}
-    {% if user.is_authenticated %}
-        <section class="hero hero-auth">
-            {# Hero section for logged in users #}
-            <div class="hero-content container">
-                <h1>Welcome to EcoPet</h1>
-                <h5>Find challenges nearby to get points for your pet!</h5>
-                <hr class="my-4" style="border-top: 2px solid rgba(255, 255, 255, 0.5);">
+  {# HERO SECTION #}
+  {% if user.is_authenticated %}
+      <section class="hero hero-auth">
+          <div class="hero-content container">
+              <h1>Welcome to EcoPet</h1>
+              <h5>Find challenges nearby to get points for your pet!</h5>
+              <hr class="my-4" style="border-top: 2px solid rgba(255, 255, 255, 0.5);">
+              <div class="challenge-alerts-container w-50 mx-auto"></div>
+          </div>
+      </section>
 
-                {# challenges.js will render alerts below #}
-                <div class="challenge-alerts-container w-50 mx-auto">
-                </div>
-            </div>
-        </section>
+      <script>
+          const getNearbyChallengesURL = "{% url 'challenges:get_nearby_challenges' %}";
+      </script>
+      <script src="{% static 'js/challenges.js' %}"></script>
+  {% else %}
+      <section class="hero">
+          <div class="hero-content container">
+              <h1>Welcome to EcoPet</h1>
+              <h5>Adopt a pet, take care of them by completing tasks, and living sustainably.</h5>
+              <hr class="my-4" style="border-top: 2px solid rgba(255, 255, 255, 0.5);">
+              <p>Please log in</p>
+              {% if form.errors %}
+                  <div class="alert alert-danger w-50 mx-auto">
+                      Username or password is incorrect.
+                  </div>
+              {% endif %}
+              <form method="post" action="{% url 'users:login' %}" class="mx-auto" style="max-width: 400px;">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{% url 'homepage' %}">
+                  <div class="mb-3">
+                      <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                      <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" class="form-control{% if form.username.errors %} is-invalid{% endif %}" value="{{ form.username.value|default_if_none:'' }}" required>
+                      {% for error in form.username.errors %}
+                          <div class="invalid-feedback">{{ error }}</div>
+                      {% endfor %}
+                  </div>
+                  <div class="mb-3">
+                      <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                      <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="form-control{% if form.password.errors %} is-invalid{% endif %}" required>
+                      {% for error in form.password.errors %}
+                          <div class="invalid-feedback">{{ error }}</div>
+                      {% endfor %}
+                  </div>
+                  <button type="submit" class="btn btn-green w-100">Log in</button>
+              </form>
+              <div class="mt-3">
+                  <a href="{% url 'users:registration' %}" class="btn btn-secondary">
+                      Not registered yet? Go here and create your pet!
+                  </a>
+              </div>
+          </div>
+      </section>
+  {% endif %}
 
-        {# Only need to load get_nearby_challenges script if logged in #}
-        <script>
-            const getNearbyChallengesURL = "{% url 'challenges:get_nearby_challenges' %}";
-        </script>
-        <script src="{% static 'js/challenges.js' %}"></script>
-    {% else %}
-        {# Hero section for non-logged in users #}
-        <section class="hero">
-            <div class="hero-content container">
-                <h1>Welcome to EcoPet</h1>
-                <h5>Adopt a pet, take care of them by completing tasks, and living sustainably.</h5>
-                <hr class="my-4" style="border-top: 2px solid rgba(255, 255, 255, 0.5);">
-                {# horizontal divider #}
-                <p>Please log in</p>
+  {# FEATURES (MAP AND PETS) SECTION #}
+  <section class="features py-5">
+      <div class="container-fluid px-0">
+          <div class="carousel-header">
+              <h3>Find places on the Map or Visit your pet</h3>
+          </div>
+          <div class="carousel-controls">
+              <button id="arrowLeft" class="btn btn-green"><i class="bi bi-arrow-left"></i></button>
+              <span id="activeFeatureLabel" class="active-feature-label">Map</span>
+              <button id="arrowRight" class="btn btn-green"><i class="bi bi-arrow-right"></i></button>
+          </div>
+          <div class="features-carousel" id="featuresCarousel">
+              <div class="feature-box map-feature">
+                  <div class="map-header d-flex justify-content-between align-items-center">
+                      <span class="map-header-text">Explore the map! 🐘</span>
+                      <button type="button" class="btn btn-link fullscreen-btn" data-bs-toggle="modal" data-bs-target="#fullscreenMapModal" aria-label="Enter Fullscreen">
+                          <i class="bi bi-arrows-fullscreen"></i>
+                      </button>
+                  </div>
+                  <div class="map-content">
+                      <div id="map" class="map-container-small"></div>
+                  </div>
+              </div>
+              {# Pet Display Widget Updated to Use Video Files #}
+              <div class="feature-box d-flex flex-column p-0">
+                  <div class="pet-header d-flex align-items-center">
+                      {% if user.is_authenticated %}
+                          <span class="map-header-text">Take care of your pet</span>
+                      {% else %}
+                          <span class="map-header-text">Not signed in, Look at an example pet!</span>
+                      {% endif %}
+                  </div>
+                  <div class="pet-content">
+                      <div class="w-50 d-flex flex-column align-items-center justify-content-center p-2">
+                          <h4 id="petName">
+                              {% if pet %}
+                                  {{ pet.name }}
+                              {% else %}
+                                  Default Pet
+                              {% endif %}
+                          </h4>
+                          {% if pet %}
+                              {% comment %}
+                              Normalise the pet type string by lowercasing and removing spaces/dashes.
+                              {% endcomment %}
+                              {% with pet_type=pet.type.name|lower|cut:" "|cut:"-" %}
+                                  {% if pet_type == "axolotl" %}
+                                      <video id="petVideo" autoplay loop playsinline muted style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                                          <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
+                                          Your browser does not support the video tag.
+                                      </video>
+                                  {% elif pet_type == "virginiabigearedbat" %}
+                                      <video id="petVideo" autoplay loop playsinline muted style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                                          <source src="/media/pets/base_movs/bat/bat.webm" type="video/webm">
+                                          Your browser does not support the video tag.
+                                      </video>
+                                  {% elif pet_type == "africanbushelephant" %}
+                                      <video id="petVideo" autoplay loop playsinline muted style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                                          <source src="/media/pets/base_movs/elephant/elephant.webm" type="video/webm">
+                                          Your browser does not support the video tag.
+                                      </video>
+                                  {% else %}
+                                      <img id="petImage" src="{{ pet.type.base_image.url }}" alt="{{ pet.name }}" style="max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                                  {% endif %}
+                              {% endwith %}
+                          {% else %}
+                              <video id="petVideo" autoplay loop playsinline muted style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                                  <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
+                                  Your browser does not support the video tag.
+                              </video>
+                          {% endif %}
+                      </div>
+                      <div class="vertical-divider"></div>
+                      <div class="w-50 d-flex align-items-center p-2">
+                          <div class="text-start">
+                              <h5>Your Score</h5>
+                              <p class="mt-3">Your score is: <span id="petPoints">0</span></p>
+                              <br>
+                              <h5>Pet Health</h5>
+                              <div class="progress w-100 mb-2">
+                                  <div id="petHealthBar" class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                      100%
+                                  </div>
+                              </div>
+                              <small id="petHealthText">She's thriving!</small>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
 
-                {# Display a custom error message if the form has errors #}
-                {% if form.errors %}
-                    <div class="alert alert-danger w-50 mx-auto">
-                        Username or password is incorrect.
-                    </div>
-                {% endif %}
-
-                {# Render form for login #}
-                <form method="post" action="{% url 'users:login' %}" class="mx-auto"
-                      style="max-width: 400px;">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{% url 'homepage' %}">
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}"
-                               class="form-label">Username</label>
-                        <input type="text" name="{{ form.username.name }}"
-                               id="{{ form.username.id_for_label }}"
-                               class="form-control{% if form.username.errors %} is-invalid{% endif %}"
-                               value="{{ form.username.value|default_if_none:'' }}" required>
-                        {% for error in form.username.errors %}
-                            <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="{{ form.password.id_for_label }}"
-                               class="form-label">Password</label>
-                        <input type="password" name="{{ form.password.name }}"
-                               id="{{ form.password.id_for_label }}"
-                               class="form-control{% if form.password.errors %} is-invalid{% endif %}"
-                               required>
-                        {% for error in form.password.errors %}
-                            <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    {# Login button #}
-                    <button type="submit" class="btn btn-green w-100">Log in</button>
-                </form>
-
-                {# Make register button #}
-                <div class="mt-3">
-                    <a href="{% url 'users:registration' %}" class="btn btn-secondary">
-                        Not registered yet? Go here and create your pet!
-                    </a>
-                </div>
-            </div>
-        </section>
-    {% endif %}
-
-    {# FEATURES (MAP AND PETS) SECTION #}
-    <section class="features py-5">
-        <div class="container-fluid px-0">
-
-            {# Carousel Header #}
-            <div class="carousel-header">
-                <h3>Find places on the Map or Visit your pet</h3>
-            </div>
-
-            {# If the device is mobile then render left / right arrows to switch features #}
-            <div class="carousel-controls">
-                <button id="arrowLeft" class="btn btn-green">
-                    <i class="bi bi-arrow-left"></i>
-                </button>
-                <span id="activeFeatureLabel" class="active-feature-label">Map</span>
-                <button id="arrowRight" class="btn btn-green">
-                    <i class="bi bi-arrow-right"></i>
-                </button>
-            </div>
-
-            {# Carousel Content #}
-            <div class="features-carousel" id="featuresCarousel">
-
-                {# Left feature is a 3D map it uses bootstrap to be responsive and custom css #}
-                <div class="feature-box map-feature">
-                    <div class="map-header d-flex justify-content-between align-items-center">
-                        <span class="map-header-text">Explore the map! 🐘</span>
-                        <button type="button" class="btn btn-link fullscreen-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#fullscreenMapModal" aria-label="Enter Fullscreen">
-                            <i class="bi bi-arrows-fullscreen"></i>
-                        </button>
-                    </div>
-                    <div class="map-content">
-                        <div id="map" class="map-container-small"></div>
-                    </div>
-                </div>
-
-                {# The right feature is a Pet display widget, just gives stats #}
-                <div class="feature-box d-flex flex-column p-0">
-
-                    <div class="pet-header d-flex align-items-center"> {# Header for the widget #}
-                        {% if user.is_authenticated %}
-                            <span class="map-header-text">Take care of your pet</span>
-                        {% else %}
-                            <span class="map-header-text">Not signed in, Look at an example pet!</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="pet-content">
-                        {# Name and image on the left #}
-                        <div class="w-50 d-flex flex-column align-items-center justify-content-center p-2">
-                            <h4 id="petName">Ellie the Elephant</h4>
-                            <img id="petImage" src="{% static 'media/demoPet.png' %}"
-                                 alt="Demo Pet"
-                                 class="img-fluid rounded"
-                                 style="max-width: 100%; height: auto;">
-                        </div>
-
-                        <div class="vertical-divider"></div>
-
-                        {# Pet stats on the right #}
-                        <div class="w-50 d-flex align-items-center p-2">
-                            <div class="text-start">
-                                <h5>Your Score</h5>
-                                <p class="mt-3">Your score is: <span id="petPoints">0</span></p>
-                                <br>
-                                <h5>Pet Health</h5>
-                                <div class="progress w-100 mb-2">
-                                    <div id="petHealthBar" class="progress-bar" role="progressbar"
-                                         style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
-                                         aria-valuemax="100">
-                                        100%
-                                    </div>
-                                </div>
-                                <small id="petHealthText">She's thriving!</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {# Have a fullscreen map div outside of the carousel so it renders properly #}
-    <div class="modal fade" id="fullscreenMapModal" tabindex="-1"
-         aria-labelledby="fullscreenMapModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="fullscreenMapModalLabel">Find challenges for your
-                        pet!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div id="modalMap" class="map-container-fullscreen"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="modal fade" id="fullscreenMapModal" tabindex="-1" aria-labelledby="fullscreenMapModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="fullscreenMapModalLabel">Find challenges for your pet!</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body p-0">
+                  <div id="modalMap" class="map-container-fullscreen"></div>
+              </div>
+          </div>
+      </div>
+  </div>
 {% endblock %}
