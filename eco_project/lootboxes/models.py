@@ -28,12 +28,12 @@ class LootBox(models.Model):
             # Win between 30 and 100 points
             winnings = random.randint(30, 100)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings} points! Total points: {profile.points}"
+            result = f"Congratulations! You won {winnings-10} points! Total points: {profile.points}"
         elif outcome == "winsmall":  # Corrected here
             # Win between 10 and 30 points
             winnings = random.randint(10, 30)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings} points! Total points: {profile.points}"
+            result = f"Congratulations! You won {winnings-10} points! Total points: {profile.points}"
         elif outcome == "lose":
             # Lose some points
             result = f"Sorry! You lost 10 points! Total points: {profile.points}"
