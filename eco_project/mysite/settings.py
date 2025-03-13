@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "leaderboard.apps.LeaderboardConfig",
-    "petReal.apps.PetrealConfig",
+    "petreal.apps.PetrealConfig",
 ]
 
 MIDDLEWARE = [
@@ -124,7 +124,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 STATIC_ROOT = BASE_DIR / "assets"
-MEDIA_ROOT = BASE_DIR / "media"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 

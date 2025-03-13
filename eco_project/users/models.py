@@ -30,7 +30,6 @@ class Profile(models.Model):
 
     owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
 
-    def update_points(self) -> None:
     friends = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     def add_friend(self, profile) -> None:

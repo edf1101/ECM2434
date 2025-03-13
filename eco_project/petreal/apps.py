@@ -15,7 +15,7 @@ class PetrealConfig(AppConfig):
     This class is used to configure the petReal app.
     """
     default_auto_field = "django.db.models.BigAutoField"
-    name = "petReal"
+    name = "petreal"
 
     def ready(self) -> None:
         # Prevent scheduling on autoreload
