@@ -43,10 +43,10 @@ class LeaderboardViewTest(TestCase):
             name="Dog", description="Test Dog")
 
         self.pet1 = Pet.objects.create(
-            name="Pet1", type=self.pet_type, owner=self.user1
+            name="Pet1", type=self.pet_type, points=75, owner=self.user1
         )
         self.pet2 = Pet.objects.create(
-            name="Pet2", type=self.pet_type, owner=self.user2
+            name="Pet2", type=self.pet_type, points=100, owner=self.user2
         )
 
         self.group = UserGroup.objects.create(name="Group1", code="G1")

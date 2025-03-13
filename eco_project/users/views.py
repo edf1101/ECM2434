@@ -3,11 +3,8 @@ This module contains the views for the users app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
-
 from challenges.challenge_helpers import get_current_window
 from challenges.models import UserFeatureReach, ChallengeSettings
-
-from django.http.request import HttpRequest
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.contrib.auth import update_session_auth_hash
@@ -22,8 +19,6 @@ from django.utils import timezone
 
 from .forms import ModifyUserForm, ModifyProfileForm, RegistrationForm
 from .models import UserGroup
-
-User = get_user_model()
 
 
 def registration_view(request) -> HttpResponse:
@@ -73,7 +68,7 @@ def login_view(request) -> HttpResponse:
         if next_url == homepage_url:
             return render(request, "home.html", {"form": form})
         return render(request, "users/login.html",
-                      {"form": form, "next": next_url})
+                          {"form": form, "next": next_url})
 
     form = AuthenticationForm(request)
     return render(request, "users/login.html",
@@ -214,66 +209,3 @@ def groups_home(request) -> HttpResponse:
     context = {"user_groups": user_groups}
 
     return render(request, "users/groups.html", context=context)
-
-
-@login_required
-def friends_view(request: HttpRequest) -> HttpResponse:
-    """
-    View to display a user's friends and search for new friends.
-
-    @param request: The request object.
-    @return: The response object.
-    """
-    profile = request.user.profile
-    # Get current friends (the ManyToManyField on Profile)
-    current_friends = profile.friends.all()
-
-    query = request.GET.get('q', '')
-    search_results = []
-    if query:
-        # Search users by username (excluding yourself)
-        search_results = User.objects.filter(username__icontains=query).exclude(pk=request.user.pk)
-        # Exclude users that are already friends
-        search_results = search_results.exclude(
-            pk__in=[friend.user.pk for friend in current_friends]
-        )
-
-    context = {
-        'current_friends': current_friends,
-        'search_results': search_results,
-        'query': query,
-    }
-    return render(request, 'users/friends.html', context)
-
-
-@login_required
-def add_friend(request: HttpRequest, user_id: int) -> HttpResponse:
-    """
-    Add a user as a friend.
-
-    @param request: The request object.
-    @param user_id: The id of the user to add as a friend.
-    @return: The response object.
-    """
-
-    friend_user = get_object_or_404(User, pk=user_id)  # Get the user to add as a friend
-    if friend_user != request.user:
-        request.user.profile.friends.add(friend_user.profile)
-    return redirect('users:friends_view')
-
-
-@login_required
-def remove_friend(request: HttpRequest, user_id: int) -> HttpResponse:
-    """
-    Remove a user as a friend.
-
-    @param request: The request object.
-    @param user_id: The id of the user to remove as a friend.
-    @return: The response object.
-    """
-    friend_user = get_object_or_404(User, pk=user_id)
-
-    # Ensure that the user is not trying to remove themselves
-    if friend_user != request.user:
-        request.user.profile.friends.remove(friend_user.profile)
-    return redirect('users:friends_view')
