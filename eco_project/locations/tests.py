@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from challenges.models import ChallengeSettings
 from .models import FeatureInstance, FeatureType, QuestionAnswer, QuestionFeature, Map3DChunk, \
@@ -383,7 +384,7 @@ class ModelsTests(TestCase):
             question_text="Test question",
             feature=self.feature_instance,
         )
-        QuestionAnswer.objects.create(
+        answer = QuestionAnswer.objects.create(
             question=question,
             choice_text="Test answer",
         )

@@ -76,10 +76,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     fetchChallenges(); // fetch challenges on page load
-
-
-// Update challenges when the location is updated
-    document.addEventListener("locationUpdated", function (e) {
-        fetchChallenges(); // Re-fetch challenges to update distances
-    });
 });

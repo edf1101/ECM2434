@@ -28,7 +28,4 @@ urlpatterns = [
     ),
     path("api/groups/join/", api.join_group, name="join_group"),
     path("api/groups/<str:code>/leave/", api.leave_group, name="leave_group"),
-    path('friends/', views.friends_view, name='friends_view'),
-    path('friends/add/<int:user_id>/', views.add_friend, name='add_friend'),
-path('friends/remove/<int:user_id>/', views.remove_friend, name='remove_friend'),
 ]
