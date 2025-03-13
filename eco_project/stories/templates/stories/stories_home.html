@@ -1,0 +1,229 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}PetReal - Home{% endblock %}
+
+{% block extrahead %}
+
+  <link rel="stylesheet" href="{% static 'stories/css/stories_style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <style>
+    .petreal-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+    .petreal-hero {
+      background: linear-gradient(135deg, #106A1A, #28963D);
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .petreal-hero h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+    .petreal-hero h5 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .petreal-hero hr {
+      border-top: 2px solid rgba(255,255,255,0.5);
+      width: 50%;
+      margin: 20px auto;
+    }
+    .petreal-hero p {
+      font-size: 1.2em;
+    }
+    .photo-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 10px;
+      gap: 10px;
+      scrollbar-width: none;
+    }
+    .photo-carousel::-webkit-scrollbar {
+      display: none;
+    }
+    .photo-card {
+      flex: 0 0 300px;
+      scroll-snap-align: start;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card-body {
+      text-align: center;
+      padding: 10px;
+    }
+    .card-body img, .card-body video {
+      width: 100%;
+      display: block;
+      border-bottom: 1px solid #ddd;
+    }
+    .post-time {
+      font-size: 0.9em;
+      color: #888;
+      margin-top: 5px;
+    }
+    .card-footer {
+      background: #f8f9fa;
+      padding: 10px;
+    }
+    .reaction-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+    .reaction-icon {
+      position: relative;
+      font-size: 2em;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .reaction-icon:hover {
+      transform: scale(1.1);
+    }
+    .reaction-count {
+      position: absolute;
+      bottom: -12px;
+      right: -8px;
+      background: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 0.7em;
+      border: 1px solid #ddd;
+    }
+    .add-reaction {
+      display: none;
+    }
+  </style>
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+    }
+    function addReaction(photoId, reaction) {
+      fetch(window.addReactionUrl, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({
+              photo_id: photoId,
+              reaction: reaction
+          })
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          const thumbsUpElem = document.getElementById(`reaction-thumbs-up-${photoId}`);
+          const thumbsDownElem = document.getElementById(`reaction-thumbs-down-${photoId}`);
+          if (reaction === '👍' && thumbsUpElem) {
+            thumbsUpElem.textContent = data.thumbs_up;
+          } else if (reaction === '👎' && thumbsDownElem) {
+            thumbsDownElem.textContent = data.thumbs_down;
+          }
+      })
+      .catch(error => {
+          console.error('Error adding reaction:', error);
+      });
+    }
+  </script>
+  <script src="{% static 'petreal/js/stories.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {# Take photo button #}
+    {% if not has_photo %}
+        <div class="container text-center my-4">
+            <button class="btn btn-primary" id="takePhotoBtn">Take Photo</button>
+        </div>
+    {% endif %}
+
+    {# Hidden file input for uploading a photo #}
+    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+
+    {# Display the PetReal photos in here #}
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2>Recent PetReal Photos</h2>
+                <p>Swipe to see the latest photos and reactions.</p>
+            </div>
+        </div>
+
+        <div class="photo-carousel">
+            {% for photo in photos %}
+                <div class="photo-card" data-photo-user="{{ photo.user }}">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">{{ photo.user }}'s Photo</h4>
+                            <img src="{{ photo.photo_url }}" alt="{{ photo.user }}'s photo"
+                                 class="card-img-top">
+                        </div>
+                        {# Display reactions in here #}
+                        <div class="card-footer text-center">
+                            <div class="reaction-container" data-photo-user="{{ photo.user }}">
+                                {% for icon, count in photo.reactions.items %}
+                                    <div class="reaction-icon">
+                                        <span class="emoji">{{ icon }}</span>
+                                        <span class="reaction-count">{{ count }}</span>
+                                    </div>
+                                {% endfor %}
+                                <div class="reaction-icon add-reaction">
+                                    <span class="emoji">+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center">
+                    <p>No photos to display.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# This section is to display the reaction selector popup #}
+    <div id="reaction-popup" class="reaction-popup">
+        <div class="reaction-options">
+            {% for icon in reaction_icons %}
+                <div class="reaction-option" data-reaction="{{ icon }}">
+                    <span class="emoji">{{ icon }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Global variable for the reaction API endpoint #}
+    <script>
+        window.has_photo = {{ has_photo|yesno:"true,false" }};
+        window.addReactionUrl = "{% url 'petreal:add_reaction' %}";
+        window.addPhotoUrl = "{% url 'petreal:add_photo' %}";
+    </script>
+    <script src="{% static 'petreal/js/petreal.js' %}"></script>
+{% endblock %}

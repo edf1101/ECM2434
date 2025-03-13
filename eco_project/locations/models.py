@@ -101,7 +101,6 @@ class FeatureInstance(models.Model):
             raise FileNotFoundError(
                 "Static file 'locations/media/ecopetLogoWhiteBG.png' not found."
             )
-
         qr = QRCode(error_correction=constants.ERROR_CORRECT_H)
         qr.add_data(
             f"{LocationsAppSettings.get_instance().qr_prefix}{self.slug}")

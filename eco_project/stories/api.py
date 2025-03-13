@@ -1,5 +1,5 @@
 """
-This page handles the API endpoints for the petReal app.
+This page handles the API endpoints for the stories app.
 """
 import base64
 import json
@@ -67,7 +67,7 @@ def add_reaction(request: HttpRequest) -> HttpResponse:
 @login_required
 def add_pet_real(request: HttpRequest) -> HttpResponse:
     """
-    Adds a petReal photo.
+    Adds a story photo.
 
     @param request: The HTTP request.
     @return: The HTTP response.

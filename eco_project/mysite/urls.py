@@ -20,7 +20,7 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("challenges/", include("challenges.urls")),
     path("pets/", include("pets.urls")),
-    path("petreal/", include("petReal.urls")),
+    path("stories/", include("stories.urls")),
     path("", views.homepage, name="homepage"),
     path("leaderboard/", include("leaderboard.urls")),
     path("about/", views.about, name="about"),

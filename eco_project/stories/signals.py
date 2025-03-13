@@ -1,5 +1,5 @@
 """
-This module holds the signals for the petReal app.
+This module holds the signals for the stories app.
 """
 import os
 

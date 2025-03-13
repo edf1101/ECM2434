@@ -1,5 +1,5 @@
 """
-This file is used to configure the petReal app. It is used to schedule the removal of expired photos
+This file is used to configure the stories app. It is used to schedule the removal of expired photos
 and import signals
 """
 import atexit
@@ -10,12 +10,12 @@ from mysite.scheduler import scheduler
 from apscheduler.schedulers.base import SchedulerAlreadyRunningError
 
 
-class PetrealConfig(AppConfig):
+class StoriesConfig(AppConfig):
     """
-    This class is used to configure the petReal app.
+    This class is used to configure the stories app.
     """
     default_auto_field = "django.db.models.BigAutoField"
-    name = "petReal"
+    name = "stories"
 
     def ready(self) -> None:
         # Prevent scheduling on autoreload

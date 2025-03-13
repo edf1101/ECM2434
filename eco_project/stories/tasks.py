@@ -1,5 +1,5 @@
 """
-This module contains tasks to run periodically for the petReal app.
+This module contains tasks to run periodically for the stories app.
 """
 from django.utils import timezone
 from .models import UserPhoto
