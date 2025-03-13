@@ -21,13 +21,14 @@
       gap: 20px;
     }
     .pet-display {
-      flex: 1 1 300px;
+      flex: 1;
       background: #fff;
       border-radius: 12px;
       padding: 15px;
       text-align: center;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
+    .pet-display video,
     .pet-display img {
       width: 100%;
       max-width: 300px;
@@ -36,11 +37,16 @@
       margin-bottom: 10px;
       transition: transform 0.3s ease;
     }
+    .pet-display video:hover,
     .pet-display img:hover {
       transform: scale(1.05);
     }
+    .pet-display h3 {
+      font-size: 1.5em;
+      color: #106A1A;
+    }
     .accessories-content {
-      flex: 2 1 600px;
+      flex: 2;
       background: #fff;
       border-radius: 12px;
       padding: 15px;
@@ -58,32 +64,6 @@
       margin-bottom: 30px;
       font-size: 1.2em;
     }
-    .accessories-nav {
-      margin-bottom: 15px;
-    }
-    .accessories-nav .nav-link {
-      color: #106A1A;
-      font-weight: bold;
-      font-size: 1em;
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-    .accessories-nav .nav-link.active {
-      background-color: #7ED08F;
-      color: #fff;
-    }
-    /* Sort Options */
-    .sort-options {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .sort-options select {
-      padding: 8px 12px;
-      border: 1px solid #80CD27;
-      border-radius: 6px;
-      font-size: 1em;
-    }
-    /* accessories grid */
     .accessories-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -97,6 +77,7 @@
       text-align: center;
       box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
     .accessory-card:hover {
       transform: translateY(-3px);
@@ -150,13 +131,12 @@
     }
   </style>
   <script>
-    // sort functionality
+    // sort functionality for accessories
     document.addEventListener("DOMContentLoaded", function(){
       const sortSelect = document.getElementById("sortSelect");
       sortSelect.addEventListener("change", function(){
         const sortValue = this.value;
         const grid = document.querySelector(".accessories-grid");
-        // get accessory cards as an array
         let cards = Array.from(grid.getElementsByClassName("accessory-card"));
         cards.sort((a, b) => {
           let aValue, bValue;
@@ -178,61 +158,83 @@
             return bValue - aValue;
           }
         });
-        // clear current cards
         cards.forEach(card => grid.removeChild(card));
-        // append cards in sorted order
         cards.forEach(card => grid.appendChild(card));
       });
     });
+
+    function equipAccessory(accessoryName) {
+      const petDisplay = document.getElementById("petDisplay");
+      const petType = petDisplay.getAttribute("data-pet-type") || "axolotl";
+      let videoSrc = "";
+      if (accessoryName === "glasses") {
+        if (petType === "axolotl") {
+          videoSrc = "/media/pets/base_movs/axolotl/axolotlglasses.webm";
+        } else if (petType === "virginiabigearedbat") {
+          videoSrc = "/media/pets/base_movs/bat/batglasses.webm";
+        } else if (petType === "africanbushelephant") {
+          videoSrc = "/media/pets/base_movs/elephant/elephantglasses.webm";
+        }
+      } else if (accessoryName === "cowboy") {
+        if (petType === "axolotl") {
+          videoSrc = "/media/pets/base_movs/axolotl/axolotlcowboy.webm";
+        } else if (petType === "virginiabigearedbat") {
+          videoSrc = "/media/pets/base_movs/bat/batcowboy.webm";
+        } else if (petType === "africanbushelephant") {
+          videoSrc = "/media/pets/base_movs/elephant/elephantcowboy.webm";
+        }
+      } else if (accessoryName === "plant") {
+        if (petType === "axolotl") {
+          videoSrc = "/media/pets/base_movs/axolotl/axolotlplant.webm";
+        } else if (petType === "virginiabigearedbat") {
+          videoSrc = "/media/pets/base_movs/bat/batplant.webm";
+        } else if (petType === "africanbushelephant") {
+          videoSrc = "/media/pets/base_movs/elephant/elephantplant.webm";
+        }
+      }
+      const petVideo = document.getElementById("petVideo");
+      if (petVideo) {
+        while (petVideo.firstChild) {
+          petVideo.removeChild(petVideo.firstChild);
+        }
+        const newSource = document.createElement("source");
+        newSource.src = videoSrc;
+        newSource.type = "video/webm";
+        petVideo.appendChild(newSource);
+        petVideo.load();
+      }
+    }
   </script>
 {% endblock %}
 
 {% block content %}
 <div class="accessories-page">
   <h1>Accessory Shop</h1>
-  <p class="subheading">Dress up your pet and express your style! Spend your coins to unlock and equip accessories.</p>
+  <p class="subheading">Dress up your pet with exclusive accessories! Click an item to equip it instantly.</p>
   
   <div class="accessories-layout">
-    <div class="pet-display">
+    <div class="pet-display" id="petDisplay" data-pet-type="{% if pet %}{{ pet.type.name|lower|cut:" "|cut:"-" }}{% else %}axolotl{% endif %}">
       <h2>Your Pet</h2>
-      {% if pet and pet.type.base_image %}
-        <img src="{{ pet.type.base_image.url }}" alt="{{ pet.name }}">
-      {% else %}
-        <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
-      {% endif %}
+      <video id="petVideo" autoplay loop playsinline muted style="width: 100%; max-width: 300px; border-radius: 50%; border: 3px solid #98DABA; margin-bottom: 10px;">
+        {% if pet %}
+          {% with pet_type=pet.type.name|lower|cut:" "|cut:"-" %}
+            {% if pet.type.name == "Axolotl" %}
+              <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
+            {% elif pet.type.name == "Virginia Big-Eared Bat" %}
+              <source src="/media/pets/base_movs/bat/bat.webm" type="video/webm">
+            {% elif pet.type.name == "African Bush Elephant" %}
+              <source src="/media/pets/base_movs/elephant/elephant.webm" type="video/webm">
+            {% endif %}
+          {% endwith %}
+        {% else %}
+          <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
+        {% endif %}
+        Your browser does not support the video tag.
+      </video>
       <h3>{% if pet %}{{ pet.name }}{% else %}Default Pet{% endif %}</h3>
     </div>
     
     <div class="accessories-content">
-      <!-- navbar stuff -->
-      <ul class="nav nav-tabs accessories-nav" id="accessoriesTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="hats-tab" data-bs-toggle="tab" data-bs-target="#hats" type="button" role="tab" aria-controls="hats" aria-selected="false">Hats</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="tops-tab" data-bs-toggle="tab" data-bs-target="#tops" type="button" role="tab" aria-controls="tops" aria-selected="false">Tops</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="trousers-tab" data-bs-toggle="tab" data-bs-target="#trousers" type="button" role="tab" aria-controls="trousers" aria-selected="false">Trousers</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="shoes-tab" data-bs-toggle="tab" data-bs-target="#shoes" type="button" role="tab" aria-controls="shoes" aria-selected="false">Shoes</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="jackets-tab" data-bs-toggle="tab" data-bs-target="#jackets" type="button" role="tab" aria-controls="jackets" aria-selected="false">Jackets</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="extras-tab" data-bs-toggle="tab" data-bs-target="#extras" type="button" role="tab" aria-controls="extras" aria-selected="false">Extras</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="colour-tab" data-bs-toggle="tab" data-bs-target="#colour" type="button" role="tab" aria-controls="colour" aria-selected="false">Colour</button>
-        </li>
-      </ul>
-      
-      <!-- sort by option -->
       <div class="sort-options">
         <label for="sortSelect">Sort by: </label>
         <select id="sortSelect">
@@ -243,78 +245,23 @@
         </select>
       </div>
       
-      <!-- accessories content tab -->
-      <div class="tab-content" id="accessoriesTabContent" style="margin-top: 20px;">
-        <!-- all -->
-        <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-          <div class="accessories-grid">
-            {% for accessory in accessories.all %}
-            <div class="accessory-card"
-                 data-price="{{ accessory.price }}"
-                 data-popular="{{ accessory.popularity|default:"0" }}"
-                 data-newest="{{ accessory.created_at }}">
-              {% if accessory.image %}
-                <img src="{{ accessory.image.url }}" alt="{{ accessory.name }}">
-              {% else %}
-                <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-              {% endif %}
-              <h3>{{ accessory.name }}</h3>
-              <p>{{ accessory.description }}</p>
-              <p><strong>Price:</strong> {{ accessory.price|default:"N/A" }} Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            {% empty %}
-            <!-- sample cards if no accessories exist -->
-            <div class="accessory-card" data-price="100" data-popular="50" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-              <h3>Cap</h3>
-              <p>Stylish cap for your pet.</p>
-              <p><strong>Price:</strong> 100 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            <div class="accessory-card" data-price="120" data-popular="40" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-              <h3>Bucket Hat</h3>
-              <p>Casual bucket hat.</p>
-              <p><strong>Price:</strong> 120 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            <div class="accessory-card" data-price="150" data-popular="60" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-              <h3>Sneakers</h3>
-              <p>Comfortable sneakers for daily adventures.</p>
-              <p><strong>Price:</strong> 150 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            <div class="accessory-card" data-price="80" data-popular="30" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-              <h3>Graphic T-Shirt</h3>
-              <p>Express your style with this T-Shirt.</p>
-              <p><strong>Price:</strong> 80 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            {% endfor %}
-          </div>
+      <div class="accessories-grid">
+        <div class="accessory-card" onclick="equipAccessory('cowboy')" data-price="100" data-popular="50" data-newest="2025-01-01">
+          <img src="/media/pets/accessories_icon/cowboy.png" alt="Cowboy Hat">
+          <h3>Cowboy Hat</h3>
+          <p>Equip for a stylish cowboy look!</p>
         </div>
-        <!-- additional category tabs (hats, tops, etc.) can be added -->
-        <div class="tab-pane fade" id="hats" role="tabpanel" aria-labelledby="hats-tab">
-          <div class="accessories-grid">
-            <div class="accessory-card" data-price="100" data-popular="50" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Cap">
-              <h3>Cap</h3>
-              <p>Classic cap.</p>
-              <p><strong>Price:</strong> 100 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            <div class="accessory-card" data-price="120" data-popular="45" data-newest="2025-01-01">
-              <img src="{% static 'media/demoAccessory.png' %}" alt="Bucket Hat">
-              <h3>Bucket Hat</h3>
-              <p>Casual bucket hat.</p>
-              <p><strong>Price:</strong> 120 Coins</p>
-              <a href="#" class="buy-btn">Buy Now</a>
-            </div>
-            <!-- will add more options -->
-          </div>
+
+        <div class="accessory-card" onclick="equipAccessory('glasses')" data-price="0" data-popular="70" data-newest="2025-01-01">
+          <img src="/media/pets/accessories_icon/glasses.png" alt="Glasses">
+          <h3>Glasses</h3>
+          <p>Equip these cool glasses!</p>
+        </div>
+
+        <div class="accessory-card" onclick="equipAccessory('plant')" data-price="150" data-popular="40" data-newest="2025-01-01">
+          <img src="/media/pets/accessories_icon/plant.png" alt="Plant Hat">
+          <h3>Plant Hat</h3>
+          <p>Equip for a nature style!</p>
         </div>
       </div>
     </div>
