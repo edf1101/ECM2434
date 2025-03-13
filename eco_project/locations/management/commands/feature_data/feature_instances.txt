@@ -6,22 +6,22 @@ Water fountain at the Innovation Centre, Water Fountain, water-fountain-innovati
 Recycling bins at the Innovation Centre, Recycling Bin, recycling-bin-innovation-centre, 50.73846381672933, -3.5310357508436594, innovation_recycling.JPG
 Innovation Center POI, Place of Interest, innovation-center-poi, 50.737928734114504, -3.5298086452480932, ww2_tree.jpg
 Recycling bins by Lafrowda, Recycling Bin, recycling-bin-lafrowda, 50.73355689693671, -3.5275522013319005, laf_bins.jpg
-Amory Recyling Bins, Recycling Bin, amory-recycling-bins, 50.73669261597638, -3.5312938664245777, amory bins.jpg
-Amory Electric Car Charger, Electric Vehicle Charging Point, amory-electric-car-charger, 50.73669969917289, -3.531532251421048, amory charger.jpg
-Birks Grange Village Bike rack, Bike Rack, birks-bike-rack, 50.73662354127609, -3.542945306795316, birks bike rack1.jpg
-Birks Catered Bike Rack, Bike Rack, birks-catered-bike-rack, 50.7372705487971, -3.5435220617448953, birks bike rack 2.jpg
-Birks Catered Donation Point, Donation Point for Clothes, birks-catered-donation-point, 50.73704353877882, -3.5432225537137714, birks donation3.jpg
-Birks Market Place Donation Point, Donation Point for Clothes, birks-market-place-donation-point, 50.73572176028596, -3.542926570715787, birks market donation.jpg
-Birks Grange Village Donation Point, Donation Point for Clothes, birks-grange-village-donation-point, 50.7363705719479, -3.54302651233133, birks salv army2.jpg
-Forum Bus Stop, Bus Stop, forum-bus-stop, 50.73637613415944, -3.534690521960828, bus 1.jpg
+Amory Recyling Bins, Recycling Bin, amory-recycling-bins, 50.73669261597638, -3.5312938664245777, amory bins.JPG
+Amory Electric Car Charger, Electric Vehicle Charging Point, amory-electric-car-charger, 50.73669969917289, -3.531532251421048, amory charger.JPG
+Birks Grange Village Bike rack, Bike Rack, birks-bike-rack, 50.73662354127609, -3.542945306795316, birks bike rack1.JPG
+Birks Catered Bike Rack, Bike Rack, birks-catered-bike-rack, 50.7372705487971, -3.5435220617448953, birks bike rack 2.JPG
+Birks Catered Donation Point, Donation Point for Clothes, birks-catered-donation-point, 50.73704353877882, -3.5432225537137714, birks donation3.JPG
+Birks Market Place Donation Point, Donation Point for Clothes, birks-market-place-donation-point, 50.73572176028596, -3.542926570715787, birks market donation.JPG
+Birks Grange Village Donation Point, Donation Point for Clothes, birks-grange-village-donation-point, 50.7363705719479, -3.54302651233133, birks salv army2.JPG
+Forum Bus Stop, Bus Stop, forum-bus-stop, 50.73637613415944, -3.534690521960828, bus 1.JPG
 Business School Bike Rack, Bike Rack, business-school-bike-rack, 50.736091697777844, -3.5306753354135085, business bike rack.jpg
-Business School Recycling Bins, Recycling Bin, business-school-recycling-bins, 50.73609660640871, -3.5310393420429893, business bins.jpg
-Electric Vehicle Charger Nash Grove, Electric Vehicle Charging Point, electric-vehicle-charger-nash-grove, 50.73653462038323, -3.540486184872908, charger nash.jpg
-Duryard Bike Rack, Bike Rack, duryard-bike-rack, 50.739211245119556, -3.5445550761578497, duryard bike.jpg
-Laver Bike Rack, Bike Rack, laver-bike-rack,50.737172430069954, -3.5333908403118004, laver bike.jpg
-Moberly, Sustainable Building, moberly, 50.738756187080725, -3.5441932433829333, moberly.jpg
-Moberly Electric Vehicle Charger, Electric Vehicle Charging Point, moberly-electric-vehicle-charger, 50.738930252411755, -3.5443823783231085, moberly charger.jpg
-Newman Pond, Ecological Area, newman-pond, 50.73651397747276, -3.5355754008192792, newman pond.jpg
+Business School Recycling Bins, Recycling Bin, business-school-recycling-bins, 50.73609660640871, -3.5310393420429893, business bins.JPG
+Electric Vehicle Charger Nash Grove, Electric Vehicle Charging Point, electric-vehicle-charger-nash-grove, 50.73653462038323, -3.540486184872908, charger nash.JPG
+Duryard Bike Rack, Bike Rack, duryard-bike-rack, 50.739211245119556, -3.5445550761578497, duryard bike.JPG
+Laver Bike Rack, Bike Rack, laver-bike-rack,50.737172430069954, -3.5333908403118004, laver bike.JPG
+Moberly, Sustainable Building, moberly, 50.738756187080725, -3.5441932433829333, moberly.JPG
+Moberly Electric Vehicle Charger, Electric Vehicle Charging Point, moberly-electric-vehicle-charger, 50.738930252411755, -3.5443823783231085, moberly charger.JPG
+Newman Pond, Ecological Area, newman-pond, 50.73651397747276, -3.5355754008192792, newman pond.JPG
 Birks Marketplace Bins,Recycling Bin, birks-marketplace-bins, 50.735925249709815, -3.5431284223649633, birks market bins.jpg
 Birks Pull Up Bars,Place of Interest, birks-pull-up-bars, 50.736025390819236, -3.5435022081018634, birks pull up.jpg
 East Park Pond, Ecological Area, east-park-pond, 50.73636812055309, -3.528398003041383, east park pond.jpg
