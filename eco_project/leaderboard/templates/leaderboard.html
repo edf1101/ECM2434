@@ -13,6 +13,7 @@
     <br>
     <div class="leaderboard-tabs">
         <button class="tab-button active" onclick="showLeaderboard('users')">Top Users</button>
+        <button class="tab-button" onclick="showLeaderboard('friends')">Friends Leaderboard</button>
         <button class="tab-button" onclick="showLeaderboard('groups')">Top Groups</button>
         <button class="tab-button" onclick="showLeaderboard('pets')">Top Pets</button>
         {% if user_groups %}
@@ -59,6 +60,48 @@
         </table>
     </div>
 
+    <!-- Friends Leaderboard -->
+    <div id="leaderboard-friends" class="leaderboard-container hidden">
+        <h2>Friends Leaderboard</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Points</th>
+                <th>Badges</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in friend_leaderboard %}
+                <tr class="{% if forloop.counter == 1 %}top-1{% elif forloop.counter == 2 %}top-2{% elif forloop.counter == 3 %}top-3{% endif %} {% if user == current_user %}current-user{% endif %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'users:user_profile' user.username %}" class="profileLink">{{ user.username }}</a></td>
+                    <td>{{ user.profile.points }}</td>
+                    <td>
+                        {% if user.badgeinstance_set.all.count %}
+                            {% for badge_instance in user.badgeinstance_set.all %}
+                                <span class="badge"
+                                      title="{{ badge_instance.badge.hover_text }}"
+                                      style="background-color: {{ badge_instance.badge.colour }}; color: white;">
+                                      {{ badge_instance.badge.title }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            No badges yet
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No friends available</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Global Top Groups -->
     <div id="leaderboard-groups" class="leaderboard-container hidden">
         <h2>Global Top Groups</h2>
         <table>
@@ -179,6 +222,20 @@
 
     <script>
         /**
+         * This function displays the leaderboard corresponding to the provided type.
+         */
+        function showLeaderboard(type) {
+            document.querySelectorAll('.leaderboard-container').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById('leaderboard-' + type).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        /**
          * This function updates a group leaderboard when a group is switched.
          */
         function changeGroupLeaderboard() {
@@ -193,23 +250,5 @@
                 selectedDiv.style.display = 'block';
             }
         }
-
-        /**
-         * This function updates leaderboard buttons
-         */
-        function showLeaderboard(type) {
-
-        document.querySelectorAll('.leaderboard-container').forEach(el => {
-            el.classList.add('hidden');
-        });
-
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        document.getElementById('leaderboard-' + type).classList.remove('hidden');
-
-        event.target.classList.add('active');
-    }
     </script>
 {% endblock %}

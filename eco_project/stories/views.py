@@ -18,9 +18,9 @@ def stories_home(request: HttpRequest) -> HttpResponse:
     @return: The HTTP response.
     """
     now = timezone.now()
-    photos = UserPhoto.objects.filter(expiration_date__gt=now)
 
-    # get all the stories photos and their reactions
+    # get all the PetReal photos and their reactions
+
     friend_profiles = request.user.profile.friends.all()  # returns Profile queryset
     allowed_user_ids = [request.user.pk] + [friend.user.pk for friend in friend_profiles]
 
@@ -48,6 +48,10 @@ def stories_home(request: HttpRequest) -> HttpResponse:
     # get if the user has already posted a photo
     user_has_photo = UserPhoto.objects.filter(user_id=request.user).exists()
 
-    context = {'photos': photos_data, 'reaction_icons': reaction_icons, 'has_photo': user_has_photo}
+    context = {
+        'photos': photos_data,
+        'reaction_icons': reaction_icons,
+        'has_photo': user_has_photo
+    }
 
     return render(request, 'stories/stories_home.html', context)

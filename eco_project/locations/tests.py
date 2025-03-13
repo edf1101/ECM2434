@@ -1,11 +1,12 @@
 """
-Test suite for the locations app.
+This module contains the test suite for the locations app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from challenges.models import ChallengeSettings
 from .models import FeatureInstance, FeatureType, QuestionAnswer, QuestionFeature, Map3DChunk, \
@@ -384,7 +385,7 @@ class ModelsTests(TestCase):
             question_text="Test question",
             feature=self.feature_instance,
         )
-        answer = QuestionAnswer.objects.create(
+        QuestionAnswer.objects.create(
             question=question,
             choice_text="Test answer",
         )
