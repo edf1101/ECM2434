@@ -30,5 +30,5 @@ def accessories(request) -> HttpResponse:
 
 @login_required
 def home(request):
-    pet = request.user.pets.first()
-    return render(request, "home.html", {"pet": pet})
+    pet = request.user.pets.select_related("type").first()
+    return render(request, "home.html", {"pet": pet or None})
