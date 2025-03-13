@@ -6,6 +6,7 @@ and their locations.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
+from typing import Self
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
@@ -276,7 +277,7 @@ class LocationsAppSettings(models.Model):
         return None  # Prevent deletion
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls) -> Self:
         """
         Static method to return the instance of this model.
         If there is no instance, it will create one.

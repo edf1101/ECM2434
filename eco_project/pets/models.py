@@ -89,6 +89,23 @@ class Pet(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="pets")
+    points = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs) -> None:
+        """
+        Override save method to update the user's points whenever a pet's points are updated.
+
+        @param args: Additional arguments.
+        @param kwargs: Additional keyword arguments.
+        @return: None
+        """
+        # Save the pet first
+        super().save(*args, **kwargs)
+
+        # After saving, update the user's profile points
+        if self.owner.profile:
+            # This will update the user's points based on their pets
+            self.owner.profile.update_points()
 
     def __str__(self) -> str:
         """
