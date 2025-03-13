@@ -20,7 +20,7 @@ User = get_user_model()
 class PetTypeTestCase(TestCase):
     """
     Set up for PetType model.
-    Ensures that the PetType and its appropraite attirbutes are created and its associated
+    Ensures that the PetType and its appropriate attributes are created and its associated
     methods run appropriately.
     """
 
