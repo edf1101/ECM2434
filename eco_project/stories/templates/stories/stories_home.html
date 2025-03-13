@@ -4,7 +4,8 @@
 {% block title %}PetReal - Home{% endblock %}
 
 {% block extrahead %}
-  <link rel="stylesheet" href="{% static 'petreal/css/petreal_style.css' %}">
+
+  <link rel="stylesheet" href="{% static 'stories/css/stories_style.css' %}">
   <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
   <style>
     .petreal-container {
@@ -151,69 +152,78 @@
       });
     }
   </script>
-  <script src="{% static 'petreal/js/petreal.js' %}"></script>
+  <script src="{% static 'petreal/js/stories.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="petreal-container">
-  <div class="petreal-hero">
-    <h1>📷 PetReal 📷</h1>
-    <h5>Capture Your Authentic Moments Every Day!</h5>
-    <hr>
-    <p>Swipe through recent posts and share your reactions.</p>
-  </div>
-  
-  {# (If no daily photo has been posted, display a take-photo button) #}
-  {% if not has_photo %}
-    <div class="container text-center my-4">
-      <button class="btn btn-primary" id="takePhotoBtn">Take Photo</button>
-    </div>
-  {% endif %}
-  
-  {# Hidden file input for uploading a photo #}
-  <input type="file" id="photoInput" accept="image/*" style="display: none;">
+    {# Take photo button #}
+    {% if not has_photo %}
+        <div class="container text-center my-4">
+            <button class="btn btn-primary" id="takePhotoBtn">Take Photo</button>
+        </div>
+    {% endif %}
 
-  <div class="container">
-    <div class="row mb-4">
-      <div class="col text-center">
-        <h2>Recent PetReal Posts</h2>
-      </div>
-    </div>
-    <div class="photo-carousel">
-      {% for photo in photos %}
-        <div class="photo-card" data-photo-user="{{ photo.user }}">
-          <div class="card h-100">
-            <div class="card-body text-center">
-              <h4 class="card-title">{{ photo.user }}'s Post</h4>
-              {% if photo.is_video %}
-                <video autoplay loop playsinline muted style="width: 100%;">
-                  <source src="{{ photo.photo_url }}" type="video/webm">
-                  Your browser does not support the video tag.
-                </video>
-              {% else %}
-                <img src="{{ photo.photo_url }}" alt="{{ photo.user }}'s post">
-              {% endif %}
+    {# Hidden file input for uploading a photo #}
+    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+
+    {# Display the PetReal photos in here #}
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2>Recent PetReal Photos</h2>
+                <p>Swipe to see the latest photos and reactions.</p>
             </div>
-            <div class="card-footer text-center">
-              <div class="reaction-container" data-photo-user="{{ photo.user }}">
-                <div class="reaction-icon" onclick="addReaction('{{ photo.id }}', '👍')">
-                  <span class="emoji">👍</span>
-                  <span class="reaction-count" id="reaction-thumbs-up-{{ photo.id }}">{{ photo.reactions.thumbs_up|default:"0" }}</span>
-                </div>
-                <div class="reaction-icon" onclick="addReaction('{{ photo.id }}', '👎')">
-                  <span class="emoji">👎</span>
-                  <span class="reaction-count" id="reaction-thumbs-down-{{ photo.id }}">{{ photo.reactions.thumbs_down|default:"0" }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      {% empty %}
-        <div class="text-center">
-          <p>No posts to display.</p>
+
+        <div class="photo-carousel">
+            {% for photo in photos %}
+                <div class="photo-card" data-photo-user="{{ photo.user }}">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">{{ photo.user }}'s Photo</h4>
+                            <img src="{{ photo.photo_url }}" alt="{{ photo.user }}'s photo"
+                                 class="card-img-top">
+                        </div>
+                        {# Display reactions in here #}
+                        <div class="card-footer text-center">
+                            <div class="reaction-container" data-photo-user="{{ photo.user }}">
+                                {% for icon, count in photo.reactions.items %}
+                                    <div class="reaction-icon">
+                                        <span class="emoji">{{ icon }}</span>
+                                        <span class="reaction-count">{{ count }}</span>
+                                    </div>
+                                {% endfor %}
+                                <div class="reaction-icon add-reaction">
+                                    <span class="emoji">+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center">
+                    <p>No photos to display.</p>
+                </div>
+            {% endfor %}
         </div>
-      {% endfor %}
     </div>
-  </div>
-</div>
+
+    {# This section is to display the reaction selector popup #}
+    <div id="reaction-popup" class="reaction-popup">
+        <div class="reaction-options">
+            {% for icon in reaction_icons %}
+                <div class="reaction-option" data-reaction="{{ icon }}">
+                    <span class="emoji">{{ icon }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Global variable for the reaction API endpoint #}
+    <script>
+        window.has_photo = {{ has_photo|yesno:"true,false" }};
+        window.addReactionUrl = "{% url 'petreal:add_reaction' %}";
+        window.addPhotoUrl = "{% url 'petreal:add_photo' %}";
+    </script>
+    <script src="{% static 'petreal/js/petreal.js' %}"></script>
 {% endblock %}

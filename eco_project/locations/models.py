@@ -6,7 +6,6 @@ and their locations.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
-
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -100,7 +99,6 @@ class FeatureInstance(models.Model):
             raise FileNotFoundError(
                 "Static file 'locations/media/ecopetLogoWhiteBG.png' not found."
             )
-
         qr = QRCode(error_correction=constants.ERROR_CORRECT_H)
         qr.add_data(
             f"{LocationsAppSettings.get_instance().qr_prefix}{self.slug}")

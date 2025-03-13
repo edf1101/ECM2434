@@ -1,5 +1,5 @@
 """
-This module holds the views for the petReal app.
+This module holds the views for the stories app.
 """
 from django.http import HttpResponse
 from django.http.request import HttpRequest
@@ -10,9 +10,9 @@ from .models import UserPhoto, UserPhotoReaction, ReactionType
 
 
 @login_required
-def petreal_home(request: HttpRequest) -> HttpResponse:
+def stories_home(request: HttpRequest) -> HttpResponse:
     """
-    Renders the petReal home page with all the photos and reactions.
+    Renders the stories home page with all the photos and reactions.
 
     @param request: The HTTP request.
     @return: The HTTP response.
@@ -20,6 +20,7 @@ def petreal_home(request: HttpRequest) -> HttpResponse:
     now = timezone.now()
 
     # get all the PetReal photos and their reactions
+
     friend_profiles = request.user.profile.friends.all()  # returns Profile queryset
     allowed_user_ids = [request.user.pk] + [friend.user.pk for friend in friend_profiles]
 
@@ -53,4 +54,4 @@ def petreal_home(request: HttpRequest) -> HttpResponse:
         'has_photo': user_has_photo
     }
 
-    return render(request, 'petreal/petreal_home.html', context)
+    return render(request, 'stories/stories_home.html', context)

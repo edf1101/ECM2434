@@ -1,5 +1,5 @@
 """
-This module contains the models for the petReal app.
+This module contains the models for the stories app.
 """
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -10,7 +10,7 @@ User = get_user_model()
 class ReactionType(models.Model):
     """
     This class represents the reaction type model.
-    This is a reaction to a petReal post.
+    This is a reaction to a stories post.
     """
     name = models.CharField(max_length=50, blank=False, null=False)
     icon = models.CharField(max_length=3, blank=False, null=False, primary_key=True, unique=True)
@@ -24,9 +24,9 @@ class ReactionType(models.Model):
 
 class UserPhoto(models.Model):
     """
-    This class represents the photo that a user takes as their PetReal.
+    This class represents the photo that a user takes as their stories.
     """
-    photo = models.ImageField(upload_to='petReal/photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to='stories/photos/', blank=True, null=True)
     user_id = models.OneToOneField(User, on_delete=models.CASCADE, related_name='UserPhoto',
                                    primary_key=True, blank=False, null=False, unique=True)
     expiration_date = models.DateTimeField(blank=False, null=False)
