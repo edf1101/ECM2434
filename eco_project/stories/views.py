@@ -19,8 +19,7 @@ def stories_home(request: HttpRequest) -> HttpResponse:
     """
     now = timezone.now()
 
-    # get all the PetReal photos and their reactions
-
+    # get all the story photos and their reactions
     friend_profiles = request.user.profile.friends.all()  # returns Profile queryset
     allowed_user_ids = [request.user.pk] + [friend.user.pk for friend in friend_profiles]
 

@@ -18,7 +18,7 @@ def homepage(request: HttpRequest) -> HttpResponse:
     form = AuthenticationForm(request)
     context = { "form": form }
 
-    if request.user:
+    if request.user and request.user.is_authenticated:
         context = {
             "form": form,
             "profile": request.user.profile,
