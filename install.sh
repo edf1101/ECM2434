@@ -14,3 +14,4 @@ python manage.py create_pets
 python manage.py create_gamekeeper_group
 python manage.py create_demo_users
 python manage.py import_quizzes
+python manage.py create_reactions
