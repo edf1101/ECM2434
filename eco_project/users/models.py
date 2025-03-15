@@ -25,15 +25,19 @@ class Profile(models.Model):
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
 
-    def update_points(self) -> None:
-        """
-        Recalculates and updates the user's points based on all owned pets.
+    friends = models.ManyToManyField("self", symmetrical=False, blank=True)
 
+    def add_friend(self, profile) -> None:
+        """
+        Add a profile to the friends list
+
+        @param profile: the profile to add
         @return: None
         """
-        # total_points = self.user.pets.aggregate(Sum('points'))['points__sum'] or 0
-        # self.points = total_points
-        # self.save()
+        if profile != self:
+            self.friends.add(profile)
+        else:
+            raise ValueError("Cannot add yourself as a friend")
 
     def __str__(self) -> str:
         """

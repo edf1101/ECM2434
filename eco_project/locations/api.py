@@ -234,7 +234,7 @@ def validate_qr(request):
 
     # Try to find the feature instance
     try:
-        feature_instance = FeatureInstance.objects.get(slug=strip_qr)
+        FeatureInstance.objects.get(slug=strip_qr)
 
         # If found, redirect to the feature's page
         target_url = reverse(

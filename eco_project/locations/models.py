@@ -6,7 +6,6 @@ and their locations.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
-from typing import Self
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
@@ -135,7 +134,7 @@ class FeatureInstance(models.Model):
         Returns whether this feature instance has a question or not.
         """
         return self.questionfeature_set.exists()
-    
+
     def has_challenge(self) -> bool:
         """
         Returns whether this feature instance has a challenge or not.
@@ -277,7 +276,7 @@ class LocationsAppSettings(models.Model):
         return None  # Prevent deletion
 
     @classmethod
-    def get_instance(cls) -> Self:
+    def get_instance(cls):
         """
         Static method to return the instance of this model.
         If there is no instance, it will create one.
