@@ -53,7 +53,7 @@ class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name")}),
-        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser","groups")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups")}),
     )
 
     add_fieldsets = (
@@ -78,6 +78,7 @@ class CustomUserAdmin(BaseUserAdmin):
         "last_name",
         "is_staff",
         "profile_points",
+        "last_active",
         "badge_count",
     )
 
@@ -106,6 +107,17 @@ class CustomUserAdmin(BaseUserAdmin):
         return obj.profile.points if hasattr(obj, "profile") else "N/A"
 
     profile_points.short_description = "Points"
+
+    def last_active(self, obj) -> int:
+        """
+        Display the last_active_string field from their profile.
+
+        @param obj: The user object.
+        @return: The user's last_active if they have a profile, otherwise "N/A".
+        """
+        return obj.profile.last_active_string if hasattr(obj, "profile") else "N/A"
+
+    last_active.short_description = "Last Active"
 
     def badge_count(self, obj) -> int:
         """
