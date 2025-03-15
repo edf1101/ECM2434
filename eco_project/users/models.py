@@ -8,6 +8,7 @@ from random import choices
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 from pets.models import Cosmetic
 
@@ -31,6 +32,27 @@ class Profile(models.Model):
     owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
 
     friends = models.ManyToManyField("self", symmetrical=False, blank=True)
+
+    last_active = models.DateTimeField(auto_now=True)
+
+    @property
+    def last_active_string(self) -> str:
+        """
+        Return a string representation of the last active time.
+        ie "2 hours ago"
+
+        :return: A string representation of the last active time.
+        """
+
+        delta = timezone.now() - self.last_active
+        if delta.days > 0:
+            return f"{delta.days} days ago"
+        elif delta.seconds < 60:
+            return "just now"
+        elif delta.seconds < 3600:
+            return f"{delta.seconds // 60} minutes ago"
+        else:
+            return f"{delta.seconds // 3600} hours ago"
 
     def add_friend(self, profile) -> None:
         """
