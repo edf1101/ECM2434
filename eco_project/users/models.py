@@ -47,12 +47,12 @@ class Profile(models.Model):
         delta = timezone.now() - self.last_active
         if delta.days > 0:
             return f"{delta.days} days ago"
-        elif delta.seconds < 60:
+        if delta.seconds < 60:
             return "just now"
-        elif delta.seconds < 3600:
+        if delta.seconds < 3600:
             return f"{delta.seconds // 60} minutes ago"
-        else:
-            return f"{delta.seconds // 3600} hours ago"
+
+        return f"{delta.seconds // 3600} hours ago"
 
     def add_friend(self, profile) -> None:
         """
