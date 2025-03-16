@@ -7,6 +7,7 @@ and their locations.
 """
 import os
 
+from typing import Union
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -100,7 +101,6 @@ class FeatureInstance(models.Model):
             raise FileNotFoundError(
                 "Static file 'locations/media/ecopetLogoWhiteBG.png' not found."
             )
-
         qr = QRCode(error_correction=constants.ERROR_CORRECT_H)
         qr.add_data(
             f"{LocationsAppSettings.get_instance().qr_prefix}{self.slug}")
@@ -150,7 +150,7 @@ class FeatureInstance(models.Model):
         return f'{self.feature.name} "{self.slug}"'
 
     @property
-    def image(self) -> ImageFieldFile | ImageField:
+    def image(self) -> Union[ImageFieldFile, ImageField]:
         """
         Returns specific_img if it exists, otherwise returns the related feature's generic_img.
         """

@@ -20,7 +20,7 @@ User = get_user_model()
 class PetTypeTestCase(TestCase):
     """
     Set up for PetType model.
-    Ensures that the PetType and its appropraite attirbutes are created and its associated
+    Ensures that the PetType and its appropriate attributes are created and its associated
     methods run appropriately.
     """
 
@@ -159,12 +159,13 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", type=self.cosmetic_type
+            name="Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
         )
         hat.fits.add(self.pet_type)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
         self.assertEqual(hat.type, self.cosmetic_type)
+        self.assertEqual(hat.price, 10)
         self.assertIn(self.pet_type, hat.fits.all())
 
     def test_cosmetic_str_method(self) -> None:
@@ -174,7 +175,7 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", type=self.cosmetic_type
+            name="Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
         )
         self.assertEqual(str(hat.description), "Red stylish hat")
 

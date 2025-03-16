@@ -24,7 +24,7 @@ SECRET_KEY = "django-insecure-!jxg!t($d^0-bnhgr(ylg179tn=+g9q4xkt$(ufr$o^$m*(*_q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.0.168", "localhost", "127.0.0.1", "192.168.5.31"]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Application definition
 
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "leaderboard.apps.LeaderboardConfig",
-    "petReal.apps.PetrealConfig",
+    "lootboxes",
+    "stories.apps.StoriesConfig",
 ]
 
 MIDDLEWARE = [
@@ -120,8 +121,10 @@ USE_TZ = True
 STATIC_URL = "static/"
 MEDIA_URL = "media/"
 
-STATIC_ROOT = BASE_DIR / "assets"
 MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
+STATIC_ROOT = BASE_DIR / "assets"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 

@@ -8,6 +8,11 @@ from random import choices
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
+
+from pets.models import Cosmetic
+
+from pets.models import Cosmetic
 
 User = get_user_model()
 
@@ -20,16 +25,40 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
 
     points = models.PositiveIntegerField(default=0, blank=False, null=False)
+    pet_bucks = models.PositiveIntegerField(default=0, blank=False, null=False)
     bio = models.TextField(blank=True, null=False)
 
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
 
+    owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
+
     friends = models.ManyToManyField("self", symmetrical=False, blank=True)
+
+    last_active = models.DateTimeField(auto_now=True)
+
+    @property
+    def last_active_string(self) -> str:
+        """
+        Return a string representation of the last active time.
+        ie "2 hours ago"
+
+        :return: A string representation of the last active time.
+        """
+
+        delta = timezone.now() - self.last_active
+        if delta.days > 0:
+            return f"{delta.days} days ago"
+        if delta.seconds < 60:
+            return "just now"
+        if delta.seconds < 3600:
+            return f"{delta.seconds // 60} minutes ago"
+
+        return f"{delta.seconds // 3600} hours ago"
 
     def add_friend(self, profile) -> None:
         """
-        Add a profile to the friends list
+        Add a profile to the friends list.
 
         @param profile: the profile to add
         @return: None
@@ -41,7 +70,7 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         """
-        Return a string representation of the profile
+        Return a string representation of the profile.
 
         @return: a string representation of the profile
         """
@@ -107,7 +136,7 @@ class BadgeInstance(models.Model):
 
 def generate_unique_code() -> str:
     """
-    Generate a unique 6-character code for a UserGroup
+    Generate a unique 6-character code for a UserGroup.
 
     @return: a unique 6-character code
     """
@@ -146,7 +175,7 @@ class UserGroup(models.Model):
     @property
     def users_in_group(self) -> str:
         """
-        Returns a string listing the users in the group
+        Returns a string listing the users in the group.
 
         @return: a string listing the users in the group
         """
@@ -164,7 +193,7 @@ class UserGroup(models.Model):
     def remove_user(self, user: User) -> None:
         """
         Remove a user from the group.
-        Cannot remove the group admin
+        Cannot remove the group admin.
 
         @param user: the user to remove
         @return: None
@@ -175,7 +204,7 @@ class UserGroup(models.Model):
 
     def __str__(self) -> str:
         """
-        Return a string representation of the group
+        Return a string representation of the group.
 
         @return: a string representation of the group
         """
