@@ -52,31 +52,79 @@
             const wheelCanvas = document.getElementById("wheelCanvas");
             const ctx = wheelCanvas.getContext("2d");
             const spinButton = document.querySelector(".spin-button");
+
             const prizes = ["Win Big", "Win Small", "Lose", "Win Bucks"];
             const colors = ["#FF5733", "#33FF57", "#5733FF", "#FFD700"];
+            const numSegments = prizes.length;
+            const anglePerSegment = (2 * Math.PI) / numSegments;
+            let currentAngle = 0;
             let isSpinning = false;
 
-            function drawWheel() {
-                const numSegments = prizes.length;
-                const angle = (2 * Math.PI) / numSegments;
+            function drawWheel(angleOffset = 0) {
+                ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+
+                ctx.save();
+                ctx.translate(150, 150); // Move origin to center
+                ctx.rotate(angleOffset); // Rotate the whole wheel
+                ctx.translate(-150, -150); // Move back
+
                 for (let i = 0; i < numSegments; i++) {
+                    const startAngle = i * anglePerSegment;
+                    const endAngle = startAngle + anglePerSegment;
+
+                    // Draw segment
                     ctx.beginPath();
                     ctx.moveTo(150, 150);
-                    ctx.arc(150, 150, 150, i * angle, (i + 1) * angle);
+                    ctx.arc(150, 150, 150, startAngle, endAngle);
                     ctx.fillStyle = colors[i];
                     ctx.fill();
                     ctx.closePath();
 
+                    // Add text
+                    ctx.save();
+                    ctx.translate(150, 150);
+                    ctx.rotate(startAngle + anglePerSegment / 2);
+                    ctx.textAlign = "right";
                     ctx.fillStyle = "white";
-                    ctx.font = "14px Arial";
-                    ctx.fillText(
-                        prizes[i], 
-                        150 + Math.cos(i * angle + angle / 2) * 100 - 20, 
-                        150 + Math.sin(i * angle + angle / 2) * 100
-                    );
+                    ctx.font = "16px Arial";
+                    ctx.fillText(prizes[i], 120, 10);
+                    ctx.restore();
                 }
+
+                ctx.restore();
             }
 
+            function spinWheel() {
+                if (isSpinning) return;
+                isSpinning = true;
+
+                let spinAngle = Math.random() * 360 + 1800; // Random (5+ full spins)
+                let spinTime = 4000; // 4 seconds
+
+                let start = null;
+                function animateSpin(timestamp) {
+                    if (!start) start = timestamp;
+                    let progress = timestamp - start;
+
+                    if (progress < spinTime) {
+                        let easeOut = 1 - Math.pow(1 - progress / spinTime, 3);
+                        currentAngle = (easeOut * spinAngle * Math.PI) / 180;
+                        drawWheel(currentAngle);
+                        requestAnimationFrame(animateSpin);
+                    } else {
+                        isSpinning = false;
+                        currentAngle %= 2 * Math.PI;
+
+                        // Determine the winning prize
+                        let winningIndex = Math.floor((2 * Math.PI - currentAngle) / (2 * Math.PI / numSegments)) % numSegments;
+                        alert(`🎉 You won: ${prizes[winningIndex]}! 🎁`);
+                    }
+                }
+
+                requestAnimationFrame(animateSpin);
+            }
+
+            spinButton.addEventListener("click", spinWheel);
             drawWheel();
         });
     </script>
