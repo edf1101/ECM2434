@@ -33,7 +33,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    color: #fff;
+    color: var(--groups-box);
     padding: 0 15px;
 }
 
@@ -46,4 +46,18 @@
 .btn-green-dark:hover {
     color: #ffffff;
     background-color: #267e48;
+}
+
+.card {
+    background-color: var(--groups-box);
+}
+
+/* Light Mode */
+:root {
+    --groups-box: #ffffff;
+}
+
+/* Dark Mode */
+.dark-mode {
+    --groups-box: #c9c9c9;
 }
