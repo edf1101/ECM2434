@@ -41,8 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "leaderboard.apps.LeaderboardConfig",
-    "lootboxes"
-    "petReal.apps.PetrealConfig",
+    "lootboxes",
 ]
 
 MIDDLEWARE = [

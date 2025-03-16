@@ -1,3 +1,9 @@
+"""
+This module contains the models needed for the lootboxes app
+
+@author: 730022096
+"""
+
 import random
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -9,17 +15,17 @@ class LootBox(models.Model):
 
     def spin(self):
         """Simulate spinning the lootbox wheel"""
-        profile = self.user.profile  # Access the user's profile to update their points
+        profile = self.user.profile
 
-        if profile.points < 10:
-            raise ValueError("Not enough points to spin.")
+        if profile.pet_bucks < 5:
+            raise ValueError("Not enough pet bucks to spin.")
 
         # Deduct points for spinning
-        profile.points -= 10
+        profile.pet_bucks -= 5
 
         # Define possible outcomes and their probabilities
-        outcomes = ["winbig", "winsmall", "lose", "loseall"]
-        probabilities = [0.2, 0.425, 0.325, 0.05]
+        outcomes = ["winbig", "winsmall", "lose", "winbucks"]
+        probabilities = [0.1, 0.325, 0.325, 0.25]
 
         # Spin the wheel and choose an outcome based on the specified probabilities
         outcome = random.choices(outcomes, weights=probabilities, k=1)[0]
@@ -28,19 +34,20 @@ class LootBox(models.Model):
             # Win between 30 and 100 points
             winnings = random.randint(30, 100)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings-10} points! Total points: {profile.points}"
-        elif outcome == "winsmall":  # Corrected here
+            result = f"Congratulations! You won {winnings} points! Total points: {profile.points}, Total Bucks: {profile.pet_bucks}"
+        elif outcome == "winsmall":
             # Win between 10 and 30 points
             winnings = random.randint(10, 30)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings-10} points! Total points: {profile.points}"
+            result = f"Congratulations! You won {winnings} points! Total points: {profile.points} Total Bucks: {profile.pet_bucks}"
+        elif outcome == "winbucks":
+            # Win between 1 and 10 bucks
+            winnings = random.randint(6, 15)
+            profile.pet_bucks += winnings
+            result = f"Congratulations! You won {winnings-5} bucks! Total points: {profile.points} Total Bucks: {profile.pet_bucks}"
         elif outcome == "lose":
-            # Lose some points
-            result = f"Sorry! You lost 10 points! Total points: {profile.points}"
-        elif outcome == "loseall":
-            # Lose all points
-            profile.points = 0
-            result = f"Sorry! You lost all your points! Total points: {profile.points}"
+            # Lose some bucks
+            result = f"Sorry! You lost! Total Bucks: {profile.pet_bucks}"
 
         # Save the profile after modifying the points
         profile.save()

@@ -7,6 +7,7 @@ and their locations.
 """
 import os
 
+from typing import Union
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -150,7 +151,7 @@ class FeatureInstance(models.Model):
         return f'{self.feature.name} "{self.slug}"'
 
     @property
-    def image(self) -> ImageFieldFile | ImageField:
+    def image(self) -> Union[ImageFieldFile, ImageField]:
         """
         Returns specific_img if it exists, otherwise returns the related feature's generic_img.
         """
