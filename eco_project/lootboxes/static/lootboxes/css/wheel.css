@@ -1,93 +1,157 @@
-/*
-.wheel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+/* The main container for the pet bucks and points */
+.text-center {
+    text-align: center;
 }
 
-.wheel {
-    position: relative;
-    width: 300px;
-    height: 300px;
+.mb-4 {
+    margin-bottom: 20px;
 }
 
-.wheel-pointer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -60%);
-    font-size: 32px;
+strong {
+    color: #228B22;
+}
+
+/* Styling for the spin results */
+.spin-results p {
+    font-size: 1.2em;
     font-weight: bold;
-    color: red;
-    z-index: 3;
+    color: #228B22;
 }
 
-canvas {
-    display: block;
-    border: 5px solid #333;
-    border-radius: 50%;
-    background-color: white;
+/* Button to trigger the spin */
+button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #228B22;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-*/
+button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
 
-/* CSS for the Wheel */
-.wheel-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+button:hover {
+    background-color: #1e7e1e;
+}
+
+/* Spin container that holds the wheel */
+.spin-container {
+    margin: 30px auto;
     position: relative;
-    margin-top: 20px;
+    width: 300px;
+    height: 300px;
 }
 
-.wheel {
+#wheel-container {
+    margin: 30px auto;
     width: 300px;
     height: 300px;
     border-radius: 50%;
+    border: 5px solid #333;
     position: relative;
     overflow: hidden;
-    border: 5px solid #000;
 }
 
-#wheelCanvas {
-    width: 100%;
-    height: 100%;
-    display: block;
+svg {
+    transform-origin: center; /* Ensures the spin occurs around the center */
+    will-change: transform;
+}
+
+/* Wheel element styling */
+#wheel {
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
+    background-color: #f0f0f0;
+    border: 5px solid #333;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    transition: transform 3s ease-out;
 }
 
-.wheel-pointer {
+/* Segments within the wheel */
+.wheel-segment {
     position: absolute;
-    top: -25px;
+    width: 50%;
+    height: 50%;
+    background-color: transparent;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 25px;
-    color: red;
+    transform-origin: 100% 100%;
+    clip-path: polygon(100% 0%, 100% 100%, 0 100%, 0 0);
 }
 
-.spin-button {
+/* Wheel segments with colors */
+.wheel-segment[data-result="winbig"] {
+    background-color: #4CAF50; /* Green for big win */
+}
+
+.wheel-segment[data-result="winsmall"] {
+    background-color: #FFD700; /* Yellow for small win */
+}
+
+.wheel-segment[data-result="lose"] {
+    background-color: #FF6347; /* Red for lose */
+}
+
+.wheel-segment[data-result="winbucks"] {
+    background-color: #1E90FF; /* Blue for bucks win */
+}
+
+/* Positioning segments */
+.wheel-segment:nth-child(1) {
+    transform: rotate(0deg) translate(150px) rotate(0deg);
+}
+
+.wheel-segment:nth-child(2) {
+    transform: rotate(90deg) translate(150px) rotate(-90deg);
+}
+
+.wheel-segment:nth-child(3) {
+    transform: rotate(180deg) translate(150px) rotate(-180deg);
+}
+
+.wheel-segment:nth-child(4) {
+    transform: rotate(270deg) translate(150px) rotate(-270deg);
+}
+
+/* Result message styling */
+#resultMessage {
     margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    font-size: 1.3em;
+    color: #228B22;
+    font-weight: bold;
 }
 
-.spin-button:hover {
-    background-color: #218838;
+/* Spin Result - You can add more visual feedback */
+.spin-results .winbig {
+    color: #4CAF50; /* Green */
 }
 
-/* Additional Styling for Alert */
-.alert {
-    background-color: #90EE90;
-    color: black;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 20px;
-    width: 100%;
+.spin-results .winsmall {
+    color: #FF9800; /* Orange */
+}
+
+.spin-results .lose {
+    color: #F44336; /* Red */
+}
+
+.spin-results .winbucks {
+    color: #2196F3; /* Blue */
+}
+
+/* Adding animation for the wheel */
+@keyframes spin-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

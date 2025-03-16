@@ -25,10 +25,21 @@
     {% endif %}
 
     <div class="spin-container text-center">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn" style="background-color: #228B22; color: white;">Spin the Wheel for 5 Bucks</button>
-        </form>
+        <button id="spinButton" type="button" class="btn" style="background-color: #228B22; color: white;" {% if profile.pet_bucks < 5 %} disabled {% endif %}>
+            Spin the Wheel for 5 Bucks
+        </button><br>
+        <div id="wheel-container">
+            <svg width="300" height="300" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Segment: Win Big -->
+                <path d="M50 50 L50 0 A50 50 0 0 1 100 50 Z" fill="#4CAF50" data-result="winbig">Win Big (10-50 points)</path>
+                <!-- Segment: Win Small -->
+                <path d="M50 50 L100 50 A50 50 0 0 1 50 100 Z" fill="#FFD700" data-result="winsmall">Win Small (1-10 points)</path>
+                <!-- Segment: Lose -->
+                <path d="M50 50 L50 100 A50 50 0 0 1 0 50 Z" fill="#FF6347" data-result="lose">Lose</path>
+                <!-- Segment: Win Bucks -->
+                <path d="M50 50 L0 50 A50 50 0 0 1 50 0 Z" fill="#1E90FF" data-result="winbucks">Win Bucks (6-15 bucks)</path>
+            </svg>
+        </div>
     </div>
 
     <div class="spin-results text-center mt-4">
@@ -37,15 +48,47 @@
         {% endif %}
     </div>
 
-    <div class="wheel-container">
-        <div class="wheel">
-            <div class="wheel-pointer">⇩</div>
-            <canvas id="wheelCanvas" width="300" height="300"></canvas>
-        </div>
-        <button class="spin-button">Spin Now!</button>
-    </div>
 {% endblock %}
 
 {% block extra_scripts %}
-    <script src="{% static 'lootboxes/js/wheelSpin.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const spinButton = document.getElementById('spinButton');
+            const wheelContainer = document.getElementById('wheel-container');
+            const resultMessage = document.getElementById('resultMessage');
+
+            if (spinButton && wheelContainer) {
+                spinButton.addEventListener('click', function () {
+                    // Disable button to prevent multiple spins
+                    spinButton.disabled = true;
+
+                    // Calculate random degrees (at least 2 full spins + random angle)
+                    const randomDegrees = 720 + Math.floor(Math.random() * 360);
+                    const wheel = wheelContainer.firstElementChild;
+
+                    // Apply spinning effect
+                    wheel.style.transition = 'transform 3s ease-out';
+                    wheel.style.transform = `rotate(${randomDegrees}deg)`;
+
+                    // Determine result based on final angle
+                    setTimeout(() => {
+                        const finalRotation = randomDegrees % 360;
+                        let result;
+
+                        if (finalRotation >= 0 && finalRotation < 90) result = 'Win Big';
+                        else if (finalRotation >= 90 && finalRotation < 180) result = 'Win Small';
+                        else if (finalRotation >= 180 && finalRotation < 270) result = 'Lose';
+                        else result = 'Win Bucks';
+
+                        // Display result
+                        resultMessage.innerHTML = `🎁 You won: <strong>${result}</strong>! 🎉`;
+
+                        // Re-enable the button
+                        spinButton.disabled = false;
+                    }, 3000); // Wait for spin animation to finish
+                });
+            }
+        });
+
+    </script>
 {% endblock %}
