@@ -31,13 +31,13 @@ class LootBox(models.Model):
         outcome = random.choices(outcomes, weights=probabilities, k=1)[0]
 
         if outcome == "winbig":
-            # Win between 30 and 100 points
-            winnings = random.randint(30, 100)
+            # Win between 10 and 50 points
+            winnings = random.randint(10, 50)
             profile.points += winnings
             result = f"Congratulations! You won {winnings} points! Total points: {profile.points}, Total Bucks: {profile.pet_bucks}"
         elif outcome == "winsmall":
-            # Win between 10 and 30 points
-            winnings = random.randint(10, 30)
+            # Win between 1 and 10 points
+            winnings = random.randint(1, 10)
             profile.points += winnings
             result = f"Congratulations! You won {winnings} points! Total points: {profile.points} Total Bucks: {profile.pet_bucks}"
         elif outcome == "winbucks":
