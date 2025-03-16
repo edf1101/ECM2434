@@ -4,134 +4,207 @@
 {% block title %}My Pet - EcoPet{% endblock %}
 
 {% block extrahead %}
-  <style>
-    .pet-container {
-      background: #C3E684;
-      border: 2px solid #28963D;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 800px;
-      margin: 20px auto;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-    .pet-header {
-      font-size: 2.5em;
-      font-weight: bold;
-      color: #106A1A;
-      text-shadow: 2px 2px #8FD8B7;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .pet-content {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      align-items: center;
-    }
-    /* Style both video and fallback image */
-    .pet-image video,
-    .pet-image img {
-      max-width: 300px;
-      border-radius: 10px;
-      border: 3px solid #98DABA;
-      transition: transform 0.3s ease;
-    }
-    .pet-image video:hover,
-    .pet-image img:hover {
-      transform: scale(1.05);
-    }
-    .pet-details {
-      font-size: 1.2em;
-      color: #106A1A;
-      line-height: 1.6;
-    }
-    .pet-details p {
-      margin: 10px 0;
-    }
-    .accessorise-btn {
-      display: block;
-      margin: 30px auto 0;
-      padding: 10px 20px;
-      background-color: #7ED08F;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.2em;
-      text-align: center;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .accessorise-btn:hover {
-      background-color: #28963D;
-      transform: translateY(-3px);
-    }
-  </style>
+    <style>
+        .pet-container {
+            background: #C3E684;
+            border: 2px solid #28963D;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .pet-header {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #106A1A;
+            text-shadow: 2px 2px #8FD8B7;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .pet-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .pet-image img {
+            max-width: 300px;
+            border-radius: 10px;
+            border: 3px solid #98DABA;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .pet-details {
+            font-size: 1.2em;
+            color: #106A1A;
+            line-height: 1.6;
+        }
+
+        .pet-details p {
+            margin: 10px 0;
+        }
+
+        .accessorise-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 10px 20px;
+            background-color: #7ED08F;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .accessorise-btn:hover {
+            background-color: #28963D;
+            transform: translateY(-3px);
+        }
+
+        .navbar-text {
+            font-family: Arial, sans-serif !important;
+        }
+
+        /* Cosmetics Section */
+        .pet-accessories {
+            margin-top: 30px;
+        }
+
+        .pet-accessories h2 {
+            text-align: center;
+            font-size: 2em;
+            color: #106A1A;
+            margin-bottom: 20px;
+        }
+
+        .cosmetics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .cosmetic-card {
+            background: #f9f9f9;
+            border: 1px solid #80CD27;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .cosmetic-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .cosmetic-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .remove-btn {
+            margin-top: 8px;
+            color: #f4573d;
+            text-decoration: none;
+        }
+
+        .equip-btn {
+            margin-top: 8px;
+            color: #28963D;
+            text-decoration: none;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-  <link rel="stylesheet" href="{% static 'pets/css/mypet.css' %}">
-  <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <link rel="stylesheet" href="{% static 'pets/css/mypet.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
 
-  <div class="pet-container">
-    <div class="pet-header">
-      {% if pet %}
-        {{ pet.name }}
-      {% else %}
-        Default Pet
-      {% endif %}
+    <div class="pet-container">
+        <div class="pet-header">
+            {% if pet %}
+                {{ pet.name }}
+            {% else %}
+                Default Pet
+            {% endif %}
+        </div>
+        <div class="pet-content">
+            <div class="pet-image">
+                <video id="petVideo" autoplay loop playsinline muted
+                       style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                    <source src="{{ pet.type.video.url }}" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="pet-details">
+                <p><strong>Type:</strong>
+                    {% if pet %}
+                        {{ pet.type.name }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+                <p><strong>Owner:</strong>
+                    {% if pet %}
+                        {{ pet.owner.username }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </p>
+                <p><strong>Points:</strong>
+                    {% if request.user.profile %}
+                        {{ request.user.profile.points }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="pet-accessories">
+            <h2>Cosmetics</h2>
+            <div class="cosmetics-grid">
+                {% for cosmetic in profile.owned_accessories.all %}
+                    <div class="cosmetic-card">
+                        <p><strong>{{ cosmetic.name }}</strong></p>
+                        <p>{{ cosmetic.description }}</p>
+                        {% if cosmetic.image %}
+                            <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
+                        {% else %}
+                            <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
+                        {% endif %}
+
+                        {% if cosmetic in pet.cosmetics.all %}
+                            <form method="post" action="{% url 'pets:equip_cosmetic' cosmetic.id 0 %}">
+                                {% csrf_token %}
+                                <button type="submit" class="remove-btn">
+                                    Remove
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'pets:equip_cosmetic' cosmetic.id 1 %}">
+                                {% csrf_token %}
+                                <button type="submit" class="equip-btn">
+                                    Equip
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'pets:shop' %}" class="accessorise-btn">Accessorise More</a>
+        </div>
     </div>
-
-    <div class="pet-content">
-      <div class="pet-image">
-        {% if pet %}
-          {% if pet.type.name == "Axolotl" %}
-            <video autoplay loop playsinline muted>
-              <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
-              Your browser does not support the video tag.
-            </video>
-          {% elif pet.type.name == "Virginia Big-Eared Bat" %}
-            <video autoplay loop playsinline muted>
-              <source src="/media/pets/base_movs/bat/bat.webm" type="video/webm">
-              Your browser does not support the video tag.
-            </video>
-          {% elif pet.type.name == "African Bush Elephant" %}
-            <video autoplay loop playsinline muted>
-              <source src="/media/pets/base_movs/elephant/elephant.webm" type="video/webm">
-              Your browser does not support the video tag.
-            </video>
-          {% else %}
-            <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet Image">
-          {% endif %}
-        {% else %}
-          <img src="{% static 'media/demoPet.png' %}" alt="Demo Pet Image">
-        {% endif %}
-      </div>
-
-      <div class="pet-details">
-        <p><strong>Type:</strong>
-          {% if pet %}
-            {{ pet.type.name }}
-          {% else %}
-            N/A
-          {% endif %}
-        </p>
-        <p><strong>Owner:</strong>
-          {% if pet %}
-            {{ pet.owner.username }}
-          {% else %}
-            N/A
-          {% endif %}
-        </p>
-        <p><strong>Points:</strong>
-          {% if request.user.profile %}
-            {{ request.user.profile.points }}
-          {% else %}
-            0
-          {% endif %}
-        </p>
-      </div>
-    </div>
-
-    <a href="{% url 'pets:accessories' %}" class="accessorise-btn">Accessorise Here</a>
-  </div>
 {% endblock %}

@@ -34,7 +34,9 @@ class Command(BaseCommand):
                                 " wrinkled gray skin, large fan-shaped ears that help regulate body"
                                 " temperature, and long, curved tusks made of ivory.",
                  "image": "elephant.png",
+                 "video": "elephant.webm",
                  },
+
                 {"name": "Axolotl",
                  "description": "The axolotl (Ambystoma mexicanum) is a neotenic salamander "
                                 "native to the lakes and canals of Mexico, particularly Lake "
@@ -45,7 +47,9 @@ class Command(BaseCommand):
                                 " regrow limbs, spinal cord, and even parts of its heart "
                                 "and brain.",
                  "image": "axolotl.png",
+                 "video": "axolotl.webm",
                  },
+
                 {"name": "Virginia Big-Eared Bat",
                  "description": "The Virginia big-eared bat (Corynorhinus townsendii virginianus)"
                                 " is a rare and federally protected subspecies of Townsend's "
@@ -56,17 +60,24 @@ class Command(BaseCommand):
                                 " making it highly vulnerable to habitat disturbances "
                                 "and environmental changes.",
                  "image": "bat.png",
+                 "video": "bat.webm",
                  },
                 ]
 
         # Empty pet media directory beforehand to reduce clutter in there
-        media_folder = os.path.join(settings.MEDIA_ROOT, "pets/base_imgs")
+        img_folder = os.path.join(settings.MEDIA_ROOT, "pets/base_imgs")
+        vid_folder = os.path.join(settings.MEDIA_ROOT, "pets/videos")
 
         # Check if the folder exists
-        if os.path.exists(media_folder):
+        if os.path.exists(img_folder):
             # Remove everything in the folder
-            for file in os.listdir(media_folder):
-                os.remove(os.path.join(media_folder, file))
+            for file in os.listdir(img_folder):
+                os.remove(os.path.join(img_folder, file))
+
+        if os.path.exists(vid_folder):
+            # Remove everything in the folder
+            for file in os.listdir(vid_folder):
+                os.remove(os.path.join(vid_folder, file))
 
         for pet in pets:
             pet_type = PetType(
@@ -79,12 +90,19 @@ class Command(BaseCommand):
                 "pets/management/commands/pet_images",
                 pet["image"])
 
+            vid = os.path.join(
+                os.getcwd(),
+                "pets/management/commands/pet_videos",
+                pet["video"]
+            )
+
             with open(img, "rb") as f:
                 pet_type.base_image = File(f, name=pet["image"])
-
-                try:
-                    pet_type.save()
-                    self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
-                except IntegrityError as e:
-                    self.stderr.write(self.style.WARNING(f"Could not create {pet['name']},"
-                                                         f" skipping it: {str(e)}"))
+                with open(vid, "rb") as vid_f:
+                    pet_type.video = File(vid_f, name=pet["video"])
+                    try:
+                        pet_type.save()
+                        self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
+                    except IntegrityError as e:
+                        self.stderr.write(self.style.WARNING(
+                            f"Could not create {pet['name']}, skipping it: {str(e)}"))

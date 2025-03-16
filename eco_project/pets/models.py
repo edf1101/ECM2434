@@ -20,7 +20,9 @@ class PetType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)  # Single definition
     description = models.TextField()
+
     base_image = models.ImageField(upload_to="pets/base_imgs/", blank=False)
+    video = models.FileField(upload_to="pets/videos/", blank=False)
 
     def __str__(self) -> str:
         """
@@ -38,6 +40,8 @@ class CosmeticType(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
     x = models.FloatField()
     y = models.FloatField()
 
@@ -58,8 +62,10 @@ class Cosmetic(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
+    price = models.PositiveIntegerField()
     type = models.ForeignKey(CosmeticType, on_delete=models.PROTECT)
     fits = models.ManyToManyField(PetType, blank=False)
+    image = models.ImageField(upload_to="pets/cosmetic_imgs/", blank=False)
 
     def __str__(self) -> str:
         """
