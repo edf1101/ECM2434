@@ -13,6 +13,7 @@
             max-width: 800px;
             margin: 20px auto;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .pet-header {
@@ -32,13 +33,16 @@
             align-items: center;
         }
 
+        /* Ensure the pet image/video isn’t in a circle */
+        .pet-image video,
         .pet-image img {
             max-width: 300px;
-            border-radius: 10px;
-            border: 3px solid #98DABA;
+            border-radius: 0 !important;
+            border: none !important;
             transition: transform 0.3s ease;
         }
 
+        .pet-image video:hover,
         .pet-image img:hover {
             transform: scale(1.05);
         }
@@ -71,8 +75,22 @@
             transform: translateY(-3px);
         }
 
-        .navbar-text {
-            font-family: Arial, sans-serif !important;
+        /* Sustainability Tip Styling */
+        .sustainability-tip {
+            margin-top: 20px;
+            padding: 15px;
+            background: #E0F7E9;
+            border: 1px solid #7ED08F;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1em;
+            color: #106A1A;
+        }
+
+        .sustainability-tip a {
+            color: #106A1A;
+            text-decoration: underline;
+            font-weight: bold;
         }
 
         /* Cosmetics Section */
@@ -143,7 +161,7 @@
         <div class="pet-content">
             <div class="pet-image">
                 <video id="petVideo" autoplay loop playsinline muted
-                       style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
+                       style="width:100%; max-width:300px; margin-bottom:10px;">
                     <source src="{{ pet.type.video.url }}" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
@@ -173,6 +191,16 @@
             </div>
         </div>
 
+        <!-- Sustainability Tip Section -->
+        <div class="sustainability-tip">
+            <strong>Sustainability Tip:</strong> {{ sustainability_tip }}
+            <br>
+            <a href="https://www.exeter.ac.uk/sustainability/" target="_blank">
+                Learn more at University of Exeter Sustainability
+            </a>
+        </div>
+
+        <!-- Cosmetics Section -->
         <div class="pet-accessories">
             <h2>Cosmetics</h2>
             <div class="cosmetics-grid">
@@ -189,22 +217,18 @@
                         {% if cosmetic in pet.cosmetics.all %}
                             <form method="post" action="{% url 'pets:equip_cosmetic' cosmetic.id 0 %}">
                                 {% csrf_token %}
-                                <button type="submit" class="remove-btn">
-                                    Remove
-                                </button>
+                                <button type="submit" class="remove-btn">Remove</button>
                             </form>
                         {% else %}
                             <form method="post" action="{% url 'pets:equip_cosmetic' cosmetic.id 1 %}">
                                 {% csrf_token %}
-                                <button type="submit" class="equip-btn">
-                                    Equip
-                                </button>
+                                <button type="submit" class="equip-btn">Equip</button>
                             </form>
                         {% endif %}
                     </div>
                 {% endfor %}
             </div>
-            <a href="{% url 'pets:shop' %}" class="accessorise-btn">Accessorise More</a>
+            <a href="{% url 'pets:shop' %}" class="accessorise-btn">Accessorise Here</a>
         </div>
     </div>
 {% endblock %}
