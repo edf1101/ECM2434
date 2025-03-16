@@ -3,9 +3,10 @@ This module is a Django management command that creates some story reactions in 
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+import sys
+
 from django.core.management.base import BaseCommand
 from stories.models import ReactionType
-import sys
 
 class Command(BaseCommand):
     """
