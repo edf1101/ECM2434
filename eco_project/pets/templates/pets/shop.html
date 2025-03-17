@@ -144,6 +144,9 @@
       background-color: #28963D;
       transform: translateY(-2px);
     }
+    .buy-btn:disabled {
+        opacity: 0.5; cursor: not-allowed;
+    }
     .back-to-pet {
       display: block;
       text-align: center;
@@ -199,7 +202,7 @@
       const petDisplay = document.getElementById("petDisplay");
       const petType = petDisplay.getAttribute("data-pet-type") || "axolotl";
       let videoSrc = "";
-      if (accessoryName === "glasses") {
+      if (accessoryName === "sunglasses") {
         if (petType === "axolotl") {
           videoSrc = "/media/pets/base_movs/axolotl/axolotlglasses.webm";
         } else if (petType === "virginiabigearedbat") {
@@ -297,6 +300,7 @@
                aria-labelledby="{{ category.name }}-tab">
             <div class="accessories-grid">
               {% for cosmetic in category.cosmetics %}
+
                 <div class="accessory-card" data-price="{{ cosmetic.price }}" data-newest="{{ cosmetic.created_at }}" data-popular="{{ cosmetic.popularity|default:0 }}">
                   <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
                   <h3>{{ cosmetic.name }}</h3>
@@ -314,60 +318,8 @@
                     </form>
                   {% endif %}
                 </div>
+
               {% endfor %}
-
-              {% if category.name|lower == "all" %}
-                <!-- Static Accessories Items added under the All tab -->
-                <!-- Sunglasses -->
-                <div class="accessory-card" data-price="80" data-newest="2025-01-01" data-popular="70">
-                  <img src="/media/pets/accessories_icon/glasses.png" alt="Sunglasses">
-                  <h3>Sunglasses</h3>
-                  <p>Cool shades for your pet!</p>
-                  <p><strong>Price:</strong> 80 Pet Bucks</p>
-                  <!-- Try It On button -->
-                  <button type="button" class="buy-btn" onclick="equipAccessory('glasses')">Try It On</button>
-                  <!-- Buy button -->
-                  <form method="post" action="{% url 'pets:buy_cosmetic' 999 %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="buy-btn" {% if 80 > profile.pet_bucks %}disabled{% endif %}>
-                      Buy
-                    </button>
-                  </form>
-                </div>
-                <!-- Cowboy Hat -->
-                <div class="accessory-card" data-price="120" data-newest="2025-01-01" data-popular="60">
-                  <img src="/media/pets/accessories_icon/cowboy.png" alt="Cowboy Hat">
-                  <h3>Cowboy Hat</h3>
-                  <p>Give your pet a cowboy look!</p>
-                  <p><strong>Price:</strong> 120 Pet Bucks</p>
-                  <!-- Try It On button -->
-                  <button type="button" class="buy-btn" onclick="equipAccessory('cowboy')">Try It On</button>
-                  <!-- Buy button -->
-                  <form method="post" action="{% url 'pets:buy_cosmetic' 1000 %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="buy-btn" {% if 120 > profile.pet_bucks %}disabled{% endif %}>
-                      Buy
-                    </button>
-                  </form>
-                </div>
-                <!-- Plant Hat -->
-                <div class="accessory-card" data-price="150" data-newest="2025-01-01" data-popular="50">
-                  <img src="/media/pets/accessories_icon/plant.png" alt="Plant Hat">
-                  <h3>Plant Hat</h3>
-                  <p>Add a touch of nature!</p>
-                  <p><strong>Price:</strong> 150 Pet Bucks</p>
-                  <!-- Try It On button -->
-                  <button type="button" class="buy-btn" onclick="equipAccessory('plant')">Try It On</button>
-                  <!-- Buy button -->
-                  <form method="post" action="{% url 'pets:buy_cosmetic' 1001 %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="buy-btn" {% if 150 > profile.pet_bucks %}disabled{% endif %}>
-                      Buy
-                    </button>
-                  </form>
-                </div>
-              {% endif %}
-
             </div><!-- End Accessories Grid -->
           </div>
         {% endfor %}
