@@ -22,7 +22,7 @@ def view_pet(request) -> HttpResponse:
     @return: HttpResponse object
     """
 
-    if request.user.is_anonymous:
+    if request.user.is_authenticated and request.user.profile:
         pet = Pet.objects.get(name="Default Pet")
     else:
         pet = request.user.pets.first()

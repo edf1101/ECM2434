@@ -11,9 +11,9 @@ from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from pets.models import PetType, Pet
-from users.models import Profile
 
 User = get_user_model()
+
 
 class Command(BaseCommand):
     """
@@ -107,7 +107,7 @@ class Command(BaseCommand):
 
                 with open(vid, "rb") as vid_f:
                     pet_type.video = File(vid_f, name=pet["video"])
-                    
+
                     try:
                         pet_type.save()
                         self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
