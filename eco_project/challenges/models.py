@@ -30,6 +30,16 @@ class ChallengeSettings(models.Model):
         default=1
     )  # points per reached normal feature
 
+    health_depreciation_interval = models.DurationField(
+        default=timedelta(hours=6)
+    )  # The interval in which the pet's health depreciates
+    health_depreciation_amount = models.IntegerField(
+        default=2
+    )  # The amount the pet's health depreciates each interval
+    last_health_depreciation = models.DateTimeField(
+        auto_now_add=True
+    )  # The last time the pet's health depreciated
+
     def __str__(self):
         """
         Override the string representation of this model.
@@ -185,6 +195,7 @@ class Choice(models.Model):
         """
         return self.text
 
+
 class QuizAttempt(models.Model):
     """
     This model holds the attempts of users on quizzes.
@@ -192,7 +203,7 @@ class QuizAttempt(models.Model):
     """
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
-    answers = models.CharField(max_length=255) # This holds a users past answers ie ABB
+    answers = models.CharField(max_length=255)  # This holds a users past answers ie ABB
     score = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
