@@ -132,6 +132,9 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
+# Load the .env file from the BASE_DIR
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
