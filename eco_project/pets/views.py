@@ -21,8 +21,13 @@ def view_pet(request) -> HttpResponse:
     @return: HttpResponse object
     """
 
+    if request.user.is_anonymous:
+        pet = Pet.objects.get(name="Default Pet")
+    else:
+        pet = request.user.pets.first()
+
     return render(request, "pets/mypet.html", {
-        "pet": request.user.pets.first(),
+        "pet": pet,
         "profile": request.user.profile
     })
 
