@@ -1,0 +1,37 @@
+/* spin.css */
+
+/* Container for the wheel */
+#wheelContainer {
+    width: 300px !important;
+    height: 300px !important;
+    margin: 20px auto !important;
+    border: 2px solid #ccc !important;
+    position: relative;
+  }
+  
+  /* Canvas styling */
+  canvas#wheel {
+    width: 300px !important;
+    height: 300px !important;
+    display: block !important;
+  }
+  
+  /* Spin button styling */
+  .spin-button {
+    display: block !important;
+    margin: 20px auto !important;
+    padding: 10px 20px !important;
+    font-size: 1.2em !important;
+    background: #228B22 !important;
+    color: #fff !important;
+    border: none !important;
+    cursor: pointer !important;
+  }
+  
+  /* Result message styling */
+  #resultMessage {
+    margin-top: 20px !important;
+    font-size: 1.3em !important;
+    text-align: center !important;
+  }
+  

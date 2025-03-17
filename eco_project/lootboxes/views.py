@@ -30,9 +30,19 @@ def spin_lootbox(request):
             result = lootbox.spin()  # Call the spin method to perform the spin logic
             return JsonResponse({'result': result})
         except ValueError as e:
+<<<<<<< HEAD
             # In case of an error (e.g., not enough bucks), send the error as a response
             # messages.error(request, str(e))
             return JsonResponse({'result': str(e)}, status=400)
     return render(request, 'lootboxes/spin.html', {
         'profile': profile,
     })
+=======
+            messages.error(request, str(e))
+
+    return render(request, "lootboxes/spin.html", {"lootbox": lootbox, "profile": request.user.profile})
+
+@login_required
+def spin_view(request):
+    return render(request, "spinningwheel/spin.html")
+>>>>>>> 2559cb5 (Wheel creation)

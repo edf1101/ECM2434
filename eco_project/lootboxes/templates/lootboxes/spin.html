@@ -1,9 +1,10 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% load static %}
 
-{% block title %}EcoPet - Loot Box Spin{% endblock %}
+{% block title %}Spin the Wheel - EcoPet{% endblock %}
 
 {% block extrahead %}
+<<<<<<< HEAD
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
     <link rel="stylesheet" href="{% static 'lootboxes/css/wheel.css' %}">
 {% endblock %}
@@ -48,6 +49,45 @@
         {% endif %}
     </div>
 
+=======
+  <link rel="stylesheet" href="{% static 'spin/css/spin.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+  <script src="{% static 'spin/js/spin.js' %}" defer></script>
+  <style>
+    /* Override only the background color (no font-family override) */
+    body {
+      background: linear-gradient(135deg, #99D887, #65B14D) !important;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-center">Spin the Wheel!</h1>
+  <p class="text-center">Your current pet bucks: <strong>{{ profile.pet_bucks }}</strong></p>
+  
+  <!-- Optional backend spin form -->
+  <div class="spin-container text-center mb-4">
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn" style="background-color: #228B22; color: white;">
+        Spend 50 Pet Bucks to Spin!
+      </button>
+    </form>
+  </div>
+  
+  <!-- Canvas Wheel Container -->
+  <div id="wheelContainer">
+    <canvas id="wheel" width="300" height="300"></canvas>
+  </div>
+  
+  <!-- Spin Button with pet bucks check -->
+  <button id="spinButton" class="spin-button" data-pet-bucks="{{ profile.pet_bucks }}">
+    Spin Now (50 Pet Bucks)
+  </button>
+  
+  <!-- Result Message -->
+  <div id="resultMessage" class="text-center"></div>
+>>>>>>> 2559cb5 (Wheel creation)
 {% endblock %}
 
 {% block extra_scripts %}
