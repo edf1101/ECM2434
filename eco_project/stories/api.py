@@ -65,7 +65,7 @@ def add_reaction(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
-def add_pet_real(request: HttpRequest) -> HttpResponse:
+def add_story(request: HttpRequest) -> HttpResponse:
     """
     Adds a story photo.
 

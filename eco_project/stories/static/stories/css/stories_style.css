@@ -16,7 +16,7 @@
     scroll-snap-align: start;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -25,7 +25,6 @@
     height: auto;
     border-bottom: 1px solid #ddd;
 }
-
 
 .card-footer {
     background: #f8f9fa;
@@ -39,23 +38,22 @@
     gap: 10px;
 }
 
-
 .reaction-icon {
     position: relative;
     display: inline-block;
-    font-size: 1.5em;  
+    font-size: 2em;
     margin: 0 5px;
     cursor: pointer;
     transition: transform 0.2s;
 }
+
 .reaction-icon:hover {
     transform: scale(1.1);
 }
 
 .reaction-icon .emoji {
-    font-size: 1em; 
+    font-size: 1em;
 }
-
 
 .reaction-count {
     position: absolute;
@@ -69,17 +67,77 @@
 }
 
 .add-reaction {
-    display: none;
+    background: #e9ecef;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.caption-input {
-    margin-top: 10px;
-    font-size: 1em;
+.reaction-popup {
+    background: white;
+    padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+}
+
+.reaction-option {
+    display: inline-block;
+    font-size: 2em;
+    margin: 0 5px;
+    cursor: pointer;
     padding: 5px;
-    width: 90%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+}
+
+.petreal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.petreal-hero {
+    background: linear-gradient(135deg, #106A1A, #28963D);
+    color: #fff;
+    text-align: center;
+    padding: 30px 10px 5px 10px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.petreal-hero h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.petreal-hero h5 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.petreal-hero hr {
+    border-top: 2px solid rgba(255, 255, 255, 0.5);
+    width: 50%;
+    margin: 20px auto;
+}
+
+.petreal-hero p {
+    font-size: 1.2em;
+}
+
+.btn-camera {
+    background-color: #165b33;
+    border-color: #1d2d24;
+    color: #fff;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.3s ease;
+}
+
+.btn-camera:hover {
+    transform: scale(1.1);
 }

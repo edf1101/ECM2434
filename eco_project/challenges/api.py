@@ -44,6 +44,10 @@ def collect_streak(request) -> Response:
     current_window_start, _ = get_current_window(now_time, interval)
     previous_window_start = current_window_start - interval
 
+    # Also update the last seen for the user profile
+
+    user.profile.last_active = now_time
+
     # If already collected in this window, return a message.
     if streak.last_window == current_window_start:
         return Response(
