@@ -5,7 +5,6 @@ This module is a Django management command that creates some pet types in the da
 """
 import os
 
-from adodbapi.schema_table import names
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File

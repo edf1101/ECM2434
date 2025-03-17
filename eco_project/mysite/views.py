@@ -20,7 +20,7 @@ def homepage(request: HttpRequest) -> HttpResponse:
     """
     form = AuthenticationForm(request)
 
-    if not request.user.is_anonymous:
+    if request.user.is_authenticated and request.user.profile:
         context = {
             "form": form,
             "profile": request.user.profile,
