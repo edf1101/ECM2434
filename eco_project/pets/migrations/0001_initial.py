@@ -69,6 +69,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("low_health_notified", models.BooleanField(default=False)),
                 ("cosmetics", models.ManyToManyField(blank=True, to="pets.cosmetic")),
                 (
                     "owner",
