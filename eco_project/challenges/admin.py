@@ -8,7 +8,8 @@ from django.contrib import admin
 import nested_admin
 from .models import Streak, ChallengeSettings, UserFeatureReach, Choice, Question, Quiz, QuizAttempt
 
-#pylint: disable=E1101
+
+# pylint: disable=E1101
 
 class StreakAdmin(admin.ModelAdmin):
     """
@@ -36,6 +37,8 @@ class ChallengeSettingsAdmin(admin.ModelAdmin):
             "Points Settings",
             {"fields": ("question_feature_points", "reached_feature_points")},
         ),
+        ("Health Settings",
+         {"fields": ("health_depreciation_interval", "health_depreciation_amount")}),
     )
 
 
@@ -46,6 +49,7 @@ class ChoiceInline(nested_admin.NestedTabularInline):
     model = Choice
     extra = 2
 
+
 class QuestionInline(nested_admin.NestedStackedInline):
     """
     This is the admin panel configuration for the Question model.
@@ -54,6 +58,7 @@ class QuestionInline(nested_admin.NestedStackedInline):
     model = Question
     extra = 1
     inlines = [ChoiceInline]
+
 
 @admin.register(Quiz)
 class QuizAdmin(nested_admin.NestedModelAdmin):

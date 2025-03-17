@@ -48,7 +48,7 @@ class ChallengesConfig(AppConfig):
         scheduler.add_job(
             update_pet_health,
             "interval",
-            seconds=86400,
+            seconds=15,
             id="update_pet_health_job",
             replace_existing=True,
         )

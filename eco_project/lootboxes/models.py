@@ -10,7 +10,11 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class LootBox(models.Model):
+    """
+    This model represents a lootbox for a user.
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="lootbox")
 
     def spin(self):
@@ -34,17 +38,20 @@ class LootBox(models.Model):
             # Win between 10 and 50 points
             winnings = random.randint(10, 50)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings} points! Total points: {profile.points}, Total Bucks: {profile.pet_bucks}"
+            result = (f"Congratulations! You won {winnings} points! Total points: {profile.points}, "
+                      f"Total Bucks: {profile.pet_bucks}")
         elif outcome == "winsmall":
             # Win between 1 and 10 points
             winnings = random.randint(1, 10)
             profile.points += winnings
-            result = f"Congratulations! You won {winnings} points! Total points: {profile.points} Total Bucks: {profile.pet_bucks}"
+            result = (f"Congratulations! You won {winnings} points! Total points: {profile.points}"
+                      f" Total Bucks: {profile.pet_bucks}")
         elif outcome == "winbucks":
             # Win between 1 and 10 bucks
             winnings = random.randint(6, 15)
             profile.pet_bucks += winnings
-            result = f"Congratulations! You won {winnings-5} bucks! Total points: {profile.points} Total Bucks: {profile.pet_bucks}"
+            result = (f"Congratulations! You won {winnings - 5} bucks! "
+                      f"Total points: {profile.points} Total Bucks: {profile.pet_bucks}")
         elif outcome == "lose":
             # Lose some bucks
             result = f"Sorry! You lost! Total Bucks: {profile.pet_bucks}"
