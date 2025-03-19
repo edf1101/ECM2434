@@ -41,7 +41,32 @@ class Command(BaseCommand):
                                " wrinkled gray skin, large fan-shaped ears that help regulate body"
                                " temperature, and long, curved tusks made of ivory.",
                 "video": "elephant.webm",
-                "cosmetics": [] # TODO
+                "cosmetics": [
+                    {
+                        "name": "Sunglasses",
+                        "description": "Vey cool sunglasses",
+                        "price": 75,
+                        "category": "Glasses",
+                        "icon": "glasses.png",
+                        "video": "elephantglasses.webm"
+                    },
+                    {
+                        "name": "Plant Hat",
+                        "description": "Plant hat",
+                        "price": 150,
+                        "category": "Hats",
+                        "icon": "plant.png",
+                        "video": "elephantplant.webm"
+                    },
+                    {
+                        "name": "Cowboy Hat",
+                        "description": "Cowboy hat",
+                        "price": 100,
+                        "category": "Hats",
+                        "icon": "cowboy.png",
+                        "video": "elephantcowboy.webm"
+                    },
+                ]
             },
 
             {
@@ -94,7 +119,32 @@ class Command(BaseCommand):
                                " making it highly vulnerable to habitat disturbances "
                                "and environmental changes.",
                 "video": "bat.webm",
-                "cosmetics": [] # TODO
+                "cosmetics": [
+                    {
+                        "name": "Sunglasses",
+                        "description": "Vey cool sunglasses",
+                        "price": 75,
+                        "category": "Glasses",
+                        "icon": "glasses.png",
+                        "video": "batglasses.webm"
+                    },
+                    {
+                        "name": "Plant Hat",
+                        "description": "Plant hat",
+                        "price": 150,
+                        "category": "Hats",
+                        "icon": "plant.png",
+                        "video": "batplant.webm"
+                    },
+                    {
+                        "name": "Cowboy Hat",
+                        "description": "Cowboy hat",
+                        "price": 100,
+                        "category": "Hats",
+                        "icon": "cowboy.png",
+                        "video": "batcowboy.webm"
+                    },
+                ]
             },
         ]
 
