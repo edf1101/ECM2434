@@ -57,13 +57,18 @@ class Cosmetic(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.PositiveIntegerField()
     category = models.ForeignKey(CosmeticCategory, on_delete=models.PROTECT)
     fits = models.ForeignKey(PetType, on_delete=models.CASCADE, blank=True, null=True)
     icon = models.FileField(upload_to="pets/cosmetic_icons/", blank=False)
     video = models.FileField(upload_to="pets/videos/", blank=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name", "fits"], name="unique_name_fits")
+        ]
 
     def __str__(self) -> str:
         """
