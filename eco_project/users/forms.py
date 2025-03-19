@@ -137,10 +137,6 @@ class PetCreationForm(forms.ModelForm):
         if not self.cleaned_data.get("type"):
             self.add_error("type", "This field is required.")
             return False
-        
-        if not self.cleaned_data.get("email"):
-            self.add_error("email", "This field is required.")
-            return False
 
         return True
 
