@@ -146,7 +146,7 @@
 
                             <video id="petVideo" autoplay loop playsinline muted
                                    style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
-                                <source src="{{ pet.type.video.url }}" type="video/webm">
+                                <source src="{% if pet.current_cosmetic %}{{ pet.current_cosmetic.video.url }}{% else %}{{ pet.type.base_video.url }}{% endif %}" type="video/webm">
                                 Your browser does not support the video tag.
                             </video>
                         </div>

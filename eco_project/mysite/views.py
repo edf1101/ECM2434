@@ -24,7 +24,7 @@ def homepage(request: HttpRequest) -> HttpResponse:
         context = {
             "form": form,
             "profile": request.user.profile,
-            "pet": request.user.pets.first(),
+            "pet": request.user.pet,
         }
     else:
         context = {

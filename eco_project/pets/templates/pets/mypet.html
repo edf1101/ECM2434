@@ -158,7 +158,7 @@
             <div class="pet-image">
                 <video id="petVideo" autoplay loop playsinline muted
                        style="width:100%; max-width:300px; margin-bottom:10px;">
-                    <source src="{{ pet.type.video.url }}" type="video/webm">
+                    <source src="{% if pet.current_cosmetic %}{{ pet.current_cosmetic.video.url }}{% else %}{{ pet.type.base_video.url }}{% endif %}" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -200,17 +200,13 @@
         <div class="pet-accessories">
             <h2>Cosmetics</h2>
             <div class="cosmetics-grid">
-                {% for cosmetic in profile.owned_accessories.all %}
+                {% for cosmetic in profile.owned_cosmetics.all %}
                     <div class="cosmetic-card">
                         <p><strong>{{ cosmetic.name }}</strong></p>
                         <p>{{ cosmetic.description }}</p>
-                        {% if cosmetic.image %}
-                            <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
-                        {% else %}
-                            <img src="{% static 'media/demoAccessory.png' %}" alt="Demo Accessory">
-                        {% endif %}
+                        <img src="{{ cosmetic.icon.url }}" alt="{{ cosmetic.name }}">
 
-                        {% if cosmetic in pet.cosmetics.all %}
+                        {% if cosmetic == pet.current_cosmetic %}
                             <form method="post" action="{% url 'pets:equip_cosmetic' cosmetic.id 0 %}">
                                 {% csrf_token %}
                                 <button type="submit" class="remove-btn">Remove</button>

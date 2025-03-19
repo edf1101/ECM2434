@@ -120,7 +120,7 @@ def profile_view(request, username) -> HttpResponse:
     # only take most recent 10
     user_feature_reaches = user_feature_reaches.order_by("-reached_at")[:10]
 
-    pet = user.pets.first()  # assumes user only has one pet for sprint 1
+    pet = user.pet
     # if there is no pet fill this in with a default pet
     if not pet:
         pet = {

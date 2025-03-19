@@ -25,7 +25,7 @@ def get_pet_data(request, username) -> JsonResponse:
     except User.DoesNotExist:
         return JsonResponse({"error": "User not found."}, status=404)
 
-    pet = target_user.pets.first()  # For sprint 1 users will only have 1 pet
+    pet = target_user.pet
     if not pet:
         return JsonResponse(
             {"error": "No pet found for this user."}, status=404)

@@ -106,7 +106,7 @@ class Command(BaseCommand):
                 pet_type.base_image = File(f, name=pet["image"])
 
                 with open(vid, "rb") as vid_f:
-                    pet_type.video = File(vid_f, name=pet["video"])
+                    pet_type.base_video = File(vid_f, name=pet["video"])
 
                     try:
                         pet_type.save()
