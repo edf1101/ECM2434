@@ -1,157 +1,42 @@
-/* The main container for the pet bucks and points */
-.text-center {
-    text-align: center;
-}
-
-.mb-4 {
-    margin-bottom: 20px;
-}
-
-strong {
-    color: #228B22;
-}
-
-/* Styling for the spin results */
-.spin-results p {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #228B22;
-}
-
-/* Button to trigger the spin */
-button {
-    padding: 15px 30px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 5px;
-    background-color: #228B22;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:disabled {
-    background-color: #a0a0a0;
-    cursor: not-allowed;
-}
-
-button:hover {
-    background-color: #1e7e1e;
-}
-
-/* Spin container that holds the wheel */
-.spin-container {
-    margin: 30px auto;
-    position: relative;
-    width: 300px;
-    height: 300px;
-}
-
 #wheel-container {
-    margin: 30px auto;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    border: 5px solid #333;
     position: relative;
-    overflow: hidden;
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
 }
 
-svg {
-    transform-origin: center; /* Ensures the spin occurs around the center */
-    will-change: transform;
-}
-
-/* Wheel element styling */
 #wheel {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: auto;
+    border: 2px solid #333;
     border-radius: 50%;
-    background-color: #f0f0f0;
-    border: 5px solid #333;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-    transition: transform 3s ease-out;
+    display: block;
 }
 
-/* Segments within the wheel */
-.wheel-segment {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    background-color: transparent;
+#petbucks-display, #result-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+#win-message {
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform-origin: 100% 100%;
-    clip-path: polygon(100% 0%, 100% 100%, 0 100%, 0 0);
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    background: rgba(255, 215, 0, 0.9); /* golden background */
+    padding: 40px;
+    border-radius: 10px;
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    z-index: 100;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
 }
 
-/* Wheel segments with colors */
-.wheel-segment[data-result="winbig"] {
-    background-color: #4CAF50; /* Green for big win */
-}
-
-.wheel-segment[data-result="winsmall"] {
-    background-color: #FFD700; /* Yellow for small win */
-}
-
-.wheel-segment[data-result="lose"] {
-    background-color: #FF6347; /* Red for lose */
-}
-
-.wheel-segment[data-result="winbucks"] {
-    background-color: #1E90FF; /* Blue for bucks win */
-}
-
-/* Positioning segments */
-.wheel-segment:nth-child(1) {
-    transform: rotate(0deg) translate(150px) rotate(0deg);
-}
-
-.wheel-segment:nth-child(2) {
-    transform: rotate(90deg) translate(150px) rotate(-90deg);
-}
-
-.wheel-segment:nth-child(3) {
-    transform: rotate(180deg) translate(150px) rotate(-180deg);
-}
-
-.wheel-segment:nth-child(4) {
-    transform: rotate(270deg) translate(150px) rotate(-270deg);
-}
-
-/* Result message styling */
-#resultMessage {
-    margin-top: 20px;
-    font-size: 1.3em;
-    color: #228B22;
-    font-weight: bold;
-}
-
-/* Spin Result - You can add more visual feedback */
-.spin-results .winbig {
-    color: #4CAF50; /* Green */
-}
-
-.spin-results .winsmall {
-    color: #FF9800; /* Orange */
-}
-
-.spin-results .lose {
-    color: #F44336; /* Red */
-}
-
-.spin-results .winbucks {
-    color: #2196F3; /* Blue */
-}
-
-/* Adding animation for the wheel */
-@keyframes spin-animation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+#win-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
 }

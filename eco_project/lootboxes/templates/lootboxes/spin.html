@@ -1,94 +1,32 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet - Loot Box Spin{% endblock %}
-
 {% block extrahead %}
-    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <meta charset="UTF-8">
+    <title>Spinning Wheel</title>
     <link rel="stylesheet" href="{% static 'lootboxes/css/wheel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Loot Box Spin 🎉</h1>
+    <h1 style="text-align: center;">Spinning Wheel</h1>
 
-    <div class="text-center mb-4">
-        <p>Your current pet bucks: <strong>{{ profile.pet_bucks }}</strong></p>
-        <p>Your total points: <strong>{{ profile.points }}</strong></p>
+    <div id="petbucks-display">
+        Pet Bucks: <span id="petbucks">{{ pet_bucks }}</span>
     </div>
 
-    {% if messages %}
-    <div class="alert" role="alert" style="background-color: #90EE90; color: black;">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="spin-container text-center">
-        <button id="spinButton" type="button" class="btn" style="background-color: #228B22; color: white;" {% if profile.pet_bucks < 5 %} disabled {% endif %}>
-            Spin the Wheel for 5 Bucks
-        </button><br>
-        <div id="wheel-container">
-            <svg width="300" height="300" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Segment: Win Big -->
-                <path d="M50 50 L50 0 A50 50 0 0 1 100 50 Z" fill="#4CAF50" data-result="winbig">Win Big (10-50 points)</path>
-                <!-- Segment: Win Small -->
-                <path d="M50 50 L100 50 A50 50 0 0 1 50 100 Z" fill="#FFD700" data-result="winsmall">Win Small (1-10 points)</path>
-                <!-- Segment: Lose -->
-                <path d="M50 50 L50 100 A50 50 0 0 1 0 50 Z" fill="#FF6347" data-result="lose">Lose</path>
-                <!-- Segment: Win Bucks -->
-                <path d="M50 50 L0 50 A50 50 0 0 1 50 0 Z" fill="#1E90FF" data-result="winbucks">Win Bucks (6-15 bucks)</path>
-            </svg>
-        </div>
+    <div id="wheel-container">
+        <canvas id="wheel"></canvas>
     </div>
 
-    <div class="spin-results text-center mt-4">
-        {% if spin_result %}
-            <p class="result-message">🎁 You won: <strong>{{ spin_result }}</strong>! 🎉</p>
-        {% endif %}
-    </div>
+    <div id="result-message"></div>
 
-{% endblock %}
-
-{% block extra_scripts %}
+    <div id="win-message"></div>
+    {# Hold django scripting vars here so js can use them too #}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const spinButton = document.getElementById('spinButton');
-            const wheelContainer = document.getElementById('wheel-container');
-            const resultMessage = document.getElementById('resultMessage');
-
-            if (spinButton && wheelContainer) {
-                spinButton.addEventListener('click', function () {
-                    // Disable button to prevent multiple spins
-                    spinButton.disabled = true;
-
-                    // Calculate random degrees (at least 2 full spins + random angle)
-                    const randomDegrees = 720 + Math.floor(Math.random() * 360);
-                    const wheel = wheelContainer.firstElementChild;
-
-                    // Apply spinning effect
-                    wheel.style.transition = 'transform 3s ease-out';
-                    wheel.style.transform = `rotate(${randomDegrees}deg)`;
-
-                    // Determine result based on final angle
-                    setTimeout(() => {
-                        const finalRotation = randomDegrees % 360;
-                        let result;
-
-                        if (finalRotation >= 0 && finalRotation < 90) result = 'Win Big';
-                        else if (finalRotation >= 90 && finalRotation < 180) result = 'Win Small';
-                        else if (finalRotation >= 180 && finalRotation < 270) result = 'Lose';
-                        else result = 'Win Bucks';
-
-                        // Display result
-                        resultMessage.innerHTML = `🎁 You won: <strong>${result}</strong>! 🎉`;
-
-                        // Re-enable the button
-                        spinButton.disabled = false;
-                    }, 3000); // Wait for spin animation to finish
-                });
-            }
-        });
-
+        window.wheelOptions = {{ options|safe }};
+        window.spinWheelUrl = "{% url 'lootboxes:spin_wheel' %}";
     </script>
+
+    <script src="{% static 'lootboxes/js/wheel.js' %}"></script>
 {% endblock %}

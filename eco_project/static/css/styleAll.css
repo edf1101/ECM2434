@@ -419,7 +419,7 @@ main.container {
     }
 }
 
-.lootbox-link {
+.dropdown-item.lootbox-link {
     font-weight: bold;
     animation: rainbow 3s infinite, shiny 1.5s infinite alternate;
 }
