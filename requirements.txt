@@ -7,3 +7,4 @@ qrcode
 pylint
 pylint-django
 APScheduler
+django-environ

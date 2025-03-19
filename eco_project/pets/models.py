@@ -92,6 +92,7 @@ class Pet(models.Model):
 
     health = models.IntegerField(default=100,
                                  validators=[MinValueValidator(0), MaxValueValidator(100)])
+    low_health_notified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     current_cosmetic = models.ForeignKey(Cosmetic, blank=True, on_delete=PROTECT, null=True)
     owner = models.OneToOneField(
