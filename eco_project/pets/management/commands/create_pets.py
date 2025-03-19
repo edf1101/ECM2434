@@ -10,7 +10,8 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
-from pets.models import PetType, Pet
+
+from pets.models import PetType, Pet, Cosmetic, CosmeticCategory
 
 User = get_user_model()
 
@@ -31,89 +32,146 @@ class Command(BaseCommand):
         @return: None
         """
 
-        # TODO Need to do videos instead of images
+        pets = [
+            {
+                "name": "African Bush Elephant",
+                "description": "The African bush elephant (Loxodonta africana) is the largest "
+                               "land animal on Earth,  native to the savannas, grasslands, and "
+                               "forests of sub-Saharan Africa. It is by its massive size,"
+                               " wrinkled gray skin, large fan-shaped ears that help regulate body"
+                               " temperature, and long, curved tusks made of ivory.",
+                "video": "elephant.webm",
+                "cosmetics": [] # TODO
+            },
 
-        pets = [{"name": "African Bush Elephant",
-                 "description": "The African bush elephant (Loxodonta africana) is the largest "
-                                "land animal on Earth,  native to the savannas, grasslands, and "
-                                "forests of sub-Saharan Africa. It is by its massive size,"
-                                " wrinkled gray skin, large fan-shaped ears that help regulate body"
-                                " temperature, and long, curved tusks made of ivory.",
-                 "image": "elephant.png",
-                 "video": "elephant.webm",
-                 },
-
-                {"name": "Axolotl",
-                 "description": "The axolotl (Ambystoma mexicanum) is a neotenic salamander "
-                                "native to the lakes and canals of Mexico, particularly Lake "
-                                "Xochimilco. It is known for its ability to retain juvenile "
-                                "features throughout its life, including external gills, "
-                                "a wide head, and a fringed, fin-like tail, while also "
-                                "possessing remarkable regenerative capabilities that allow it to"
-                                " regrow limbs, spinal cord, and even parts of its heart "
-                                "and brain.",
-                 "image": "axolotl.png",
-                 "video": "axolotl.webm",
-                 },
-
-                {"name": "Virginia Big-Eared Bat",
-                 "description": "The Virginia big-eared bat (Corynorhinus townsendii virginianus)"
-                                " is a rare and federally protected subspecies of Townsend's "
-                                "big-eared bat, found in limestone caves and forests of the"
-                                " Appalachian region in the eastern United States. It is "
-                                "characterized by its oversized, elongated ears, soft "
-                                "brownish-gray fur, and strong fidelity to its roosting sites,"
-                                " making it highly vulnerable to habitat disturbances "
-                                "and environmental changes.",
-                 "image": "bat.png",
-                 "video": "bat.webm",
-                 },
+            {
+                "name": "Axolotl",
+                "description": "The axolotl (Ambystoma mexicanum) is a neotenic salamander "
+                               "native to the lakes and canals of Mexico, particularly Lake "
+                               "Xochimilco. It is known for its ability to retain juvenile "
+                               "features throughout its life, including external gills, "
+                               "a wide head, and a fringed, fin-like tail, while also "
+                               "possessing remarkable regenerative capabilities that allow it to"
+                               " regrow limbs, spinal cord, and even parts of its heart "
+                               "and brain.",
+                "video": "axolotl.webm",
+                "cosmetics": [
+                    {
+                        "name": "Sunglasses",
+                        "description": "Vey cool sunglasses",
+                        "price": 75,
+                        "category": "Glasses",
+                        "icon": "glasses.png",
+                        "video": "axolotlglasses.webm"
+                    },
+                    {
+                        "name": "Plant Hat",
+                        "description": "Plant hat",
+                        "price": 150,
+                        "category": "Hats",
+                        "icon": "plant.png",
+                        "video": "axolotlplant.webm"
+                    },
+                    {
+                        "name": "Cowboy Hat",
+                        "description": "Cowboy hat",
+                        "price": 100,
+                        "category": "Hats",
+                        "icon": "cowboy.png",
+                        "video": "axolotlcowboy.webm"
+                    },
                 ]
+            },
 
-        # Empty pet media directory beforehand to reduce clutter in there
-        img_folder = os.path.join(settings.MEDIA_ROOT, "pets/base_imgs")
+            {
+                "name": "Virginia Big-Eared Bat",
+                "description": "The Virginia big-eared bat (Corynorhinus townsendii virginianus)"
+                               " is a rare and federally protected subspecies of Townsend's "
+                               "big-eared bat, found in limestone caves and forests of the"
+                               " Appalachian region in the eastern United States. It is "
+                               "characterized by its oversized, elongated ears, soft "
+                               "brownish-gray fur, and strong fidelity to its roosting sites,"
+                               " making it highly vulnerable to habitat disturbances "
+                               "and environmental changes.",
+                "video": "bat.webm",
+                "cosmetics": [] # TODO
+            },
+        ]
+
+        # Empty pet media directories beforehand to reduce clutter in there
         vid_folder = os.path.join(settings.MEDIA_ROOT, "pets/videos")
-
-        # Check if the folder exists
-        if os.path.exists(img_folder):
-            # Remove everything in the folder
-            for file in os.listdir(img_folder):
-                os.remove(os.path.join(img_folder, file))
+        icon_folder = os.path.join(settings.MEDIA_ROOT, "pets/cosmetic_icons")
 
         if os.path.exists(vid_folder):
-            # Remove everything in the folder
             for file in os.listdir(vid_folder):
                 os.remove(os.path.join(vid_folder, file))
 
+        if os.path.exists(icon_folder):
+            for file in os.listdir(icon_folder):
+                os.remove(os.path.join(icon_folder, file))
+
+        # Create the pets and cosmetics from above dict
         for pet in pets:
             pet_type = PetType(
                 name=pet["name"],
                 description=pet["description"],
             )
 
-            img = os.path.join(
-                os.getcwd(),
-                "pets/management/commands/pet_images",
-                pet["image"])
-
             vid = os.path.join(
                 os.getcwd(),
-                "pets/management/commands/pet_videos",
+                "pets/management/commands/media/videos",
                 pet["video"]
             )
 
-            with open(img, "rb") as f:
-                pet_type.base_image = File(f, name=pet["image"])
+            with open(vid, "rb") as f:
+                pet_type.base_video = File(f, name=pet["video"])
 
-                with open(vid, "rb") as vid_f:
-                    pet_type.base_video = File(vid_f, name=pet["video"])
+                try:
+                    pet_type.save()
+                    self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
+                except IntegrityError as e:
+                    self.stderr.write(self.style.WARNING(
+                        f"Could not create {pet['name']}, skipping it: {str(e)}"))
 
-                    try:
-                        pet_type.save()
-                        self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
-                    except IntegrityError as e:
-                        self.stderr.write(self.style.WARNING(
-                            f"Could not create {pet['name']}, skipping it: {str(e)}"))
+            for cosmetic_data in pet["cosmetics"]:
+                cosmetic = Cosmetic(name=cosmetic_data["name"], description=cosmetic_data["description"], price=cosmetic_data["price"])
+
+                icon = os.path.join(
+                    os.getcwd(),
+                    "pets/management/commands/media/cosmetic_icons",
+                    cosmetic_data["icon"]
+                )
+
+                with open(icon, "rb") as icon_f:
+                    cosmetic.icon = File(icon_f, name=cosmetic_data["icon"])
+
+                    vid = os.path.join(
+                        os.getcwd(),
+                        "pets/management/commands/media/videos",
+                        cosmetic_data["video"]
+                    )
+
+                    with open(vid, "rb") as vid_f:
+                        cosmetic.video = File(vid_f, name=cosmetic_data["video"])
+
+                        try:
+                            category = CosmeticCategory.objects.get(name=cosmetic_data["category"])
+                        except CosmeticCategory.DoesNotExist:
+                            new_category = CosmeticCategory(name=cosmetic_data["category"])
+                            new_category.save()
+                            category = new_category
+
+                        cosmetic.category = category
+                        cosmetic.fits = PetType.objects.get(name=pet["name"])
+
+                        try:
+                            cosmetic.save()
+                            self.stderr.write(self.style.SUCCESS(f"Created {cosmetic_data['name']} for {pet['name']}"))
+                        except IntegrityError as e:
+                            self.stderr.write(self.style.WARNING(f"Could not create {cosmetic_data['name']} for {pet['name']}, skipping it: {str(e)}"))
+
+
+        # Create example user and default pet
         try:
             example_user = User.objects.create_user(username="ExampleUser", password="example")
             example_user.save()
