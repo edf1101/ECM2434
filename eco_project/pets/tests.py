@@ -12,7 +12,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from .models import PetType, CosmeticType, Cosmetic, Pet
+from .models import PetType, CosmeticCategory, Cosmetic, Pet
 
 User = get_user_model()
 
@@ -35,10 +35,9 @@ class PetTypeTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater of"
                         " Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            base_image=SimpleUploadedFile(
-                "axolotl.jpg", b"file content", content_type="image/jpeg"
-            ),
-            # dummy image (axolotl.jpg) needed
+            base_video=SimpleUploadedFile(
+                "axolotl.webm", b"file content", content_type="video/webm"
+            )
         )
         axolotl = PetType.objects.get(name="Axolotl")
         self.assertEqual(axolotl.name, "Axolotl")
@@ -47,7 +46,7 @@ class PetTypeTestCase(TestCase):
             "Critically endangered aquatic species native only to the freshwater"
             " of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
         )
-        self.assertTrue(axolotl.base_image)
+        self.assertTrue(axolotl.base_video)
 
     def tearDown(self) -> None:
         """
@@ -58,9 +57,9 @@ class PetTypeTestCase(TestCase):
         # Loop through all PetType instances and delete the file on disk if it
         # exists.
         for pet in PetType.objects.all():
-            if pet.base_image and os.path.exists(pet.base_image.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.base_image.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()
@@ -76,10 +75,9 @@ class PetTypeTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            base_image=SimpleUploadedFile(
-                "axolotl.jpg", b"file content", content_type="image/jpeg"
-            ),
-            # dummy image (axolotl.jpg) needed
+            base_video=SimpleUploadedFile(
+                "axolotl.webm", b"file content", content_type="video/webm"
+            )
         )
         axolotl = PetType.objects.get(name="Axolotl")
         self.assertEqual(str(axolotl), "Axolotl")
@@ -98,11 +96,9 @@ class CosmeticTypeTestCase(TestCase):
 
         @return: None
         """
-        CosmeticType.objects.create(name="Hat", x=5, y=20)
-        hat = CosmeticType.objects.get(name="Hat")
+        CosmeticCategory.objects.create(name="Hat")
+        hat = CosmeticCategory.objects.get(name="Hat")
         self.assertEqual(hat.name, "Hat")
-        self.assertEqual(hat.x, 5)
-        self.assertEqual(hat.y, 20)
 
     def test_cosmetic_str_method(self) -> None:
         """
@@ -110,8 +106,8 @@ class CosmeticTypeTestCase(TestCase):
 
         @return: None
         """
-        CosmeticType.objects.create(name="Hat", x=5, y=20)
-        hat = CosmeticType.objects.get(name="Hat")
+        CosmeticCategory.objects.create(name="Hat")
+        hat = CosmeticCategory.objects.get(name="Hat")
         self.assertEqual(str(hat), "Hat")
 
 
@@ -130,12 +126,11 @@ class CosmeticModelTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            base_image=SimpleUploadedFile(
-                "axolotl.jpg", b"file content", content_type="image/jpeg"
-            ),
-            # dummy image (axolotl.jpg) needed
+            base_video=SimpleUploadedFile(
+                "axolotl.webm", b"file content", content_type="video/webm"
+            )
         )
-        self.cosmetic_type = CosmeticType.objects.create(name="Hat", x=5, y=20)
+        self.cosmetic_type = CosmeticCategory.objects.create(name="Hat")
 
     def tearDown(self) -> None:
         """
@@ -145,9 +140,9 @@ class CosmeticModelTestCase(TestCase):
         """
         # Clean up any PetType image files created in setUp.
         for pet in PetType.objects.all():
-            if pet.base_image and os.path.exists(pet.base_image.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.base_image.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()
@@ -159,14 +154,13 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
+            name="Hat", description="Red stylish hat", category=self.cosmetic_type, price=10, fits=self.pet_type
         )
-        hat.fits.add(self.pet_type)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
-        self.assertEqual(hat.type, self.cosmetic_type)
+        self.assertEqual(hat.category, self.cosmetic_type)
         self.assertEqual(hat.price, 10)
-        self.assertIn(self.pet_type, hat.fits.all())
+        self.assertEqual(self.pet_type, hat.fits)
 
     def test_cosmetic_str_method(self) -> None:
         """
@@ -175,7 +169,7 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
+            name="Hat", description="Red stylish hat", category=self.cosmetic_type, price=10
         )
         self.assertEqual(str(hat.description), "Red stylish hat")
 
@@ -198,10 +192,9 @@ class PetModelTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            base_image=SimpleUploadedFile(
-                "axolotl.jpg",
-                b"file content",
-                content_type="image/jpeg"),
+            base_video=SimpleUploadedFile(
+                "axolotl.webm", b"file content", content_type="video/webm"
+            )
         )
 
     def test_pet_setup(self) -> None:
@@ -225,9 +218,9 @@ class PetModelTestCase(TestCase):
         """
         # Clean up the PetType image file created in setUp.
         for pet in PetType.objects.all():
-            if pet.base_image and os.path.exists(pet.base_image.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.base_image.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()

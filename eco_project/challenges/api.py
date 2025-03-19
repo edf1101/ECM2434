@@ -228,7 +228,7 @@ def score_quiz(request: HttpRequest) -> Response:
 
             if percentage > 80:
                 reward_health = 20
-                pet = request.user.pets.first()
+                pet = request.user.pet
                 if pet:
                     pet.health = min(pet.health + reward_health, 100)
                     pet.save()

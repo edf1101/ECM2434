@@ -10,27 +10,7 @@ import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
 
-from pets.models import Cosmetic, CosmeticType, Pet
-
-
-@login_required
-def view_pet(request) -> HttpResponse:
-    """
-    View for displaying the pet details.
-
-    @param request: HttpRequest object
-    @return: HttpResponse object
-    """
-
-    if request.user.is_authenticated and request.user.profile:
-        pet = Pet.objects.get(name="Default Pet")
-    else:
-        pet = request.user.pets.first()
-
-    return render(request, "pets/mypet.html", {
-        "pet": pet,
-        "profile": request.user.profile
-    })
+from pets.models import Cosmetic, CosmeticCategory, Pet
 
 @login_required
 def view_pet(request) -> HttpResponse:
@@ -42,7 +22,11 @@ def view_pet(request) -> HttpResponse:
     @return: HttpResponse object
     """
 
-    pet = request.user.pets.first()
+    if request.user.is_authenticated and request.user.profile:
+        pet = request.user.pet
+    else:
+        pet = Pet.objects.get(name="Default Pet")
+
     tips = [
         "Recycling one aluminum can saves enough energy to power a laptop for an hour!",
         "Planting trees helps absorb CO₂ and support biodiversity—every tree counts!",
@@ -50,13 +34,18 @@ def view_pet(request) -> HttpResponse:
         "Turn off lights and unplug electronics to save energy.",
         "Reuse and recycle to conserve natural resources and reduce waste."
     ]
+
     # uses the day of the year to choose a tip
     day_of_year = datetime.datetime.now().timetuple().tm_yday
     sustainability_tip = tips[day_of_year % len(tips)]
+
     context = {
         "pet": pet,
+        "profile": request.user.profile,
         "sustainability_tip": sustainability_tip,
+
     }
+
     return render(request, "pets/mypet.html", context)
 
 
@@ -73,28 +62,25 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
 
     cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
     profile = request.user.profile
-    pet: Pet = request.user.pets.first()
+    pet: Pet = request.user.pet
 
-    if cosmetic not in profile.owned_accessories.all():
+    if cosmetic not in profile.owned_cosmetics.all():
         messages.error(request, "You do not own this cosmetic.")
         return redirect('pets:mypet')
 
+    if cosmetic.fits != pet.type:
+        messages.error(request, "This cosmetic does not fit your pet.")
+        return redirect('pets:mypet')
+
     if equip:
-        if cosmetic in pet.cosmetics.all():
+        if cosmetic == pet.current_cosmetic:
             messages.info(request, "This cosmetic is already equipped.")
         else:
-            cosmetic_type: CosmeticType = cosmetic.type
-
-            # Remove all other cosmetics of the same type (a pet can only wear one hat, etc.)
-            for other in pet.cosmetics.all():
-                if other.type == cosmetic_type:
-                    pet.cosmetics.remove(other)
-
-            pet.cosmetics.add(cosmetic)
+            pet.current_cosmetic = cosmetic
             messages.success(request, f"{cosmetic.name} has been equipped.")
     else:
-        if cosmetic in pet.cosmetics.all():
-            pet.cosmetics.remove(cosmetic)
+        if cosmetic == pet.current_cosmetic:
+            pet.current_cosmetic = None
             messages.success(request, f"{cosmetic.name} has been removed.")
         else:
             messages.info(request, "This cosmetic is not equipped.")
@@ -114,18 +100,18 @@ def shop(request) -> HttpResponse:
     """
 
     all_cosmetics = Cosmetic.objects.all()
-    cosmetic_types = CosmeticType.objects.all()
+    cosmetic_types = CosmeticCategory.objects.all()
 
     # Create dictionary of categories (including 'All') and the cosmetics in that category
-    categories = [{'name': 'All', 'cosmetics': all_cosmetics}]
+    categories = [{'name': 'All', 'cosmetics': [c for c in  all_cosmetics if c.fits == request.user.pet.type]}]
     categories += [
-        {'name': category.name, 'cosmetics': category.cosmetic_set.all()}
+        {'name': category.name, 'cosmetics': [c for c in  category.cosmetic_set.all() if c.fits == request.user.pet.type]}
         for category in cosmetic_types
     ]
 
     return render(request, "pets/shop.html", {
         "profile": request.user.profile,
-        "pet": request.user.pets.first(),
+        "pet": request.user.pet,
         "categories": categories,
     })
 
@@ -139,10 +125,11 @@ def buy_cosmetic(request, cosmetic_id: int):
     @param cosmetic_id: The ID of the cosmetic to buy
     @return: Redirects to shop
     """
+
     cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
     profile = request.user.profile
 
-    if cosmetic in profile.owned_accessories.all():
+    if cosmetic in profile.owned_cosmetics.all():
         messages.error(request, "You already own this cosmetic.")
         return redirect('pets:shop')
 
@@ -151,13 +138,8 @@ def buy_cosmetic(request, cosmetic_id: int):
         return redirect('pets:shop')
 
     profile.pet_bucks -= cosmetic.price
-    profile.owned_accessories.add(cosmetic)
+    profile.owned_cosmetics.add(cosmetic)
     profile.save()
 
     messages.success(request, f"You have successfully purchased {cosmetic.name}.")
     return redirect('pets:shop')
-
-@login_required
-def home(request):
-    pet = request.user.pets.first()
-    return render(request, "home.html", {"pet": pet})

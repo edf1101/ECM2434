@@ -29,7 +29,7 @@ class Profile(models.Model):
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
 
-    owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
+    owned_cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
     friends = models.ManyToManyField("self", symmetrical=False, blank=True)
 

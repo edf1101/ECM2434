@@ -153,8 +153,9 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     user.profile.points += points_for_feature
     user.profile.save()
     reward_health = 20
-    pet = user.pets.first()
-    if pet:
+
+    if hasattr(user.profile, "pet"):
+        pet = user.profile.pet
         pet.health = min(pet.health + reward_health, 100)
         pet.save()
 
