@@ -68,6 +68,10 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
         messages.error(request, "You do not own this cosmetic.")
         return redirect('pets:mypet')
 
+    if cosmetic.fits != pet.type:
+        messages.error(request, "This cosmetic does not fit your pet.")
+        return redirect('pets:mypet')
+
     if equip:
         if cosmetic == pet.current_cosmetic:
             messages.info(request, "This cosmetic is already equipped.")
@@ -99,9 +103,9 @@ def shop(request) -> HttpResponse:
     cosmetic_types = CosmeticCategory.objects.all()
 
     # Create dictionary of categories (including 'All') and the cosmetics in that category
-    categories = [{'name': 'All', 'cosmetics': all_cosmetics}]
+    categories = [{'name': 'All', 'cosmetics': [c for c in  all_cosmetics if c.fits == request.user.pet.type]}]
     categories += [
-        {'name': category.name, 'cosmetics': category.cosmetic_set.all()}
+        {'name': category.name, 'cosmetics': [c for c in  category.cosmetic_set.all() if c.fits == request.user.pet.type]}
         for category in cosmetic_types
     ]
 

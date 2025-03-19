@@ -148,18 +148,6 @@ class Command(BaseCommand):
             },
         ]
 
-        # Empty pet media directories beforehand to reduce clutter in there
-        vid_folder = os.path.join(settings.MEDIA_ROOT, "pets/videos")
-        icon_folder = os.path.join(settings.MEDIA_ROOT, "pets/cosmetic_icons")
-
-        if os.path.exists(vid_folder):
-            for file in os.listdir(vid_folder):
-                os.remove(os.path.join(vid_folder, file))
-
-        if os.path.exists(icon_folder):
-            for file in os.listdir(icon_folder):
-                os.remove(os.path.join(icon_folder, file))
-
         # Create the pets and cosmetics from above dict
         for pet in pets:
             pet_type = PetType(
