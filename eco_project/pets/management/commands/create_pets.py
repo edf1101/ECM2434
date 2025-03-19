@@ -4,11 +4,15 @@ This module is a Django management command that creates some pet types in the da
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
-from pets.models import PetType
+from pets.models import PetType, Pet
+
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -26,6 +30,8 @@ class Command(BaseCommand):
         @param kwargs: None expected
         @return: None
         """
+
+        # TODO Need to do videos instead of images
 
         pets = [{"name": "African Bush Elephant",
                  "description": "The African bush elephant (Loxodonta africana) is the largest "
@@ -98,11 +104,24 @@ class Command(BaseCommand):
 
             with open(img, "rb") as f:
                 pet_type.base_image = File(f, name=pet["image"])
+
                 with open(vid, "rb") as vid_f:
                     pet_type.video = File(vid_f, name=pet["video"])
+
                     try:
                         pet_type.save()
                         self.stderr.write(self.style.SUCCESS(f"Created {pet['name']}"))
                     except IntegrityError as e:
                         self.stderr.write(self.style.WARNING(
                             f"Could not create {pet['name']}, skipping it: {str(e)}"))
+        try:
+            example_user = User.objects.create_user(username="ExampleUser", password="example")
+            example_user.save()
+
+            default_pet = Pet(name="Default Pet", type=PetType.objects.first())
+            default_pet.owner = example_user
+            default_pet.save()
+
+            self.stderr.write(self.style.SUCCESS(f"Created default pet and user"))
+        except IntegrityError as e:
+            self.stderr.write(self.style.WARNING(f"Could not create default pet or user: {str(e)}"))

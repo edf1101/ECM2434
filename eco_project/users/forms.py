@@ -21,6 +21,11 @@ class UserCreationFormWithNames(UserCreationForm):
     and last name.
     """
 
+    email = forms.EmailField(
+        max_length=254,
+        required=True,
+        help_text="Required. Enter a valid email address.")
+
     first_name = forms.CharField(
         max_length=30,
         required=True,
@@ -38,6 +43,7 @@ class UserCreationFormWithNames(UserCreationForm):
         model = User
         fields = (
             "username",
+            "email",
             "first_name",
             "last_name",
             "password1",
@@ -130,6 +136,10 @@ class PetCreationForm(forms.ModelForm):
         # if type is empty then its invalid
         if not self.cleaned_data.get("type"):
             self.add_error("type", "This field is required.")
+            return False
+        
+        if not self.cleaned_data.get("email"):
+            self.add_error("email", "This field is required.")
             return False
 
         return True

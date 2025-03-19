@@ -6,6 +6,7 @@ This module contains the views for the pets app.
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -21,10 +22,43 @@ def view_pet(request) -> HttpResponse:
     @return: HttpResponse object
     """
 
+    if request.user.is_authenticated and request.user.profile:
+        pet = Pet.objects.get(name="Default Pet")
+    else:
+        pet = request.user.pets.first()
+
     return render(request, "pets/mypet.html", {
-        "pet": request.user.pets.first(),
+        "pet": pet,
         "profile": request.user.profile
     })
+
+@login_required
+def view_pet(request) -> HttpResponse:
+
+    """
+    View for displaying the pet details
+
+    @param request: HttpRequest object
+    @return: HttpResponse object
+    """
+
+    pet = request.user.pets.first()
+    tips = [
+        "Recycling one aluminum can saves enough energy to power a laptop for an hour!",
+        "Planting trees helps absorb CO₂ and support biodiversity—every tree counts!",
+        "Using public transport or biking reduces your carbon footprint.",
+        "Turn off lights and unplug electronics to save energy.",
+        "Reuse and recycle to conserve natural resources and reduce waste."
+    ]
+    # uses the day of the year to choose a tip
+    day_of_year = datetime.datetime.now().timetuple().tm_yday
+    sustainability_tip = tips[day_of_year % len(tips)]
+    context = {
+        "pet": pet,
+        "sustainability_tip": sustainability_tip,
+    }
+    return render(request, "pets/mypet.html", context)
+
 
 @login_required
 def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:

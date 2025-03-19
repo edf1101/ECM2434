@@ -21,55 +21,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     {% block extrahead %}{% endblock %} <!-- extra head block for additional code here -->
 
-    <style>
-        #qr-scanner-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #qr-video {
-            max-width: 100%;
-            max-height: 80vh;
-            border: 3px solid white;
-            border-radius: 10px;
-        }
-
-        #qr-scanner-close {
-            color: white;
-            font-size: 2rem;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        @keyframes rainbow {
-            0% { color: red; }
-            14% { color: orange; }
-            28% { color: yellow; }
-            42% { color: green; }
-            57% { color: blue; }
-            71% { color: indigo; }
-            85% { color: violet; }
-            100% { color: red; }
-        }
-
-        @keyframes shiny {
-            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff0000, 0 0 20px #ff0000, 0 0 25px #ff0000; }
-            100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff7300, 0 0 20px #ff7300, 0 0 25px #ff7300; }
-        }
-
-        .lootbox-link {
-            font-weight: bold;
-            animation: rainbow 3s infinite, shiny 1.5s infinite alternate;
-        }
-    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -130,19 +81,33 @@
                         <a class="nav-link" href="{% url 'pets:mypet' %}">Your Pet</a>
                     </li>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link lootbox-link" href="http://127.0.0.1:8000/lootboxes/spin/">Lootboxes</a>
-                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="qrScannerIcon">
                         <i class="bi bi-qr-code-scan"></i>
                     </a>
                 </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-bag"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+
+                        <li>
+                            <a class="dropdown-item" href="{% url 'pets:shop' %}">Pet Shop</a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item lootbox-link"
+                               href="{% url 'lootboxes:spin_lootbox' %}">Lootboxes</a>
+                        </li>
+
+                    </ul>
+                </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -178,7 +143,7 @@
                                 <a class="dropdown-item"
                                    href="{% url 'users:group_home' %}">Groups</a>
                             </li>
-                      
+
                             <li>
                                 <a class="dropdown-item" href="{% url 'stories:home' %}">PetReal</a>
                             </li>
@@ -213,11 +178,12 @@
                         </li>
                     </ul>
                 </li>
+
+
             </ul>
         </div>
     </div>
 </nav>
-
 
 
 <main class="container my-4 flex-grow-1">
@@ -263,54 +229,55 @@
     //Dark Mode Listener
     document.addEventListener("DOMContentLoaded", function () {
 
-    const toggle = document.getElementById("dark-mode-toggle");
-    const body = document.body;
+        const toggle = document.getElementById("dark-mode-toggle");
+        const body = document.body;
 
-    const isDarkMode = localStorage.getItem("theme") === "dark";
-    body.classList.toggle("dark-mode", isDarkMode);
-    toggle.checked = isDarkMode; // Sync switch position
+        const isDarkMode = localStorage.getItem("theme") === "dark";
+        body.classList.toggle("dark-mode", isDarkMode);
+        toggle.checked = isDarkMode; // Sync switch position
 
-    toggle.addEventListener("change", function () {
-        const darkModeEnabled = toggle.checked;
-        body.classList.toggle("dark-mode", darkModeEnabled);
-        localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const qrScannerIcon = document.getElementById('qrScannerIcon');
-    const qrScannerOverlay = document.getElementById('qr-scanner-overlay');
-    const qrVideo = document.getElementById('qr-video');
-    const qrScannerClose = document.getElementById('qr-scanner-close');
-    const qrFileInput = document.getElementById('qrFileInput');
-
-    // QR Code Validation Function
-    function sendQRToServer(qrString) {
-        console.log("Sending QR code:", qrString);
-        fetch("{% url 'locations:validate_qr' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({qr_code: qrString})
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                return response.json().then(data => {
-                    console.log("Server response:", data);
-                    alert(data.message || 'Invalid QR code');
-                });
-            }
-        })
-        .catch(error => {
-            console.error('QR validation error:', error);
-            alert('Error validating QR code: ' + error.message);
-
+        toggle.addEventListener("change", function () {
+            const darkModeEnabled = toggle.checked;
+            body.classList.toggle("dark-mode", darkModeEnabled);
+            localStorage.setItem("theme", darkModeEnabled ? "dark" : "light");
         });
-    }});
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const qrScannerIcon = document.getElementById('qrScannerIcon');
+        const qrScannerOverlay = document.getElementById('qr-scanner-overlay');
+        const qrVideo = document.getElementById('qr-video');
+        const qrScannerClose = document.getElementById('qr-scanner-close');
+        const qrFileInput = document.getElementById('qrFileInput');
+
+        // QR Code Validation Function
+        function sendQRToServer(qrString) {
+            console.log("Sending QR code:", qrString);
+            fetch("{% url 'locations:validate_qr' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({qr_code: qrString})
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json().then(data => {
+                            console.log("Server response:", data);
+                            alert(data.message || 'Invalid QR code');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('QR validation error:', error);
+                    alert('Error validating QR code: ' + error.message);
+
+                });
+        }
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         const qrScannerIcon = document.getElementById('qrScannerIcon');

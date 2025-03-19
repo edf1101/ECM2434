@@ -1,38 +1,54 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import LootBox
-from django.http import JsonResponse
+"""
+This module contains the views for the lootboxes app.
+"""
+
+import random
+from django.shortcuts import render
+from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.views.decorators.http import require_POST
+
+from .spinner import handle_result, WHEEL_OPTIONS, OPTION_PROBABILITIES
 
 
-#@login_required
-#def spin_lootbox(request):
-#    try:
-#        lootbox = request.user.lootbox
-#    except LootBox.DoesNotExist:
-#        lootbox = LootBox.objects.create(user=request.user)  # Initialize LootBox for user if not exists
+def wheel_view(request: HttpRequest) -> HttpResponse:
+    """
+    Renders the actual spinning wheel page.
 
-#    if request.method == "POST":
-#        try:
-#            result = lootbox.spin()  # Spin the lootbox wheel and update points
-#            messages.success(request, result)
-#        except ValueError as e:
-#            messages.error(request, str(e))
+    @param request: The HTTP request object.
+    @return: The HTTP response object.
+    """
+    return render(
+        request,
+        'lootboxes/spin.html',
+        context={
+            'options': WHEEL_OPTIONS,
+            'pet_bucks': request.user.profile.pet_bucks
+        }
+    )
 
-#    return render(request, "lootboxes/spin.html", {"lootbox": lootbox, "profile": request.user.profile})
 
-def spin_lootbox(request):
-    profile = request.user.profile
-    if request.method == "POST":
-        try:
-            # Access the user's lootbox instance
-            lootbox = request.user.lootbox
-            result = lootbox.spin()  # Call the spin method to perform the spin logic
-            return JsonResponse({'result': result})
-        except ValueError as e:
-            # In case of an error (e.g., not enough bucks), send the error as a response
-            # messages.error(request, str(e))
-            return JsonResponse({'result': str(e)}, status=400)
-    return render(request, 'lootboxes/spin.html', {
-        'profile': profile,
+@require_POST
+def spin_wheel(request: HttpRequest) -> JsonResponse:
+    """
+    API endpoint that returns the result of spinning the wheel, or an error if the user cant
+    afford to spin the wheel.
+
+    @param request: The HTTP request object.
+    @return: The JSON response object.
+    """
+
+    if request.user.profile.pet_bucks < 5:  # Check if the user can afford it
+        return JsonResponse({'error': "Insufficient pet bucks."}, status=400)
+
+    request.user.profile.pet_bucks -= 5  # pay the fee
+    request.user.profile.save()
+
+    # Choose a result
+    result = random.choices(WHEEL_OPTIONS, weights=OPTION_PROBABILITIES, k=1)[0]
+    handle_result(result, request.user)  # Handle the result
+
+    return JsonResponse({
+        'result': result,
+        'options': WHEEL_OPTIONS,
+        'pet_bucks': request.user.profile.pet_bucks
     })

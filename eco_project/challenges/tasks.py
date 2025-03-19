@@ -8,8 +8,9 @@ from datetime import timedelta
 from django.utils import timezone
 from django.apps import apps
 
-from .models import Streak, get_current_window, UserFeatureReach
+from .models import Streak, get_current_window, UserFeatureReach,ChallengeSettings
 from .challenge_helpers import get_interval
+from pets.models import Pet
 
 
 def update_challenges() -> None:
@@ -69,14 +70,15 @@ def update_pet_health() -> None:
     @return: None
     """
 
-    pet_model = apps.get_model('pets', 'Pet')
-    now = timezone.now()
-    time_threshold = now - timedelta(days=1)  # Set to 1 day; adjust as needed
+    settings = ChallengeSettings.get_solo()
+    elapsed = timezone.now() - settings.last_health_depreciation
 
-    pets = pet_model.objects.filter(created_at__lte=time_threshold)
-    for pet in pets:
-        # Calculate new health by reducing current health by 5%
-        new_health = int(pet.health * 0.95)
-        # Ensure the health doesn't go below 0
-        pet.health = max(0, new_health)
-        pet.save()
+    if elapsed > settings.health_depreciation_interval:
+        print("Updating pet health")
+        for pet in Pet.objects.all():
+            pet.health = max(0, pet.health - settings.health_depreciation_amount)
+            pet.save(update_fields=["health"])
+
+        # Update the last depreciation time to now
+        settings.last_health_depreciation = timezone.now()
+        settings.save(update_fields=["last_health_depreciation"])

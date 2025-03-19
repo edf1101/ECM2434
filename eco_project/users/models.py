@@ -12,8 +12,6 @@ from django.utils import timezone
 
 from pets.models import Cosmetic
 
-from pets.models import Cosmetic
-
 User = get_user_model()
 
 
