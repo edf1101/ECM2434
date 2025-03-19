@@ -11,6 +11,8 @@
           rel="stylesheet"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <link rel="stylesheet"
+          href= {% static 'css/background.css' %}>
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
@@ -23,7 +25,30 @@
 
 </head>
 <body class="d-flex flex-column min-vh-100">
+<div id="background-animations"
+     style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;">
+    <div class="leaf-background">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 5%; animation-delay: 0s; animation-duration: 4s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 20%; animation-delay: 1s; animation-duration: 5s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 35%; animation-delay: 2s; animation-duration: 6s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 50%; animation-delay: 1.5s; animation-duration: 4s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 65%; animation-delay: 2s; animation-duration: 5s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 80%; animation-delay: 2.5s; animation-duration: 6s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 90%; animation-delay: 1s; animation-duration: 5s;">
+    </div>
 
+    <div class="bee-container">
+        <img src="{% static 'media/flying_bee.gif' %}" class="flying-bee"
+             style="animation-delay: 0s; animation-duration: 40s;">
+    </div>
+</div>
 {% block topBar %}
     <nav class="navbar navbar-dark bg-dark py-2">
         <div class="container-fluid">

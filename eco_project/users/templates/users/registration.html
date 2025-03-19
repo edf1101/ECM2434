@@ -18,157 +18,51 @@
     <script type="module" src="{% static 'locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'updateChallenges.js' %}"></script>
 
-    <style>
-        .form-submit {
-            margin-top: 20px;
-            background-color: #8fbc8f;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            transition: background-color 0.3s ease;
-        }
-        .form-submit:hover {
-            background-color: #66cdaa;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-150px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh) rotate(360deg);
-                opacity: 0.5;
-            }
-        }
-
-        .leaf-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .falling-leaf {
-            position: absolute;
-            top: -150px; 
-            width: 40px; 
-            animation: fall linear infinite;
-            pointer-events: auto; 
-            cursor: pointer;
-        }
-
-        @keyframes beeWander {
-            0% {
-                left: 5%;
-                top: 10%;
-                transform: translateY(0);
-            }
-            20% {
-                left: 80%;
-                top: 20%;
-                transform: translateY(-10px);
-            }
-            40% {
-                left: 60%;
-                top: 70%;
-                transform: translateY(10px);
-            }
-            60% {
-                left: 20%;
-                top: 80%;
-                transform: translateY(0);
-            }
-            80% {
-                left: 40%;
-                top: 30%;
-                transform: translateY(10px);
-            }
-            100% {
-                left: 5%;
-                top: 10%;
-                transform: translateY(0);
-            }
-        }
-
-        .bee-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .flying-bee {
-            position: absolute;
-            width: 190px; 
-            animation: beeWander linear infinite;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
 
-<div class="leaf-background">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 5%; animation-delay: 0s; animation-duration: 6s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 20%; animation-delay: 2s; animation-duration: 7s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 35%; animation-delay: 4s; animation-duration: 8s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 50%; animation-delay: 1s; animation-duration: 6s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 65%; animation-delay: 3s; animation-duration: 7s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 80%; animation-delay: 5s; animation-duration: 8s;">
-    <img src="{% static 'media/leaf.png' %}" class="falling-leaf" style="left: 90%; animation-delay: 2s; animation-duration: 7s;">
-</div>
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; position: relative; z-index: 1;">
+        <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
+            <h1 style="text-align: center; color: white;">Register a New User</h1>
+            <form class="form-with-validation" action="{% url 'users:registration' %}"
+                  method="post">
+                {% csrf_token %}
 
-<div class="bee-container">
-    <img src="{% static 'media/flying_bee.gif' %}" class="flying-bee" style="animation-delay: 0s; animation-duration: 40s;">
-</div>
+                <h2>Create your Account</h2>
+                {% for field in form.user_form %}
+                    <div class="form-group">
+                        <label style="color: white;">{{ field.label_tag }}</label><br>
+                        {{ field }}<br>
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="error" style="color: red;">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small style="color: white;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; position: relative; z-index: 1;">
-    <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
-        <h1 style="text-align: center; color: white;">Register a New User</h1>
-        <form class="form-with-validation" action="{% url 'users:registration' %}" method="post">
-            {% csrf_token %}
-
-            <h2>Create your Account</h2>
-            {% for field in form.user_form %}
-              <div class="form-group">
-                  <label style="color: white;">{{ field.label_tag }}</label><br>
-                  {{ field }}<br>
-                  {% if field.errors %}
-                      {% for error in field.errors %}
-                          <p class="error" style="color: red;">{{ error }}</p>
-                      {% endfor %}
-                  {% endif %}
-                  {% if field.help_text %}
-                      <small style="color: white;">{{ field.help_text }}</small>
-                  {% endif %}
-              </div>
-            {% endfor %}
-
-            <h2>Choose your Pet</h2>
-            {% for field in form.pet_form %}
-              <div class="form-group">
-                  <label style="color: white;">{{ field.label_tag }}</label><br>
-                  {{ field }}<br>
-                  {% if field.errors %}
-                      {% for error in field.errors %}
-                          <p class="error" style="color: red;">{{ error }}</p>
-                      {% endfor %}
-                  {% endif %}
-                  {% if field.help_text %}
-                      <small style="color: white;">{{ field.help_text }}</small>
-                  {% endif %}
-              </div>
-            {% endfor %}
-            <button class="form-submit" type="submit">Submit</button>
-        </form>
+                <h2>Choose your Pet</h2>
+                {% for field in form.pet_form %}
+                    <div class="form-group">
+                        <label style="color: white;">{{ field.label_tag }}</label><br>
+                        {{ field }}<br>
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="error" style="color: red;">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small style="color: white;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="form-submit" type="submit">Submit</button>
+            </form>
+        </div>
     </div>
-</div>
 
 {% endblock %}
