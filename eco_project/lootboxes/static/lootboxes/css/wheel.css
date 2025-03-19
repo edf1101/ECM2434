@@ -1,0 +1,42 @@
+#wheel-container {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+}
+
+#wheel {
+    width: 100%;
+    height: auto;
+    border: 2px solid #333;
+    border-radius: 50%;
+    display: block;
+}
+
+#petbucks-display, #result-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+#win-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    background: rgba(255, 215, 0, 0.9); /* golden background */
+    padding: 40px;
+    border-radius: 10px;
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    z-index: 100;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+#win-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}

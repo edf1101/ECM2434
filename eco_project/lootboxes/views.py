@@ -1,32 +1,54 @@
 """
 This module contains the views for the lootboxes app.
 """
+
+import random
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import LootBox
+from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.views.decorators.http import require_POST
+
+from .spinner import handle_result, WHEEL_OPTIONS, OPTION_PROBABILITIES
 
 
-@login_required
-def spin_lootbox(request):
+def wheel_view(request: HttpRequest) -> HttpResponse:
     """
-    This function handles the spinning of the lootbox wheel.
+    Renders the actual spinning wheel page.
 
-    :param request: The request object.
-    :return: A response object.
+    @param request: The HTTP request object.
+    @return: The HTTP response object.
     """
-    try:
-        lootbox = request.user.lootbox
-    except LootBox.DoesNotExist:
-        # Initialize LootBox for user if not exists
-        lootbox = LootBox.objects.create(user=request.user)
+    return render(
+        request,
+        'lootboxes/spin.html',
+        context={
+            'options': WHEEL_OPTIONS,
+            'pet_bucks': request.user.profile.pet_bucks
+        }
+    )
 
-    if request.method == "POST":
-        try:
-            result = lootbox.spin()  # Spin the lootbox wheel and update points
-            messages.success(request, result)
-        except ValueError as e:
-            messages.error(request, str(e))
 
-    return render(request, "lootboxes/spin.html",
-                  {"lootbox": lootbox, "profile": request.user.profile})
+@require_POST
+def spin_wheel(request: HttpRequest) -> JsonResponse:
+    """
+    API endpoint that returns the result of spinning the wheel, or an error if the user cant
+    afford to spin the wheel.
+
+    @param request: The HTTP request object.
+    @return: The JSON response object.
+    """
+
+    if request.user.profile.pet_bucks < 5:  # Check if the user can afford it
+        return JsonResponse({'error': "Insufficient pet bucks."}, status=400)
+
+    request.user.profile.pet_bucks -= 5  # pay the fee
+    request.user.profile.save()
+
+    # Choose a result
+    result = random.choices(WHEEL_OPTIONS, weights=OPTION_PROBABILITIES, k=1)[0]
+    handle_result(result, request.user)  # Handle the result
+
+    return JsonResponse({
+        'result': result,
+        'options': WHEEL_OPTIONS,
+        'pet_bucks': request.user.profile.pet_bucks
+    })

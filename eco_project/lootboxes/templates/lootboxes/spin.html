@@ -1,39 +1,32 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet - Loot Box Spin{% endblock %}
-
 {% block extrahead %}
+    <meta charset="UTF-8">
+    <title>Spinning Wheel</title>
+    <link rel="stylesheet" href="{% static 'lootboxes/css/wheel.css' %}">
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
-    <link rel="stylesheet" href="{% static 'spin/css/spin.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Loot Box Spin 🎉</h1>
+    <h1 style="text-align: center;">Spinning Wheel</h1>
 
-    <div class="text-center mb-4">
-        <p>Your current pet bucks: <strong>{{ profile.pet_bucks }}</strong></p>
+    <div id="petbucks-display">
+        Pet Bucks: <span id="petbucks">{{ pet_bucks }}</span>
     </div>
 
-    {% if messages %}
-        <div class="alert" role="alert" style="background-color: #90EE90; color: black;">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <div class="spin-container text-center">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn" style="background-color: #228B22; color: white;">Spin the Wheel for 5 Bucks</button>
-        </form>
+    <div id="wheel-container">
+        <canvas id="wheel"></canvas>
     </div>
 
+    <div id="result-message"></div>
 
-    <div class="spin-results text-center mt-4">
-        {% if spin_result %}
-            <p class="result-message">🎁 You won: <strong>{{ spin_result }}</strong>! 🎉</p>
-        {% endif %}
-    </div>
+    <div id="win-message"></div>
+    {# Hold django scripting vars here so js can use them too #}
+    <script>
+        window.wheelOptions = {{ options|safe }};
+        window.spinWheelUrl = "{% url 'lootboxes:spin_wheel' %}";
+    </script>
+
+    <script src="{% static 'lootboxes/js/wheel.js' %}"></script>
 {% endblock %}
