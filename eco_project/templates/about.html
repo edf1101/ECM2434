@@ -5,35 +5,164 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+    <style>
+        .interactive-info {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 2px solid #28963D;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .interactive-info .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .interactive-info .tab-button {
+            background: #fff;
+            border: 2px solid #28963D;
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .interactive-info .tab-button.active,
+        .interactive-info .tab-button:hover {
+            background: #8fbc8f;
+            transform: scale(1.05);
+        }
+        .interactive-info .tab-content {
+            display: none;
+            animation: fadeIn 1s;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .interactive-info .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .challenge-btn {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1.3em;
+            border: 2px solid #28963D;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: pulse 2s infinite;
+            text-decoration: none;
+            color: #000;
+            white-space: nowrap;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animated-heading {
+            font-size: 2.5em;
+            animation: bounceIn 1.5s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            80% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .animated-subheading {
+            font-size: 1.3em;
+            animation: fadeInUp 1.5s ease-out;
+            margin-bottom: 20px;
+        }
+        @keyframes fadeInUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animated-title {
+            font-size: 2em;
+            margin-top: 40px;
+            animation: slideIn 1.5s ease-out;
+        }
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        .animated-description {
+            font-size: 1.1em;
+            animation: popIn 1.2s ease-out;
+            margin: 10px 0;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <div class="container my-4">
         <div class="row text-center">
             <div class="col-12">
-                <h1>About EcoPet!</h1>
-                <p>Welcome to EcoPet! We want to help you explore the University of Exeter campus
+                <h1 class="animated-heading">About EcoPet</h1>
+                <p class="animated-subheading">Welcome to EcoPet! We want to help you explore the University of Exeter campus
                     while keeping your pet happy and healthy.</p>
             </div>
         </div>
         <div class="row align-items-center my-4">
             <div class="col-md-6">
-                <img src="{% static 'media/mapImage.jpg' %}" alt="About EcoPet"
-                     class="img-fluid rounded">
+                <img src="{% static 'media/mapImage.jpg' %}" alt="About EcoPet" class="img-fluid rounded">
             </div>
             <div class="col-md-6">
-                <p>
+                <p class="animated-description">
                     EcoPet is a platform designed to help pet owners discover new locations,
                     challenges, and connect with your community.
                     You can scan QR codes at sustainable locations around the campus to score points
                     for your pet so you can keep them happy
                     and earn them points!
                 </p>
-                <p>
+                <p class="animated-description">
                     Points are spendable in the item shop so you can show off your pet to your
                     friends and other users.
                 </p>
             </div>
         </div>
+        <div class="interactive-info">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="how-to-play">How to Play</button>
+                <button class="tab-button" data-tab="our-story">Our Story</button>
+            </div>
+            <div class="tab-content active" id="how-to-play">
+                <p class="animated-description">
+                    Embark on campus quests! Scan the QR codes, complete fun challenges, and rack up points to boost your pet's skills and style. Rally your friends and claim your title as the ultimate EcoPet master!
+                </p>
+            </div>
+            <div class="tab-content" id="our-story">
+                <p class="animated-description">
+                    EcoPet was born from the idea that exploring campus should be an adventure. We combine sustainability with gaming to create an engaging, interactive experience that rewards curiosity and eco-friendly behavior.
+                </p>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="{% url 'challenges:home' %}" class="challenge-btn">Ready for a Challenge?</a>
+        </div>
     </div>
+    <script>
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+            });
+        });
+    </script>
 {% endblock %}
