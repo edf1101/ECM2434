@@ -18,7 +18,7 @@
     }
     .friends-lobby {
         max-width: 1200px;
-        margin: 40px auto;
+        margin: auto;
         padding: 30px;
         border: 3px solid #28963D;
         border-radius: 20px;
@@ -36,6 +36,7 @@
         position: relative;
         overflow: hidden;
         animation: slideIn 1s ease-out;
+        margin-bottom: 20px;
     }
     .section:hover {
         transform: scale(1.02);
@@ -142,10 +143,14 @@
         transform: scale(1.1);
     }
     .search-form {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-bottom: 20px;
         text-align: center;
     }
     .search-form input[type="text"] {
+        flex-grow: 1;
         width: 70%;
         padding: 10px;
         border: 2px solid #28963D;
@@ -154,6 +159,7 @@
         font-size: 1.1em;
     }
     .search-form button {
+        width: 100%;
         padding: 10px 20px;
         font-size: 1.1em;
         border: 2px solid #28963D;
@@ -162,6 +168,7 @@
         color: #fff;
         cursor: pointer;
         transition: transform 0.3s;
+        align-items: center;
     }
     .search-form button:hover {
         transform: scale(1.05);
@@ -185,6 +192,54 @@
     .vertical-divider {
         border-right: 2px solid rgba(37,46,42,0.32);
         padding-right: 15px;
+    }
+
+    @media (min-width: 768px) { 
+        .friend-card, .search-card {
+            width: 180px; 
+        }
+    }
+    .search-form input[type="text"], .search-form button {
+        width: 100%; 
+        margin-top: 10px;
+    }
+    @media (min-width: 768px) { 
+        .search-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .search-form input[type="text"] {
+            width: 70%;
+            margin-top: 0;
+        }
+        .search-form button {
+            width: auto;
+            padding: 10px 20px;
+        }
+    }
+    .section {
+        background: linear-gradient(135deg, #fffbf2, #e0f7e9);
+        border: 3px solid #28963D;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        padding: 20px;
+        flex-grow: 1;
+        min-width: 100%; 
+        position: relative;
+        overflow: hidden;
+        animation: slideIn 1s ease-out;
+    }
+    @media (min-width: 768px) { 
+        .section {
+            flex: 1 1 45%; 
+            min-width: 320px;
+        }
+    }
+    @media (max-width: 768px) {
+        .dashboard-header {
+            font-size: 1.8em;
+        }
     }
 </style>
 {% endblock %}
