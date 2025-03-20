@@ -6,6 +6,7 @@
     <title>Spinning Wheel</title>
     <link rel="stylesheet" href="{% static 'lootboxes/css/wheel.css' %}">
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -20,31 +21,34 @@
         </div>
     </div>
 
-    <div class="container my-4">
-        <div class="row">
-            {# Left column: Spinning wheel and messages #}
-            <div class="col-md-6 pr-md-3 d-flex flex-column align-items-center justify-content-center mb-4 mb-md-0">
-                <h3>You have <strong id="petbucks">{{ pet_bucks }}</strong> Pet Bucks 💰</h3>
-                <div id="wheel-container">
-                    <canvas id="wheel"></canvas>
+    <div class="card-container">
+        <div class="container my-4">
+            <div class="row">
+                {# Left column: Spinning wheel and messages #}
+                <div class="col-md-6 pr-md-3 d-flex flex-column align-items-center justify-content-center mb-4 mb-md-0">
+                    <h3>You have <strong id="petbucks">{{ pet_bucks }}</strong> Pet Bucks 💰</h3>
+                    <div id="wheel-container">
+                        <canvas id="wheel"></canvas>
+                    </div>
+                    <div id="result-message" class="mt-3"></div>
+                    <div id="win-message" class="mt-3"></div>
                 </div>
-                <div id="result-message" class="mt-3"></div>
-                <div id="win-message" class="mt-3"></div>
-            </div>
 
-            {# Right column: Description and list of prizes with vertical divider on its left edge #}
-            <div class="col-md-6 vertical-divider-left pl-md-3">
-                <h2>About the Prize Wheel</h2>
-                <p>Try your luck by spinning the wheel to win amazing prizes! Each spin costs 5 Pet
-                    Bucks, so make every spin count.</p>
-                <h3>Prizes</h3>
-                <ul>
-                    {% for option in options %}
-                        <li>
-                            {{ option }}
-                        </li>
-                    {% endfor %}
-                </ul>
+                {# Right column: Description and list of prizes with vertical divider on its left edge #}
+                <div class="col-md-6 vertical-divider-left pl-md-3">
+                    <h2>About the Prize Wheel</h2>
+                    <p>Try your luck by spinning the wheel to win amazing prizes! Each spin costs 5
+                        Pet
+                        Bucks, so make every spin count.</p>
+                    <h3>Prizes</h3>
+                    <ul>
+                        {% for option in options %}
+                            <li>
+                                {{ option }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
