@@ -61,3 +61,19 @@
 .dark-mode {
     --groups-box: #c9c9c9;
 }
+
+
+.text-black * {
+    color: #000000 !important;
+}
+
+.card-container {
+    background: rgba(238, 251, 212, 0.76);
+    border: 3px solid #28963D;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 20px auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
