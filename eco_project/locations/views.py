@@ -36,10 +36,9 @@ def individual_feature_page(request, slug) -> HttpResponse:
     # get if feature has a question or not then return correct template
     # get question from feature
     question = None
-    for question in QuestionFeature.objects.all():
-        if question.feature == feature_instance.feature:
-            question = question.question
-
+    for question_check in QuestionFeature.objects.all():
+        if question_check.feature == feature_instance:
+            question = question_check
     # if user signed in update points for reaching feature
     if request.user.is_authenticated:
         user_reached_feature(request.user, feature_instance)

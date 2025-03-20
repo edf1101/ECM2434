@@ -34,15 +34,24 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Create an alert element for a feature instance.
      */
-    function createFeatureAlert(feature) {
+   function createFeatureAlert(feature) {
         const directions = feature.directions;
         const description = feature.description;
+        const url = feature.url; // Check if there is a URL key
 
         // create alert itself
         const alertDiv = document.createElement('div');
         alertDiv.className = 'alert alert-custom-green alert-dismissible fade show';
         alertDiv.setAttribute('role', 'alert');
-        alertDiv.innerHTML = `<strong>${directions}</strong>: ${description}
+
+        // If url exists, make the description a clickable link
+        let content;
+        if (url) {
+            content = `<strong>${directions}</strong>:  <a href="${url}" class="profileLink">${description}</a>`;
+        } else {
+            content = `<strong>${directions}</strong>: ${description}`;
+        }
+        alertDiv.innerHTML = content + `
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
 
         alertDiv.addEventListener('closed.bs.alert', function () {
@@ -54,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // in case exit click doesnt work
+        // in case exit click doesn't work
         alertDiv.querySelector('.btn-close').addEventListener('click', function () {
             setTimeout(function () {
                 displayAlerts();

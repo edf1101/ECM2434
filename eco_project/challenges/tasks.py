@@ -74,7 +74,6 @@ def update_pet_health() -> None:
     elapsed = timezone.now() - settings.last_health_depreciation
 
     if elapsed > settings.health_depreciation_interval:
-        print("Updating pet health")
         for pet in Pet.objects.all():
             pet.health = max(0, pet.health - settings.health_depreciation_amount)
             pet.save(update_fields=["health"])
