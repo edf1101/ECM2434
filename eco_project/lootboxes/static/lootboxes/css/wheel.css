@@ -74,28 +74,28 @@
     padding: 0 1rem;
 }
 
-.vertical-divider h2 {
+.vertical-divider-left h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
 
-.vertical-divider h3 {
+.vertical-divider-left h3 {
     font-size: 1.75rem;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
 }
 
-.vertical-divider p {
+.vertical-divider-left p {
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
-.vertical-divider ul {
+.vertical-divider-left ul {
     list-style: none;
     padding-left: 0;
 }
 
-.vertical-divider ul li {
+.vertical-divider-left ul li {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
     display: flex;
@@ -103,17 +103,17 @@
     transition: transform 0.2s ease-in-out;
 }
 
-.vertical-divider ul li:hover,
-.vertical-divider ul li:active {
+.vertical-divider-left ul li:hover,
+.vertical-divider-left ul li:active {
     transform: scale(1.05);
 }
 
-.vertical-divider ul li:nth-child(odd)::before {
+.vertical-divider-left ul li:nth-child(odd)::before {
     content: "✨ ";
     margin-right: 0.5rem;
 }
 
-.vertical-divider ul li:nth-child(even)::before {
+.vertical-divider-left ul li:nth-child(even)::before {
     content: "🥇 ";
     margin-right: 0.5rem;
 }
@@ -123,3 +123,33 @@
         border-left: 2px solid rgba(37, 46, 42, 0.32);
     }
 }
+.card-container {
+     background: #ecfadf;
+    border: 10px solid transparent;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+	border-image: conic-gradient(from var(--angle), #16f172, #ccf466, #96ffd9, #eff38f, #30c46e,#16f172) 1;
+
+	animation: 10s rotate linear infinite;
+}
+/* Animate the custom property for the conic gradient */
+@keyframes rotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+/* Enable animation of the custom property */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+
+
