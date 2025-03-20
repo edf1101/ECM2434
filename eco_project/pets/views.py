@@ -3,11 +3,11 @@ This module contains the views for the pets app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-import datetime
-
 from django.shortcuts import render, get_object_or_404, redirect
 
 from pets.models import Cosmetic, CosmeticCategory, Pet
@@ -103,9 +103,11 @@ def shop(request) -> HttpResponse:
     cosmetic_types = CosmeticCategory.objects.all()
 
     # Create dictionary of categories (including 'All') and the cosmetics in that category
-    categories = [{'name': 'All', 'cosmetics': [c for c in  all_cosmetics if c.fits == request.user.pet.type]}]
+    categories = [{'name': 'All',
+                   'cosmetics': [c for c in  all_cosmetics if c.fits == request.user.pet.type]}]
     categories += [
-        {'name': category.name, 'cosmetics': [c for c in  category.cosmetic_set.all() if c.fits == request.user.pet.type]}
+        {'name': category.name,
+         'cosmetics': [c for c in  category.cosmetic_set.all() if c.fits == request.user.pet.type]}
         for category in cosmetic_types
     ]
 

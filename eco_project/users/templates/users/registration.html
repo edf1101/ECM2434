@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block content %}
-<div class = "card-container" style="text-align: center; width: 100%; max-width: 600px; color: black;">
+<div class = "card-container" style="text-align: center; width: 100%; max-width: 600px; color: #191919;">
             <h1 style="text-align: center;">Register a New User</h1>
             <form class="form-with-validation" action="{% url 'users:registration' %}"
                   method="post">
@@ -41,7 +41,7 @@
 
                 {% for field in form.user_form %}
                     <div class="form-group">
-                        <label style="color: black;">{{ field.label_tag }}</label><br>
+                        <label style="color: #191919;">{{ field.label_tag }}</label><br>
                         {{ field }}<br>
                         {% if field.errors %}
                             {% for error in field.errors %}
@@ -49,7 +49,7 @@
                             {% endfor %}
                         {% endif %}
                         {% if field.help_text %}
-                            <small style="color: black;">{{ field.help_text }}</small>
+                            <small style="color: #191919;">{{ field.help_text }}</small>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -57,7 +57,7 @@
                 <h2>Choose your Pet</h2>
                 {% for field in form.pet_form %}
                     <div class="form-group">
-                        <label style="color: black;">{{ field.label_tag }}</label><br>
+                        <label style="color: #191919;">{{ field.label_tag }}</label><br>
                         {{ field }}<br>
                         {% if field.errors %}
                             {% for error in field.errors %}
@@ -65,7 +65,7 @@
                             {% endfor %}
                         {% endif %}
                         {% if field.help_text %}
-                            <small style="color: black;">{{ field.help_text }}</small>
+                            <small style="color: #191919;">{{ field.help_text }}</small>
                         {% endif %}
                     </div>
                 {% endfor %}

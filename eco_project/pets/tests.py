@@ -154,7 +154,8 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", category=self.cosmetic_type, price=10, fits=self.pet_type
+            name="Hat", description="Red stylish hat", category=self.cosmetic_type,
+            price=10, fits=self.pet_type
         )
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")

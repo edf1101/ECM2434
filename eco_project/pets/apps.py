@@ -17,4 +17,4 @@ class PetsConfig(AppConfig):
     name = "pets"
 
     def ready(self):
-        import pets.signals  
+        import pets.signals

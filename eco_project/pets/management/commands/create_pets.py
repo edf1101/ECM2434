@@ -5,7 +5,6 @@ This module is a Django management command that creates some pet types in the da
 """
 import os
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management.base import BaseCommand
@@ -172,7 +171,9 @@ class Command(BaseCommand):
                         f"Could not create {pet['name']}, skipping it: {str(e)}"))
 
             for cosmetic_data in pet["cosmetics"]:
-                cosmetic = Cosmetic(name=cosmetic_data["name"], description=cosmetic_data["description"], price=cosmetic_data["price"])
+                cosmetic = Cosmetic(name=cosmetic_data["name"],
+                                    description=cosmetic_data["description"],
+                                    price=cosmetic_data["price"])
 
                 icon = os.path.join(
                     os.getcwd(),
@@ -204,9 +205,12 @@ class Command(BaseCommand):
 
                         try:
                             cosmetic.save()
-                            self.stderr.write(self.style.SUCCESS(f"Created {cosmetic_data['name']} for {pet['name']}"))
+                            msg = f"Created {cosmetic_data['name']} for {pet['name']}"
+                            self.stderr.write(self.style.SUCCESS(msg))
                         except IntegrityError as e:
-                            self.stderr.write(self.style.WARNING(f"Could not create {cosmetic_data['name']} for {pet['name']}, skipping it: {str(e)}"))
+                            msg = (f"Could not create {cosmetic_data['name']} "
+                                   f"for {pet['name']}, skipping it: {str(e)}")
+                            self.stderr.write(self.style.WARNING(msg))
 
 
         # Create example user and default pet
@@ -218,6 +222,6 @@ class Command(BaseCommand):
             default_pet.owner = example_user
             default_pet.save()
 
-            self.stderr.write(self.style.SUCCESS(f"Created default pet and user"))
+            self.stderr.write(self.style.SUCCESS("Created default pet and user"))
         except IntegrityError as e:
             self.stderr.write(self.style.WARNING(f"Could not create default pet or user: {str(e)}"))
