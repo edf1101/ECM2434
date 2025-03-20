@@ -24,10 +24,10 @@ class ChallengeSettings(models.Model):
         default=timedelta(
             days=1))  # The interval in which the user must check in to maintain their streak
     question_feature_points: models.IntegerField = models.IntegerField(
-        default=2
+        default=35
     )  # points per correct answer
     reached_feature_points: models.IntegerField = models.IntegerField(
-        default=1
+        default=20
     )  # points per reached normal feature
 
     health_depreciation_interval = models.DurationField(

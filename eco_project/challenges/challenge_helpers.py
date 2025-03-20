@@ -150,12 +150,11 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
 
     points_for_feature = ChallengeSettings.get_solo().reached_feature_points
 
-    user.profile.points += points_for_feature
-    user.profile.save()
+    user.profile.add_points(points_for_feature)
     reward_health = 20
 
-    if hasattr(user.profile, "pet"):
-        pet = user.profile.pet
+    if hasattr(user, "pet"):
+        pet = user.pet
         pet.health = min(pet.health + reward_health, 100)
         pet.save()
 
