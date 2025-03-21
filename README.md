@@ -68,13 +68,24 @@ cd ECM2434
 pylint eco_project
 ```
 
-To generate a test coverage report:
-
+## Coverage Reports
+To install coverage:
 ```shell
 pip install coverage
-cd eco_project
+```
+
+To generate a full test coverage report:
+
+```shell
 coverage run manage.py test
 coverage report -m
+```
+
+To generate a report for a specific app:
+
+```shell
+coverage run manage.py test [app_name]
+coverage report -m --include="*/[app_name]/*"
 ```
 
 ## GDPR Compliance
