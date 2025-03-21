@@ -2,7 +2,7 @@
 
 Sustainability Group Software Engineering Project by Team Group
 
-<img src="eco_project/static/media/readme_banner.png" alt="Alt Text" width="1000">
+<img src="eco_project/static/media/readme_banner.png" alt="Alt Text" width="2568">
 
 
 Group Members
@@ -55,13 +55,13 @@ From the base ECM2434 folder go to the eco_project folder
 cd eco_project
 ```
 
-You can then run the manage.py commands eg:
+You can then run the manage.py commands, eg:
 
 ```shell
 python manage.py runserver
 ```
 
-To run pylint on the project:
+To run `pylint` on the project:
 
 ```shell
 cd ECM2434
@@ -73,8 +73,8 @@ To generate a test coverage report:
 ```shell
 pip install coverage
 cd eco_project
-coverage run --source='.' manage.py test mysite
-coverage report
+coverage run manage.py test
+coverage report -m
 ```
 
 ## GDPR Compliance

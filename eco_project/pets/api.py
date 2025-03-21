@@ -30,9 +30,6 @@ def get_pet_data(request, username) -> JsonResponse:
         return JsonResponse(
             {"error": "No pet found for this user."}, status=404)
 
-    pet_image_url = ""
-    if pet.type.base_image:
-        pet_image_url = request.build_absolute_uri(pet.type.base_image.url)
 
     # get user points from the profile
     user_points = target_user.profile.points if hasattr(
@@ -42,6 +39,6 @@ def get_pet_data(request, username) -> JsonResponse:
         "user_points": user_points,
         "pet_name": pet.name,
         "pet_health": pet.health,
-        "pet_image": pet_image_url,
     }
+
     return JsonResponse(data)

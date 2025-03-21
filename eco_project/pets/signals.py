@@ -6,7 +6,15 @@ from pets.models import Pet
 
 @receiver(post_save, sender=Pet)
 def notify_low_health(sender, instance, **kwargs):
-    # If the pet's health is below 25 and an email hasn't been sent yet:
+    """
+    Signal received from a Pet after it has been saved.
+
+    @param sender: The sender the signal is received from
+    @param instance: The pet being saved
+    @param kwargs: None expected
+    """
+
+    # If the pet's health is below 25 and an email hasn't been sent yet
     if instance.health < 25 and not instance.low_health_notified:
         subject = "Your pet needs help!"
         message = (

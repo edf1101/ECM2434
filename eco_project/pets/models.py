@@ -42,9 +42,6 @@ class CosmeticType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     created_at = models.DateTimeField(default=timezone.now)
 
-    x = models.FloatField()
-    y = models.FloatField()
-
     def __str__(self) -> str:
         """
         Returns the name of the cosmetic type.
