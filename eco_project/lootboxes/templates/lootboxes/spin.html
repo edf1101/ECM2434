@@ -1,39 +1,61 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet - Loot Box Spin{% endblock %}
-
 {% block extrahead %}
+    <meta charset="UTF-8">
+    <title>Spinning Wheel</title>
+    <link rel="stylesheet" href="{% static 'lootboxes/css/wheel.css' %}">
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
-    <link rel="stylesheet" href="{% static 'spin/css/spin.css' %}">
+
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">Loot Box Spin 🎉</h1>
 
-    <div class="text-center mb-4">
-        <p>Your current pet bucks: <strong>{{ profile.pet_bucks }}</strong></p>
-    </div>
-
-    {% if messages %}
-        <div class="alert" role="alert" style="background-color: #90EE90; color: black;">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
+    <div class="hero-container">
+        <div class="hero-bg"></div>
+        <div class="hero-text">
+            <h1>Spinning Wheel</h1>
+            <br>
+            <p>Being sustainable can be fun!</p>
+            <p>Use your PetBucks you earnt doing sustainable tasks to try and win big prizes!</p>
         </div>
-    {% endif %}
-
-    <div class="spin-container text-center">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn" style="background-color: #228B22; color: white;">Spin the Wheel for 5 Bucks</button>
-        </form>
     </div>
 
+    <div class="card-container">
+        <div class="container my-4" style="color: #191919;">
+            <div class="row">
+                {# Left column: Spinning wheel and messages #}
+                <div class="col-md-6 pr-md-3 d-flex flex-column align-items-center justify-content-center mb-4 mb-md-0">
+                    <h3>You have <strong id="petbucks">{{ pet_bucks }}</strong> Pet Bucks 💰</h3>
+                    <div id="wheel-container">
+                        <canvas id="wheel"></canvas>
+                    </div>
+                    <div id="result-message" class="mt-3"></div>
+                    <div id="win-message" class="mt-3"></div>
+                </div>
 
-    <div class="spin-results text-center mt-4">
-        {% if spin_result %}
-            <p class="result-message">🎁 You won: <strong>{{ spin_result }}</strong>! 🎉</p>
-        {% endif %}
+                {# Right column: Description and list of prizes with vertical divider on its left edge #}
+                <div class="col-md-6 vertical-divider-left pl-md-3">
+                    <h2>About the Prize Wheel</h2>
+                    <p>Try your luck by spinning the wheel to win amazing prizes! Each spin costs 5
+                        Pet
+                        Bucks, so make every spin count.</p>
+                    <h3>Prizes</h3>
+                    <ul>
+                        {% for option in options %}
+                            <li>
+                                {{ option }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        window.wheelOptions = {{ options|safe }};
+        window.spinWheelUrl = "{% url 'lootboxes:spin_wheel' %}";
+    </script>
+    <script src="{% static 'lootboxes/js/wheel.js' %}"></script>
 {% endblock %}

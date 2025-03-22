@@ -1,6 +1,7 @@
 """
-Configuration class for the lootboxes app.
+This file is used to configure the app name for the Django admin panel.
 """
+
 from django.apps import AppConfig
 
 

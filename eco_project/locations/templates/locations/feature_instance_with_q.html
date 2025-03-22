@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}EcoPet - Feature Instance with !{% endblock %}
+{% block title %}EcoPet - Feature Instance with Question{% endblock %}
 
 {% block extrahead %}
     <meta charset="UTF-8">
@@ -11,9 +11,33 @@
         body {
             background-color: #99D887;
         }
+
+        @media (min-width: 768px) {
+            .vertical-divider {
+                border-right: 2px solid rgba(37, 46, 42, 0.32);
+            }
+        }
+
+        img.rounded {
+            border-radius: 10px;
+        }
+
+        .text-black * {
+            color: #191919 !important;
+        }
+
+        .card-container {
+            background: rgba(238, 251, 212, 0.76);
+            border: 3px solid #28963D;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 20px auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
     </style>
     <script>
-
         /**
          * Function to get a cookie
          * @param name The name of the cookie
@@ -22,10 +46,9 @@
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
-                let cookies = document.cookie.split(';'); // split up cookie string into list
+                let cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
-                    let cookie = cookies[i].trim(); // trim whitespace
-
+                    let cookie = cookies[i].trim();
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -40,12 +63,10 @@
          * @return {Promise<void>} A promise that resolves when the answer is submitted
          */
         async function submitAnswer() {
-            // get required fields for the API
             const answerText = document.getElementById('answer').value;
             const questionId = document.getElementById('question-id').value;
-            const csrftoken = getCookie('csrftoken'); // django needs this for user authentication
+            const csrftoken = getCookie('csrftoken');
 
-            // Create the POST request
             const response = await fetch('/challenges/submit_answer/', {
                 method: 'POST',
                 headers: {
@@ -58,36 +79,55 @@
                 })
             });
             const data = await response.json();
-
-            alert(data.message); // show the message. Front end ppl can handle this better
+            alert(data.message);
         }
     </script>
 {% endblock %}
 
 {% block content %}
-    <div class="center-content">
-        <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
-        <h3>
-            Lat: {{ feature_instance.latitude }},
-            Lon: {{ feature_instance.longitude }},
-            Code: {{ feature_instance.slug }}
-        </h3>
-        <br>
-        <img src="{{ feature_instance.image.url }}" alt="Image of {{ feature_instance.name }}">
+    <div class="card-container">
+        <div class="container my-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    {% if in_range %}
+                        <h1>✨You have reached the {{ feature_instance.name }}✨</h1>
+                        <h4>You have gained points for getting here!</h4>
+                    {% else %}
+                        <h1>✨The {{ feature_instance.name }}✨</h1>
+                        <h4>We don't think you are actually in range... Try reloading or getting closer?</h4>
+                    {% endif %}
+                </div>
+            </div>
 
-        <br>
-        <br>
-        <h2>About this Feature</h2>
-        <h3>{{ feature_instance.feature.name }}</h3>
-        <p>{{ feature_instance.feature.description }}</p>
+            <div class="row mt-4">
+                <!-- Left column: Image and stats -->
+                <div class="col-md-6 vertical-divider pr-md-3 text-center">
+                    <h3>
+                        Lat: {{ feature_instance.latitude | floatformat:"3" }},
+                        Lon: {{ feature_instance.longitude | floatformat:"3" }}
+                    </h3>
+                    <h3>Code: {{ feature_instance.slug }}</h3>
+                    <img src="{{ feature_instance.image.url }}"
+                         alt="Image of {{ feature_instance.name }}" class="img-fluid rounded"/>
+                </div>
 
-        <br>
-        <br>
-        <h2>Question:</h2>
-        <p>{{ question.question_text }}</p>
-        <input type="hidden" id="question-id" value="{{ question.id }}">
-
-        <input type="text" id="answer" placeholder="Your answer here">
-        <button type="button" onclick="submitAnswer()">Submit Answer</button>
+                <!-- Right column: Feature info and question -->
+                <div class="col-md-6 pl-md-3 text-center">
+                    {% if feature_instance.instance_description %}
+                        <h2>About the {{ feature_instance.name }}</h2>
+                        <p>{{ feature_instance.instance_description }}</p>
+                        <br>
+                    {% endif %}
+                    <h2>About {{ feature_instance.feature.name }}</h2>
+                    <p>{{ feature_instance.feature.description }}</p>
+                    <br>
+                    <h2>Question:</h2>
+                    <p>{{ question.question_text }}</p>
+                    <input type="hidden" id="question-id" value="{{ question.id }}">
+                    <input type="text" id="answer" placeholder="Your answer here">
+                    <button type="button" onclick="submitAnswer()">Submit Answer</button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

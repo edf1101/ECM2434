@@ -23,17 +23,28 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
 
     points = models.PositiveIntegerField(default=0, blank=False, null=False)
-    pet_bucks = models.PositiveIntegerField(default=0, blank=False, null=False)
+    pet_bucks = models.PositiveIntegerField(default=30, blank=False, null=False, )
     bio = models.TextField(blank=True, null=False)
 
     longitude = models.FloatField(blank=False, null=False, default=0)
     latitude = models.FloatField(blank=False, null=False, default=0)
 
-    owned_accessories = models.ManyToManyField(Cosmetic, blank=True)
+    owned_cosmetics = models.ManyToManyField(Cosmetic, blank=True)
 
     friends = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     last_active = models.DateTimeField(auto_now=True)
+
+    def add_points(self, points: int) -> None:
+        """
+        This method adds points and petBucks to the user's profile.
+
+        @:param points: how many to add
+        @return: None
+        """
+        self.points += points
+        self.pet_bucks += points
+        self.save()
 
     @property
     def last_active_string(self) -> str:

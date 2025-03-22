@@ -147,6 +147,17 @@
     .buy-btn:disabled {
         opacity: 0.5; cursor: not-allowed;
     }
+    .remove-btn {
+        margin-top: 8px;
+        color: #f4573d;
+        text-decoration: none;
+    }
+
+    .equip-btn {
+        margin-top: 8px;
+        color: #28963D;
+        text-decoration: none;
+    }
     .back-to-pet {
       display: block;
       text-align: center;
@@ -196,49 +207,6 @@
         cards.forEach(card => grid.appendChild(card));
       });
     });
-
-    // equipAccessory function with distinct video paths for each pet type
-    function equipAccessory(accessoryName) {
-      const petDisplay = document.getElementById("petDisplay");
-      const petType = petDisplay.getAttribute("data-pet-type") || "axolotl";
-      let videoSrc = "";
-      if (accessoryName === "sunglasses") {
-        if (petType === "axolotl") {
-          videoSrc = "/media/pets/base_movs/axolotl/axolotlglasses.webm";
-        } else if (petType === "virginiabigearedbat") {
-          videoSrc = "/media/pets/base_movs/bat/batglasses.webm";
-        } else if (petType === "africanbushelephant") {
-          videoSrc = "/media/pets/base_movs/elephant/elephantglasses.webm";
-        }
-      } else if (accessoryName === "cowboy") {
-        if (petType === "axolotl") {
-          videoSrc = "/media/pets/base_movs/axolotl/axolotlcowboy.webm";
-        } else if (petType === "virginiabigearedbat") {
-          videoSrc = "/media/pets/base_movs/bat/batcowboy.webm";
-        } else if (petType === "africanbushelephant") {
-          videoSrc = "/media/pets/base_movs/elephant/elephantcowboy.webm";
-        }
-      } else if (accessoryName === "plant") {
-        if (petType === "axolotl") {
-          videoSrc = "/media/pets/base_movs/axolotl/axolotlplant.webm";
-        } else if (petType === "virginiabigearedbat") {
-          videoSrc = "/media/pets/base_movs/bat/batplant.webm";
-        } else if (petType === "africanbushelephant") {
-          videoSrc = "/media/pets/base_movs/elephant/elephantplant.webm";
-        }
-      }
-      const petVideo = document.getElementById("petVideo");
-      if (petVideo) {
-        while (petVideo.firstChild) {
-          petVideo.removeChild(petVideo.firstChild);
-        }
-        const newSource = document.createElement("source");
-        newSource.src = videoSrc;
-        newSource.type = "video/webm";
-        petVideo.appendChild(newSource);
-        petVideo.load();
-      }
-    }
   </script>
 {% endblock %}
 
@@ -253,14 +221,10 @@
   </div>
   
   <div class="accessories-layout">
-    <div class="pet-display" id="petDisplay" data-pet-type="{% if pet %}{{ pet.type.name|lower|cut:' '|cut:'-' }}{% else %}axolotl{% endif %}">
+    <div class="pet-display">
       <h2>Your Pet</h2>
       <video id="petVideo" autoplay loop playsinline muted style="width:100%; max-width:300px; border-radius:50%; border:3px solid #98DABA; margin-bottom:10px;">
-        {% if pet %}
-          <source src="{{ pet.type.video.url }}" type="video/webm">
-        {% else %}
-          <source src="/media/pets/base_movs/axolotl/axolotl.webm" type="video/webm">
-        {% endif %}
+          <source src="{% if pet.current_cosmetic %}{{ pet.current_cosmetic.video.url }}{% else %}{{ pet.type.base_video.url }}{% endif %}" type="video/webm">
         Your browser does not support the video tag.
       </video>
       <h3>{% if pet %}{{ pet.name }}{% else %}Default Pet{% endif %}</h3>
@@ -302,13 +266,16 @@
               {% for cosmetic in category.cosmetics %}
 
                 <div class="accessory-card" data-price="{{ cosmetic.price }}" data-newest="{{ cosmetic.created_at }}" data-popular="{{ cosmetic.popularity|default:0 }}">
-                  <img src="{{ cosmetic.image.url }}" alt="{{ cosmetic.name }}">
+                  <img src="{{ cosmetic.icon.url }}" alt="{{ cosmetic.name }}">
                   <h3>{{ cosmetic.name }}</h3>
                   <p>{{ cosmetic.description }}</p>
                   <p><strong>Price:</strong> {{ cosmetic.price }} Pet Bucks</p>
-                  {% if cosmetic in profile.owned_accessories.all %}
+                  {% if cosmetic in profile.owned_cosmetics.all %}
                     <p>You already own this item</p>
-                    <button type="button" class="buy-btn" onclick="equipAccessory('{{ cosmetic.name|lower|cut:' '|cut:'-' }}')">Equip</button>
+                      <button type="submit" class="buy-btn" disabled>
+                          Buy
+                      </button>
+                      </form>
                   {% else %}
                     <form method="post" action="{% url 'pets:buy_cosmetic' cosmetic.id %}">
                       {% csrf_token %}

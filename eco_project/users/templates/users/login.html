@@ -28,18 +28,27 @@
         .form-submit:hover {
             background-color: #66cdaa;
         }
+.card-container {
+    background: rgba(238, 251, 212, 0.76);
+    border: 3px solid #28963D;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
     </style>
 {% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px;">
-    <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; margin-top: 70px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
-        <h1 style="text-align: center; color: white;">Login</h1>
+<div class = "card-container" style="text-align: center; width: 100%; max-width: 600px; color: #191919;">
+        <h1 style="text-align: center; color: #191919;">Login</h1>
         <form class="form-with-validation" action="{% url 'users:login' %}" method="post">
             {% csrf_token %}
             {% for field in form %}
             <div class="form-group">
-                <label style="color: white;">{{ field.label_tag }}</label><br>
+                <label style="color: #191919;">{{ field.label_tag }}</label><br>
                 {{ field }}<br>
                 {% if field.errors %}
                     {% for error in field.errors %}
@@ -47,12 +56,11 @@
                     {% endfor %}
                 {% endif %}
                 {% if field.help_text %}
-                    <small style="color: white;">{{ field.help_text }}</small>
+                    <small style="color: #191919;">{{ field.help_text }}</small>
                 {% endif %}
             </div>
             {% endfor %}
             <button class="form-submit" type="submit">Submit</button>
         </form>
     </div>
-</div>
 {% endblock %}

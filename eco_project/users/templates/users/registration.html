@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
     <script>
+
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
         const csrfToken = "{{ csrf_token }}";
@@ -17,63 +18,59 @@
     <script type="module" src="{% static 'locationUpdater.js' %}"></script>
     <script type="module" src="{% static 'updateChallenges.js' %}"></script>
 
-    <style>
-        .form-submit {
-            margin-top: 20px;
-            background-color: #8fbc8f;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            transition: background-color 0.3s ease;
-        }
-        
-        .form-submit:hover {
-            background-color: #66cdaa;
-        }
+<style>
+    .card-container {
+    background: rgba(238, 251, 212, 0.76);
+    border: 3px solid #28963D;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
     </style>
-    {% endblock %}
+{% endblock %}
 
 {% block content %}
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
-    <div style="width: 100%; max-width: 500px; background-color: darkgreen; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: white;">
-        <h1 style="text-align: center; color: white;">Register a New User</h1>
-        <form class="form-with-validation" action="{% url 'users:registration' %}" method="post">
-            {% csrf_token %}
+<div class = "card-container" style="text-align: center; width: 100%; max-width: 600px; color: #191919;">
+            <h1 style="text-align: center;">Register a New User</h1>
+            <form class="form-with-validation" action="{% url 'users:registration' %}"
+                  method="post">
+                {% csrf_token %}
 
-            <h2>Create your Account</h2>
-            {% for field in form.user_form %}
-              <div class="form-group">
-                  <label style="color: white;">{{ field.label_tag }}</label><br>
-                  {{ field }}<br>
-                  {% if field.errors %}
-                      {% for error in field.errors %}
-                          <p class="error" style="color: red;">{{ error }}</p>
-                      {% endfor %}
-                  {% endif %}
-                  {% if field.help_text %}
-                      <small style="color: white;">{{ field.help_text }}</small>
-                  {% endif %}
-              </div>
-            {% endfor %}
+                {% for field in form.user_form %}
+                    <div class="form-group">
+                        <label style="color: #191919;">{{ field.label_tag }}</label><br>
+                        {{ field }}<br>
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="error" style="color: red;">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small style="color: #191919;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
+                <h2>Choose your Pet</h2>
+                {% for field in form.pet_form %}
+                    <div class="form-group">
+                        <label style="color: #191919;">{{ field.label_tag }}</label><br>
+                        {{ field }}<br>
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="error" style="color: red;">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small style="color: #191919;">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class="form-submit" type="submit">Submit</button>
+            </form>
+        </div>
 
-            <h2>Choose your Pet</h2>
-            {% for field in form.pet_form %}
-              <div class="form-group">
-                  <label style="color: white;">{{ field.label_tag }}</label><br>
-                  {{ field }}<br>
-                  {% if field.errors %}
-                      {% for error in field.errors %}
-                          <p class="error" style="color: red;">{{ error }}</p>
-                      {% endfor %}
-                  {% endif %}
-                  {% if field.help_text %}
-                      <small style="color: white;">{{ field.help_text }}</small>
-                  {% endif %}
-              </div>
-            {% endfor %}
-            <button class="form-submit" type="submit">Submit</button>
-        </form>
-    </div>
-</div>
 {% endblock %}

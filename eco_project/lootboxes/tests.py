@@ -61,3 +61,4 @@ class LootBoxTestCase(TestCase):
 
     def test_lootbox_str(self):
         self.assertEqual(self.lootbox.__str__(), f"LootBox for {self.user.username}")
+

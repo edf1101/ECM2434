@@ -68,12 +68,6 @@ class Command(BaseCommand):
             ("pets", "cosmetic", "delete_cosmetic"),
             ("pets", "cosmetic", "view_cosmetic"),
 
-            # Pets | Cosmetic Type
-            ("pets", "cosmetictype", "add_cosmetictype"),
-            ("pets", "cosmetictype", "change_cosmetictype"),
-            ("pets", "cosmetictype", "delete_cosmetictype"),
-            ("pets", "cosmetictype", "view_cosmetictype"),
-
             # Locations | Feature Type
             ("locations", "featuretype", "add_featuretype"),
             ("locations", "featuretype", "change_featuretype"),

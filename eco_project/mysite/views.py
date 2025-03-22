@@ -4,7 +4,6 @@ This module contains the views for the homepage, about, contact and faq pages.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 
@@ -24,7 +23,7 @@ def homepage(request: HttpRequest) -> HttpResponse:
         context = {
             "form": form,
             "profile": request.user.profile,
-            "pet": request.user.pets.first(),
+            "pet": request.user.pet,
         }
     else:
         context = {

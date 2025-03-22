@@ -8,6 +8,7 @@ from math import log2
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.utils import timezone
 from locations.chunk_handling import haversine
 from locations.models import FeatureInstance
@@ -56,7 +57,7 @@ def streak_to_points(streak_count: int) -> int:
     @param streak_count: The number of days in the streak.
     @return: The number of points to award.
     """
-    return int(log2(streak_count) + 1)
+    return int(log2(streak_count) + 1) * 5
 
 
 def user_in_range_of_feature(
@@ -150,11 +151,11 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
 
     points_for_feature = ChallengeSettings.get_solo().reached_feature_points
 
-    user.profile.points += points_for_feature
-    user.profile.save()
+    user.profile.add_points(points_for_feature)
     reward_health = 20
-    pet = user.pets.first()
-    if pet:
+
+    if hasattr(user, "pet"):
+        pet = user.pet
         pet.health = min(pet.health + reward_health, 100)
         pet.save()
 
@@ -172,7 +173,7 @@ def get_features_near(lat: float, lon: float, user=None, specific_feature=None) 
     @return: A list of dictionaries representing the challenges near the given location.
     """
 
-    challenge_data: dict[FeatureInstance, str] = {}
+    challenge_data: dict[FeatureInstance, float] = {}
     all_features = FeatureInstance.objects.all()
     if specific_feature:
         all_features = all_features.filter(feature=specific_feature)
@@ -185,17 +186,23 @@ def get_features_near(lat: float, lon: float, user=None, specific_feature=None) 
                 lon,
                 feature.latitude,
                 feature.longitude)
-            dist_str = f"{dist / 1000.0:.2f}km away" if dist > 1 else f"{int(dist)}m away"
-            challenge_data[feature] = dist_str
+
+            challenge_data[feature] = dist
 
     # Sort the challenges by distance and get the 10 closest
     sorted_challenges = sorted(challenge_data.items(), key=lambda x: x[1])
     return_challenges = []
     for feature, dist in sorted_challenges[:10]:
-        return_challenges.append(
-            {
-                "directions": dist,
-                "description": feature.name,
-            }
-        )
+        dist_str = f"{dist / 1000.0:.2f}km away" if dist > 1 else f"{int(dist)}m away"
+        data = {
+            "directions": dist_str,
+            "description": feature.name,
+        }
+        # if in range then add url
+        if (dist < settings.USER_CHALLENGE_RANGE) or not settings.CHECK_USER_CHALLENGE_RANGE:
+            data["url"] = reverse(
+                "locations:individual-feature",
+                kwargs={"slug": feature.slug}
+            )
+        return_challenges.append(data)
     return return_challenges

@@ -6,6 +6,7 @@ This module contains the models for the pets app.
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import PROTECT
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
@@ -21,8 +22,7 @@ class PetType(models.Model):
     name = models.CharField(max_length=255, unique=True)  # Single definition
     description = models.TextField()
 
-    base_image = models.ImageField(upload_to="pets/base_imgs/", blank=False)
-    video = models.FileField(upload_to="pets/videos/", blank=False)
+    base_video = models.FileField(upload_to="pets/videos/", blank=False)
 
     def __str__(self) -> str:
         """
@@ -33,7 +33,7 @@ class PetType(models.Model):
         return self.name
 
 
-class CosmeticType(models.Model):
+class CosmeticCategory(models.Model):
     """
     A model to store a type of cosmetic (i.e. Hat, Scarf)
     """
@@ -44,9 +44,9 @@ class CosmeticType(models.Model):
 
     def __str__(self) -> str:
         """
-        Returns the name of the cosmetic type.
+        Returns the name of the cosmetic category.
 
-        @return: The name of the cosmetic type.
+        @return: The name of the cosmetic category.
         """
         return self.name
 
@@ -57,12 +57,18 @@ class Cosmetic(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.PositiveIntegerField()
-    type = models.ForeignKey(CosmeticType, on_delete=models.PROTECT)
-    fits = models.ManyToManyField(PetType, blank=False)
-    image = models.ImageField(upload_to="pets/cosmetic_imgs/", blank=False)
+    category = models.ForeignKey(CosmeticCategory, on_delete=models.PROTECT)
+    fits = models.ForeignKey(PetType, on_delete=models.CASCADE, blank=True, null=True)
+    icon = models.FileField(upload_to="pets/cosmetic_icons/", blank=False)
+    video = models.FileField(upload_to="pets/videos/", blank=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name", "fits"], name="unique_name_fits")
+        ]
 
     def __str__(self) -> str:
         """
@@ -70,7 +76,7 @@ class Cosmetic(models.Model):
 
         @return: The name of the cosmetic.
         """
-        return f"{self.name} ({self.type.name})"
+        return f"{self.name} ({self.fits.name} {self.category.name})"
 
 
 class Pet(models.Model):
@@ -88,11 +94,12 @@ class Pet(models.Model):
                                  validators=[MinValueValidator(0), MaxValueValidator(100)])
     low_health_notified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
-    cosmetics = models.ManyToManyField(Cosmetic, blank=True)
-    owner = models.ForeignKey(
+    current_cosmetic = models.ForeignKey(Cosmetic, blank=True, on_delete=PROTECT, null=True)
+    owner = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name="pets")
+        related_name="pet"
+    )
 
     def __str__(self) -> str:
         """

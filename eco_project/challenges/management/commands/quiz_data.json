@@ -1,7 +1,7 @@
 [
   {
     "title": "Individual Sustainability Actions Quiz",
-    "total_points": 10,
+    "total_points": 30,
     "questions": [
       {
         "text": "Which of the following is a recommended action to reduce personal energy consumption?",
@@ -42,7 +42,7 @@
   },
   {
     "title": "University Sustainability Initiatives Quiz",
-    "total_points": 10,
+    "total_points": 30,
     "questions": [
       {
         "text": "What is the purpose of the Environment and Sustainability Institute (ESI) at the University of Exeter?",

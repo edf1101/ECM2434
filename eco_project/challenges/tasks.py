@@ -4,13 +4,12 @@ This module contains tasks that are called by the scheduler.
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
-from datetime import timedelta
 from django.utils import timezone
-from django.apps import apps
+
+from pets.models import Pet
 
 from .models import Streak, get_current_window, UserFeatureReach,ChallengeSettings
 from .challenge_helpers import get_interval
-from pets.models import Pet
 
 
 def update_challenges() -> None:
@@ -74,7 +73,6 @@ def update_pet_health() -> None:
     elapsed = timezone.now() - settings.last_health_depreciation
 
     if elapsed > settings.health_depreciation_interval:
-        print("Updating pet health")
         for pet in Pet.objects.all():
             pet.health = max(0, pet.health - settings.health_depreciation_amount)
             pet.save(update_fields=["health"])

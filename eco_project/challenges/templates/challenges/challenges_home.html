@@ -8,8 +8,10 @@
     <link rel="stylesheet" href="{% static 'css/styleAll.css' %}">
 
     <style>
-        .vertical-divider {
-            border-right: 2px solid rgba(37, 46, 42, 0.32);
+        @media (min-width: 768px) {
+            .vertical-divider {
+                border-right: 2px solid rgba(37, 46, 42, 0.32);
+            }
         }
 
         .alert-custom-green {
@@ -26,41 +28,61 @@
         .profileLink:hover {
             color: #1c9a58;
         }
+
+        .text-black * {
+            color: #191919 !important;
+        }
+
+        .card-container {
+            background: rgba(238, 251, 212, 0.76);
+            border: 3px solid #28963D;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
     </style>
 
 {% endblock %}
 
 {% block content %}
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1>Challenges around campus 🗺️</h1>
-                <h4>Learn more about this sustainability feature!</h4>
+    <div class="card-container">
+        <div class="container my-4">
+            <div class="row">
+                <div class="col-12 text-center text-black">
+                    <h1>Challenges around campus 🗺️</h1>
+                    <h4>Learn more about this sustainability feature!</h4>
+                </div>
             </div>
-        </div>
 
-        {# Have 2 columns one for location based challenges and other for quizzes etc #}
-        <div class="row mt-4">
-            {# left col for location based challenges #}
-            <div class="col-md-6 vertical-divider pr-md-3 text-center">
-                <h2>Location based Challenges 📍</h2>
-                <p>These are features around campus that you can go to and learn about for
-                    points!</p>
-                <br><br>
-                <div id="feature-alerts-container" class="w-100 mt-3"></div>
-                {# feature alerts container #}
-            </div>
-            {# Right column have quizzes etc #}
-            <div class="col-md-6 pl-md-3 text-center d-flex flex-column align-items-center ">
-                <h2>Other Challenges </h2>
-                <p>Here are some other challenges you can complete to earn points!</p>
-                <br><br>
-                <div id="challenge-alerts-container" class="w-100 mt-3"></div>
-                {# challenge alerts container #}
+            {# Have 2 columns one for location based challenges and other for quizzes etc #}
+            <div class="row mt-4">
+                {# left col for location based challenges #}
+                <div class="col-md-6 vertical-divider pr-md-3 text-center ">
+                    <div class="text-black">
+                        <h2>Location based Challenges 📍</h2>
+                        <p>These are features around campus that you can go to and learn about for
+                            points!</p>
+                    </div>
+                    <br><br>
+                    <div id="feature-alerts-container" class="w-100 mt-3"></div>
+                    {# feature alerts container #}
+                </div>
+                {# Right column have quizzes etc #}
+                <div class="col-md-6 pl-md-3 text-center d-flex flex-column align-items-center ">
+                    <div class="text-black">
+                        <h2>Other Challenges </h2>
+                        <p>Here are some other challenges you can complete to earn points!</p>
+                    </div>
+                    <br><br>
+                    <div id="challenge-alerts-container" class="w-100 mt-3"></div>
+                    {# challenge alerts container #}
+                </div>
             </div>
         </div>
     </div>
-
     {{ nearby_features|json_script:"nearby-features-data" }}
     {{ quizzes|json_script:"quizzes-data" }}
     <script src="{% static 'challenges/js/home.js' %}"></script>

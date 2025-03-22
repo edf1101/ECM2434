@@ -5,3 +5,4 @@ ignore-patterns=migrations/*.py
 
 
 [DJANGO]
+django-settings-module=mysite.settings

@@ -67,8 +67,7 @@ def collect_streak(request) -> Response:
 
     # add points to the user
     points_awarded = streak_to_points(streak.raw_count)
-    user.profile.points += points_awarded
-    user.profile.save()
+    user.profile.add_points(points_awarded)
 
     # Update the last_window to the start of the current window.
     streak.last_window = current_window_start
@@ -132,8 +131,7 @@ def submit_answer_api(request) -> Response:
         # get how many point per question feature from challenge settings
 
         points_per_q = ChallengeSettings.get_solo().question_feature_points
-        request.user.profile.points += points_per_q
-        request.user.profile.save()
+        request.user.profile.add_points(points_per_q)
 
     # Return response with required info
     return Response(
@@ -223,12 +221,11 @@ def score_quiz(request: HttpRequest) -> Response:
             defaults={'answers': answers, 'score': percentage}
         )
         if created:
-            request.user.profile.points += points
-            request.user.profile.save()
+            request.user.profile.add_points(points)
 
             if percentage > 80:
                 reward_health = 20
-                pet = request.user.pets.first()
+                pet = request.user.pet
                 if pet:
                     pet.health = min(pet.health + reward_health, 100)
                     pet.save()

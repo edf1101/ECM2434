@@ -11,6 +11,8 @@
           rel="stylesheet"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <link rel="stylesheet"
+          href= {% static 'css/background.css' %}>
     <script>
         const streakURL = "{% url 'challenges:update_streak' %}";
         const updateLocURL = "{% url 'users:update_location' %}";
@@ -23,7 +25,30 @@
 
 </head>
 <body class="d-flex flex-column min-vh-100">
+<div id="background-animations"
+     style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;">
+    <div class="leaf-background">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 5%; animation-delay: 0s; animation-duration: 4s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 20%; animation-delay: 1s; animation-duration: 5s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 35%; animation-delay: 2s; animation-duration: 6s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 50%; animation-delay: 1.5s; animation-duration: 4s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 65%; animation-delay: 2s; animation-duration: 5s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 80%; animation-delay: 2.5s; animation-duration: 6s;">
+        <img src="{% static 'media/leaf.png' %}" class="falling-leaf"
+             style="left: 90%; animation-delay: 1s; animation-duration: 5s;">
+    </div>
 
+    <div class="bee-container">
+        <img src="{% static 'media/flying_bee.gif' %}" class="flying-bee"
+             style="animation-delay: 0s; animation-duration: 40s;">
+    </div>
+</div>
 {% block topBar %}
     <nav class="navbar navbar-dark bg-dark py-2">
         <div class="container-fluid">
@@ -54,7 +79,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="{% url 'homepage' %}">
-            <img src="{% static 'media/ecoPetLogo.png' %}" alt="EcoPet Logo" class="logo img-fluid"
+            <img src="{% static 'media/ecopetLogo.png' %}" alt="EcoPet Logo" class="logo img-fluid"
                  style="height: 40px;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -80,34 +105,36 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'pets:mypet' %}">Your Pet</a>
                     </li>
+
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="qrScannerIcon">
+                            <i class="bi bi-qr-code-scan"></i>
+                        </a>
+                    </li>
                 {% endif %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="qrScannerIcon">
-                        <i class="bi bi-qr-code-scan"></i>
-                    </a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-bag"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bag"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
 
 
-                        <li>
-                            <a class="dropdown-item" href="{% url 'pets:shop' %}">Pet Shop</a>
-                        </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'pets:shop' %}">Pet Shop</a>
+                            </li>
 
-                        <li>
-                            <a class="dropdown-item lootbox-link"
-                               href="{% url 'lootboxes:spin_lootbox' %}">Lootboxes</a>
-                        </li>
+                            <li>
+                                <a class="dropdown-item lootbox-link"
+                                   href="{% url 'lootboxes:spin' %}">Lootboxes</a>
+                            </li>
 
-                    </ul>
-                </li>
-
+                        </ul>
+                    </li>
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -125,6 +152,7 @@
                                     Password</a>
                             </li>
 
+                            <li>
                             <li>
                                 <a class="dropdown-item" href="{% url 'users:logout' %}">Sign
                                     Out</a>
@@ -195,7 +223,7 @@
 <footer>
     <div class="footer-content">
         <div class="footer-logo">
-            <img src="{% static 'media/ecoPetLogo.png' %}" alt="EcoPet Logo"
+            <img src="{% static 'media/ecopetLogo.png' %}" alt="EcoPet Logo"
                  class="footer-logo-img">
         </div>
         <div class="footer-links">

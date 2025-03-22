@@ -14,7 +14,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import PetType, CosmeticType, Cosmetic, Pet
+from .models import PetType, CosmeticCategory, Cosmetic, Pet
 
 User = get_user_model()
 
@@ -48,6 +48,7 @@ class PetTypeTestCase(TestCase):
             "Critically endangered aquatic species native only to the freshwater"
             " of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
         )
+
         self.assertTrue(self.pet_type.video)
 
     def tearDown(self) -> None:
@@ -73,7 +74,6 @@ class PetTypeTestCase(TestCase):
 
         @return: None
         """
-
         self.assertEqual(self.pet_type.__str__(), "Axolotl")
 
 
@@ -99,6 +99,7 @@ class CosmeticTypeTestCase(TestCase):
 
         @return: None
         """
+
         CosmeticType.objects.create(name="Hat")
         hat = CosmeticType.objects.get(name="Hat")
         self.assertEqual(hat.__str__(), "Hat")
@@ -119,6 +120,7 @@ class CosmeticModelTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
+
             video=SimpleUploadedFile(
                 "axolotl.webm", b"file content", content_type="video/webm"
             ),
@@ -148,14 +150,14 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
+            name="Hat", description="Red stylish hat", category=self.cosmetic_type,
+            price=10, fits=self.pet_type
         )
-        hat.fits.add(self.pet_type)
         self.assertEqual(hat.name, "Hat")
         self.assertEqual(hat.description, "Red stylish hat")
-        self.assertEqual(hat.type, self.cosmetic_type)
+        self.assertEqual(hat.category, self.cosmetic_type)
         self.assertEqual(hat.price, 10)
-        self.assertIn(self.pet_type, hat.fits.all())
+        self.assertEqual(self.pet_type, hat.fits)
 
     def test_cosmetic_str_method(self) -> None:
         """

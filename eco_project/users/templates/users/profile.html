@@ -38,28 +38,18 @@
             <div class="pet-image-container">
                 {% if pet %}
                     <h4 id="petName">{{ pet.name }}</h4>
-                    {% if pet.type.name == "Axolotl" %}
+                    {% if pet.current_cosmetic %}
                         <video id="petVideo" autoplay loop playsinline muted
                                style="max-width:220px;">
-                            <source src="/media/pets/base_movs/axolotl/axolotl.webm"
-                                    type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    {% elif pet.type.name == "Virginia Big-Eared Bat" %}
-                        <video id="petVideo" autoplay loop playsinline muted
-                               style="max-width:220px;">
-                            <source src="/media/pets/base_movs/bat/bat.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    {% elif pet.type.name == "African Bush Elephant" %}
-                        <video id="petVideo" autoplay loop playsinline muted
-                               style="max-width:220px;">
-                            <source src="/media/pets/base_movs/elephant/elephant.webm"
-                                    type="video/webm">
+                            <source src="{{ pet.current_cosmetic.video.url }}" type="video/webm">
                             Your browser does not support the video tag.
                         </video>
                     {% else %}
-                        <img id="petImage" src="{% static 'media/demoPet.png' %}" alt="Demo Pet">
+                        <video id="petVideo" autoplay loop playsinline muted
+                               style="max-width:220px;">
+                            <source src="{{ pet.type.base_video.url }}" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
                     {% endif %}
                 {% else %}
                     <h4 id="petName">Default Pet Name</h4>

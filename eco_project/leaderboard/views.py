@@ -16,20 +16,20 @@ def leaderboard_view(request) -> HttpResponse:
     """
     View to render the leaderboard page, showing the top users, pets, groups, and friends.
     """
-    top_users = User.objects.prefetch_related('pets').all()
+    top_users = User.objects.prefetch_related('pet').all()
     # sort top_users by profile.points
     top_users = sorted(top_users, key=lambda user: user.profile.points, reverse=True)
 
-    pets = Pet.objects.order_by("-health")[:10]
+    pet = Pet.objects.order_by("-health")[:10]
 
     user_groups = UserGroup.objects.filter(users=request.user)
 
     # Get all groups and calculate their total points
-    all_groups = UserGroup.objects.all().prefetch_related('users', 'users__pets', 'users__profile')
+    all_groups = UserGroup.objects.all().prefetch_related('users', 'users__pet', 'users__profile')
     top_groups = []
 
     for group in all_groups:
-        group_users = User.objects.filter(usergroup=group).prefetch_related('pets', 'profile')
+        group_users = User.objects.filter(usergroup=group).prefetch_related('pet', 'profile')
         total_group_points = sum(user.profile.points for user in group_users)
         top_groups.append({
             'group': group,
@@ -42,7 +42,7 @@ def leaderboard_view(request) -> HttpResponse:
 
     group_leaderboards = []
     for group in user_groups:
-        group_users = User.objects.filter(usergroup=group).prefetch_related('pets')
+        group_users = User.objects.filter(usergroup=group).prefetch_related('pet')
 
         sorted_users = sorted(group_users, key=lambda u: u.profile.points, reverse=True)
 
@@ -60,7 +60,7 @@ def leaderboard_view(request) -> HttpResponse:
 
     context = {
         "users": top_users,
-        "pets": pets,
+        "pets": pet,
         "user_groups": user_groups,
         "group_leaderboards": group_leaderboards,
         "current_user": request.user,

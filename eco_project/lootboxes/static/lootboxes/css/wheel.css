@@ -1,0 +1,155 @@
+#wheel-container {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+}
+
+#wheel {
+    width: 100%;
+    height: auto;
+    border: 2px solid #333;
+    border-radius: 50%;
+    display: block;
+}
+
+#petbucks-display, #result-message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+#win-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+    background: rgba(255, 215, 0, 0.9); /* golden background */
+    padding: 40px;
+    border-radius: 10px;
+    font-size: 2em;
+    color: #333;
+    text-align: center;
+    z-index: 100;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+#win-message.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+
+.hero-container {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: url("/static/media/mapImage.jpg") no-repeat center center;
+    background-size: cover;
+    padding: 100px 0px 0px 0px;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    url('/static/media/mapImage.jpg') center center / cover no-repeat;
+    filter: blur(2px);
+    z-index: 1;
+}
+
+.hero-text {
+    position: relative;
+    z-index: 2;
+    color: #f3f3f3;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 1rem;
+}
+
+.vertical-divider-left h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.vertical-divider-left h3 {
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.vertical-divider-left p {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.vertical-divider-left ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.vertical-divider-left ul li {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.vertical-divider-left ul li:hover,
+.vertical-divider-left ul li:active {
+    transform: scale(1.05);
+}
+
+.vertical-divider-left ul li:nth-child(odd)::before {
+    content: "✨ ";
+    margin-right: 0.5rem;
+}
+
+.vertical-divider-left ul li:nth-child(even)::before {
+    content: "🥇 ";
+    margin-right: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .vertical-divider-left {
+        border-left: 2px solid rgba(37, 46, 42, 0.32);
+    }
+}
+.card-container {
+     background: #ecfadf;
+    border: 10px solid transparent;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+	border-image: conic-gradient(from var(--angle), #16f172, #ccf466, #96ffd9, #eff38f, #30c46e,#16f172) 1;
+
+	animation: 10s rotate linear infinite;
+}
+/* Animate the custom property for the conic gradient */
+@keyframes rotate {
+    to {
+        --angle: 360deg;
+    }
+}
+
+/* Enable animation of the custom property */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+
+
