@@ -7,7 +7,7 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from pets.models import Cosmetic, CosmeticCategory, Pet
@@ -65,16 +65,14 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
     pet: Pet = request.user.pet
 
     if cosmetic not in profile.owned_cosmetics.all():
-        messages.error(request, "You do not own this cosmetic.")
-        return redirect('pets:mypet')
+        return JsonResponse({"error": "You do not own this cosmetic."}, status=404)
 
     if cosmetic.fits != pet.type:
-        messages.error(request, "This cosmetic does not fit your pet.")
-        return redirect('pets:mypet')
+        return JsonResponse({"error": "This cosmetic does not fit your pet."}, status=404)
 
     if equip:
         if cosmetic == pet.current_cosmetic:
-            messages.info(request, "This cosmetic is already equipped.")
+            return JsonResponse({"error": "This cosmetic is already equipped."}, status=404)
         else:
             pet.current_cosmetic = cosmetic
             messages.success(request, f"{cosmetic.name} has been equipped.")
@@ -83,10 +81,10 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
             pet.current_cosmetic = None
             messages.success(request, f"{cosmetic.name} has been removed.")
         else:
-            messages.info(request, "This cosmetic is not equipped.")
+            return JsonResponse({"error": "This cosmetic is not equipped."}, status=404)
+
 
     pet.save()
-
     return redirect('pets:mypet')
 
 

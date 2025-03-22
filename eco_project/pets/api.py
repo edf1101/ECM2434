@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 
+from users.models import Profile
+
 User = get_user_model()  # Get the user model
 
 
@@ -25,8 +27,9 @@ def get_pet_data(request, username) -> JsonResponse:
     except User.DoesNotExist:
         return JsonResponse({"error": "User not found."}, status=404)
 
-    pet = target_user.pet
-    if not pet:
+    try:
+        pet = target_user.pet
+    except Exception as e:
         return JsonResponse(
             {"error": "No pet found for this user."}, status=404)
 

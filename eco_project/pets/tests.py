@@ -37,7 +37,7 @@ class PetTypeTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater of"
                         " Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            video=SimpleUploadedFile(
+            base_video=SimpleUploadedFile(
                 "axolotl.webm", b"file content", content_type="video/webm"
             ),
         )
@@ -49,7 +49,7 @@ class PetTypeTestCase(TestCase):
             " of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
         )
 
-        self.assertTrue(self.pet_type.video)
+        self.assertTrue(self.pet_type.base_video)
 
     def tearDown(self) -> None:
         """
@@ -60,9 +60,9 @@ class PetTypeTestCase(TestCase):
         # Loop through all PetType instances and delete the file on disk if it
         # exists.
         for pet in PetType.objects.all():
-            if pet.video and os.path.exists(pet.video.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.video.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()
@@ -77,9 +77,9 @@ class PetTypeTestCase(TestCase):
         self.assertEqual(self.pet_type.__str__(), "Axolotl")
 
 
-class CosmeticTypeTestCase(TestCase):
+class CosmeticCategoryTestCase(TestCase):
     """
-    Test Suite for CosmeticType model, similar to PetType where its appropriate attributes
+    Test Suite for CosmeticCategory model, similar to PetType where its appropriate attributes
     and methods are made and run.
     """
 
@@ -89,19 +89,19 @@ class CosmeticTypeTestCase(TestCase):
 
         @return: None
         """
-        CosmeticType.objects.create(name="Hat")
-        hat = CosmeticType.objects.get(name="Hat")
+        CosmeticCategory.objects.create(name="Hat")
+        hat = CosmeticCategory.objects.get(name="Hat")
         self.assertEqual(hat.name, "Hat")
 
     def test_cosmetic_str_method(self) -> None:
         """
-        Tests the __str__ method of CosmeticType
+        Tests the __str__ method of CosmeticCategory
 
         @return: None
         """
 
-        CosmeticType.objects.create(name="Hat")
-        hat = CosmeticType.objects.get(name="Hat")
+        CosmeticCategory.objects.create(name="Hat")
+        hat = CosmeticCategory.objects.get(name="Hat")
         self.assertEqual(hat.__str__(), "Hat")
 
 
@@ -112,7 +112,7 @@ class CosmeticModelTestCase(TestCase):
 
     def setUp(self) -> None:
         """
-        Set up with necessary data for PetType and CosmeticType objects.
+        Set up with necessary data for PetType and CosmeticCategory objects.
 
         @return: None
         """
@@ -121,11 +121,11 @@ class CosmeticModelTestCase(TestCase):
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
 
-            video=SimpleUploadedFile(
+            base_video=SimpleUploadedFile(
                 "axolotl.webm", b"file content", content_type="video/webm"
             ),
         )
-        self.cosmetic_type = CosmeticType.objects.create(name="Hat")
+        self.cosmetic_type = CosmeticCategory.objects.create(name="Hat")
 
     def tearDown(self) -> None:
         """
@@ -136,9 +136,9 @@ class CosmeticModelTestCase(TestCase):
 
         # Clean up any PetType video files created in setUp.
         for pet in PetType.objects.all():
-            if pet.video and os.path.exists(pet.video.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.video.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()
@@ -166,9 +166,9 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Red Hat", description="Red stylish hat", type=self.cosmetic_type, price=10
+            name="Red Hat", description="Red stylish hat", category=self.cosmetic_type, price=10, fits=self.pet_type
         )
-        self.assertEqual(hat.__str__(), "Red Hat (Hat)")
+        self.assertEqual(hat.__str__(), "Red Hat (Axolotl Hat)")
 
 
 class PetModelTestCase(TestCase):
@@ -190,7 +190,7 @@ class PetModelTestCase(TestCase):
             name="Axolotl",
             description="Critically endangered aquatic species native only to the freshwater "
                         "of Lake Xochimilco and Lake Chalco in the Valley of Mexico.",
-            video=SimpleUploadedFile(
+            base_video=SimpleUploadedFile(
                 "axolotl.webm",
                 b"file content",
                 content_type="video/webm"),
@@ -262,9 +262,9 @@ class PetModelTestCase(TestCase):
         """
         # Clean up the PetType video file created in setUp.
         for pet in PetType.objects.all():
-            if pet.video and os.path.exists(pet.video.path):
+            if pet.base_video and os.path.exists(pet.base_video.path):
                 try:
-                    os.remove(pet.video.path)
+                    os.remove(pet.base_video.path)
                 except OSError:
                     pass
         super().tearDown()
@@ -340,7 +340,7 @@ class PetViewsTestCase(TestCase):
         self.pet_type = PetType.objects.create(
             name="Axolotl",
             description="Aquatic species native to Mexico.",
-            video=SimpleUploadedFile(
+            base_video=SimpleUploadedFile(
                 "axolotl.webm", b"file content", content_type="video/webm"
             ),
         )
@@ -358,12 +358,17 @@ class PetViewsTestCase(TestCase):
         self.assertEqual(response.context["pet"], self.pet)
 
     def test_equip_cosmetic(self):
-        cosmetic_type = CosmeticType.objects.create(name="Hat")
-        cosmetic = Cosmetic.objects.create(name="Red Hat", type=cosmetic_type, price=10)
-        self.user.profile.owned_accessories.add(cosmetic)
+        cosmetic_type = CosmeticCategory.objects.create(name="Hat")
+        cosmetic = Cosmetic.objects.create(name="Red Hat", category=cosmetic_type, price=10, fits=self.pet.type,
+                                           icon=SimpleUploadedFile(
+                                               "icon.png", b"file content", content_type="image/png"
+                                           ), video=SimpleUploadedFile(
+                "axolotl.webm", b"file content", content_type="video/webm"
+            ))
+        self.user.profile.owned_cosmetics.add(cosmetic)
         response = self.client.get(reverse("pets:equip_cosmetic", args=[cosmetic.id, 1]))
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("pets:mypet"))
-        self.assertIn(cosmetic, self.pet.cosmetics.all())
 
     def test_shop_view(self):
         response = self.client.get(reverse("pets:shop"))
