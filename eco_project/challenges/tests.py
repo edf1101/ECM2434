@@ -7,11 +7,14 @@ Mocks are used extensively to simplify the tests and to avoid side effects.
 import json
 from datetime import timedelta
 from unittest.mock import patch, MagicMock
+from django.utils import timezone
 
-from challenges.models import Streak, ChallengeSettings
+from challenges.models import Streak, UserFeatureReach, ChallengeSettings, get_current_window
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from pets.models import Pet, PetType
+from challenges.tasks import reset_missed_streaks, cleanup_user_feature_reaches, update_pet_health, update_challenges
 
 #pylint: disable=W0613,C0415,W0611
 
@@ -328,3 +331,187 @@ class ChallengesAPITests(TestCase):
 
         # assert streak created
         self.assertTrue(Streak.objects.filter(user=new_user).exists())
+
+
+class TasksTests(TestCase):
+    """
+    Tests for the tasks in challenges/tasks.py
+    """
+
+    def setUp(self) -> None:
+        """
+        Set up the test environment.
+        """
+        # Create a test user
+        self.user = User.objects.create_user(
+            username="testuser", password="testpass")
+        self.profile, _ = Profile.objects.get_or_create(
+            user=self.user, defaults={"points": 0, "latitude": 0.0, "longitude": 0.0}
+        )
+
+        # Get or create the streak for the user
+        self.streak = Streak.objects.get(user=self.user)
+
+        # Setup challenge settings
+        self.challenge_settings = ChallengeSettings.get_solo()
+        self.challenge_settings.interval = timedelta(days=1)
+        self.challenge_settings.health_depreciation_interval = timedelta(days=1)
+        self.challenge_settings.health_depreciation_amount = 5
+        self.challenge_settings.save()
+
+        self.pet_type = PetType.objects.create(name="Axolotl")
+
+        # Create a pet for testing update_pet_health
+        self.pet = Pet.objects.create(
+            name="TestPet",
+            owner=self.user,
+            health=100,
+            type=self.pet_type
+        )
+
+    def test_update_challenges(self) -> None:
+        """
+        Test that update_challenges calls both reset_missed_streaks and cleanup_user_feature_reaches.
+        """
+        with patch('challenges.tasks.reset_missed_streaks') as mock_reset_streaks:
+            with patch('challenges.tasks.cleanup_user_feature_reaches') as mock_cleanup:
+                update_challenges()
+
+                # Verify both functions were called
+                mock_reset_streaks.assert_called_once()
+                mock_cleanup.assert_called_once()
+
+    def test_reset_missed_streaks_current_window(self) -> None:
+        """
+        Test that streaks in the current window are not reset.
+        """
+        now = timezone.now()
+        current_window_start, _ = get_current_window(now, self.challenge_settings.interval)
+
+        # Set the streak's last window to the current window
+        self.streak.last_window = current_window_start
+        self.streak.raw_count = 5
+        self.streak.save()
+
+        # Call the function
+        reset_missed_streaks()
+
+        # Refresh the streak from the database
+        self.streak.refresh_from_db()
+
+        # Assert the streak count wasn't reset
+        self.assertEqual(self.streak.raw_count, 5)
+
+    def test_reset_missed_streaks_previous_window(self) -> None:
+        """
+        Test that streaks in the previous window are not reset.
+        """
+        now = timezone.now()
+        current_window_start, _ = get_current_window(now, self.challenge_settings.interval)
+        previous_window_start = current_window_start - self.challenge_settings.interval
+
+        # Set the streak's last window to the previous window
+        self.streak.last_window = previous_window_start
+        self.streak.raw_count = 5
+        self.streak.save()
+
+        # Call the function
+        reset_missed_streaks()
+
+        # Refresh the streak from the database
+        self.streak.refresh_from_db()
+
+        # Assert the streak count wasn't reset
+        self.assertEqual(self.streak.raw_count, 5)
+
+    def test_reset_missed_streaks_old_window(self) -> None:
+        """
+        Test that streaks in an old window (not current or previous) are reset.
+        """
+        now = timezone.now()
+        current_window_start, _ = get_current_window(now, self.challenge_settings.interval)
+        old_window_start = current_window_start - (self.challenge_settings.interval * 2)
+
+        # Set the streak's last window to an old window
+        self.streak.last_window = old_window_start
+        self.streak.raw_count = 5
+        self.streak.save()
+
+        # Call the function
+        reset_missed_streaks()
+
+        # Refresh the streak from the database
+        self.streak.refresh_from_db()
+
+        # Assert the streak count was reset to 0
+        self.assertEqual(self.streak.raw_count, 0)
+
+    def test_update_pet_health_no_update_needed(self) -> None:
+        """
+        Test that pet health is not updated if the depreciation interval hasn't passed.
+        """
+        # Set the last health depreciation to be recent
+        self.challenge_settings.last_health_depreciation = timezone.now() - timedelta(hours=12)
+        self.challenge_settings.save()
+
+        # Set initial pet health
+        self.pet.health = 90
+        self.pet.save()
+
+        # Call the function
+        update_pet_health()
+
+        # Refresh the pet from the database
+        self.pet.refresh_from_db()
+
+        # Assert the health hasn't changed
+        self.assertEqual(self.pet.health, 90)
+
+    def test_update_pet_health_update_needed(self) -> None:
+        """
+        Test that pet health is updated if the depreciation interval has passed.
+        """
+        # Set the last health depreciation to be old
+        self.challenge_settings.last_health_depreciation = timezone.now() - timedelta(days=2)
+        self.challenge_settings.save()
+
+        # Set initial pet health
+        self.pet.health = 90
+        self.pet.save()
+
+        # Call the function
+        update_pet_health()
+
+        # Refresh the pet from the database
+        self.pet.refresh_from_db()
+
+        # Assert the health has been decreased by health_depreciation_amount
+        self.assertEqual(self.pet.health, 85)
+
+        # Assert that the last_health_depreciation has been updated
+        self.challenge_settings.refresh_from_db()
+        self.assertGreater(
+            self.challenge_settings.last_health_depreciation,
+            timezone.now() - timedelta(minutes=1)
+        )
+
+    def test_update_pet_health_minimum_zero(self) -> None:
+        """
+        Test that pet health doesn't go below zero.
+        """
+        # Set the last health depreciation to be old
+        self.challenge_settings.last_health_depreciation = timezone.now() - timedelta(days=2)
+        self.challenge_settings.save()
+
+        # Set initial pet health to something that would go below zero
+        self.pet.health = 3
+        self.pet.save()
+
+        # Call the function
+        update_pet_health()
+
+        # Refresh the pet from the database
+        self.pet.refresh_from_db()
+
+        # Assert the health has been set to 0, not negative
+        self.assertEqual(self.pet.health, 0)
