@@ -73,7 +73,7 @@ To generate a test coverage report:
 ```shell
 pip install coverage
 cd eco_project
-coverage run --source='.' manage.py test mysite
+coverage run --source='.' manage.py test 
 coverage report
 ```
 
