@@ -43,7 +43,8 @@ def individual_feature_page(request, slug) -> HttpResponse:
     if request.user.is_authenticated:
         user_reached_feature(request.user, feature_instance)
 
-    context["in_range"] = user_in_range_of_feature(request.user, feature_instance)
+    context["in_range"] = False if not request.user.is_authenticated else \
+        user_in_range_of_feature(request.user, feature_instance)
 
     if feature_instance.has_question:
         context["question"] = question
