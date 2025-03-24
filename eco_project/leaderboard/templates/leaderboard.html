@@ -192,7 +192,7 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td><a href="{% url 'users:user_profile' user.username %}"
                                            class="profileLink"> {{ user.username }}</a></td>
-                                    <td>{{ user.total_pet_points }}</td>
+                                    <td>{{ user.profile.points }}</td>
                                     <td>
                                         {% if user.badgeinstance_set.all.count %}
                                             {% for badge_instance in user.badgeinstance_set.all %}

@@ -9,7 +9,7 @@ import os
 
 from django.apps import AppConfig
 
-from mysite.scheduler import scheduler
+from mysite.scheduler import scheduler as challenge_scheduler
 from apscheduler.schedulers.base import SchedulerAlreadyRunningError
 
 
@@ -36,7 +36,7 @@ class ChallengesConfig(AppConfig):
         from .tasks import update_challenges, update_pet_health
 
         # Schedule the job for a 1m interval
-        scheduler.add_job(
+        challenge_scheduler.add_job(
             update_challenges,
             "interval",
             seconds=60,
@@ -45,7 +45,7 @@ class ChallengesConfig(AppConfig):
         )
 
         # Schedule the pet health update job to run every 24 hours.
-        scheduler.add_job(
+        challenge_scheduler.add_job(
             update_pet_health,
             "interval",
             seconds=15,
@@ -53,7 +53,7 @@ class ChallengesConfig(AppConfig):
             replace_existing=True,
         )
         try:
-            scheduler.start()
+            challenge_scheduler.start()
         except SchedulerAlreadyRunningError:
             pass
-        atexit.register(lambda: scheduler.shutdown())
+        atexit.register(lambda: challenge_scheduler.shutdown())

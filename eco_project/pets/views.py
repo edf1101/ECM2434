@@ -73,9 +73,9 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
     if equip:
         if cosmetic == pet.current_cosmetic:
             return JsonResponse({"error": "This cosmetic is already equipped."}, status=404)
-        else:
-            pet.current_cosmetic = cosmetic
-            messages.success(request, f"{cosmetic.name} has been equipped.")
+
+        pet.current_cosmetic = cosmetic
+        messages.success(request, f"{cosmetic.name} has been equipped.")
     else:
         if cosmetic == pet.current_cosmetic:
             pet.current_cosmetic = None

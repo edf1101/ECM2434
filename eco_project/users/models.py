@@ -119,21 +119,14 @@ class BadgeInstance(models.Model):
     This model represents an instance of a badge that a user has earned.
     """
 
-    badge: models.ForeignKey = models.ForeignKey(
-        Badge, on_delete=models.CASCADE)
-    user: models.ForeignKey = models.ForeignKey(User, on_delete=models.CASCADE)
+    badge = models.OneToOneField(Badge, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         """
-        Return a string representation of the badge instance
-
-        @return: a string representation of the badge instance
+        Return a string representation of the badge instance.
         """
-
-        user: User = self.user
-        badge: Badge = self.badge
-
-        return f"{user.username} - {badge.title}"
+        return f"{self.user.username} - {self.badge.title}"
 
     class Meta:
         """

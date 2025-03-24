@@ -20,12 +20,13 @@ def challenges_home(request) -> HttpResponse:
     """
 
     # get nearby location features
-    # get user location if logged in else get default locations
+    user = request.user
     lat = LocationsAppSettings.get_instance().default_lat
     lon = LocationsAppSettings.get_instance().default_lon
-    if request.user.is_authenticated:
-        lat = request.user.profile.latitude
-        lon = request.user.profile.longitude
+
+    if user.is_authenticated:
+        lat = user.profile.latitude
+        lon = user.profile.longitude
 
     nearby_features = list(get_features_near(lat, lon))
 

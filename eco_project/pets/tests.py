@@ -74,7 +74,7 @@ class PetTypeTestCase(TestCase):
 
         @return: None
         """
-        self.assertEqual(self.pet_type.__str__(), "Axolotl")
+        self.assertEqual(str(self.pet_type), "Axolotl")
 
 
 class CosmeticCategoryTestCase(TestCase):
@@ -102,7 +102,7 @@ class CosmeticCategoryTestCase(TestCase):
 
         CosmeticCategory.objects.create(name="Hat")
         hat = CosmeticCategory.objects.get(name="Hat")
-        self.assertEqual(hat.__str__(), "Hat")
+        self.assertEqual(str(hat), "Hat")
 
 
 class CosmeticModelTestCase(TestCase):
@@ -166,9 +166,10 @@ class CosmeticModelTestCase(TestCase):
         @return: None
         """
         hat = Cosmetic.objects.create(
-            name="Red Hat", description="Red stylish hat", category=self.cosmetic_type, price=10, fits=self.pet_type
+            name="Red Hat", description="Red stylish hat", category=self.cosmetic_type,
+            price=10, fits=self.pet_type
         )
-        self.assertEqual(hat.__str__(), "Red Hat (Axolotl Hat)")
+        self.assertEqual(str(hat), "Red Hat (Axolotl Hat)")
 
 
 class PetModelTestCase(TestCase):
@@ -271,11 +272,15 @@ class PetModelTestCase(TestCase):
 
 
 class NotifyLowHealthSignalTestCase(TestCase):
+    """
+    Test suite for the notify_low_health signal.
+    """
     def setUp(self):
         """
         Set up a user, pet type, and pet instance for testing.
         """
-        self.user = User.objects.create_user(username="testuser", email="testuser@example.com", password="password")
+        self.user = User.objects.create_user(username="testuser",
+                                             email="testuser@example.com", password="password")
         self.pet_type = PetType.objects.create(
             name="Axolotl",
             description="Aquatic species native to Mexico.",
@@ -333,6 +338,9 @@ class NotifyLowHealthSignalTestCase(TestCase):
 
 
 class PetViewsTestCase(TestCase):
+    """
+    Test suite for the views in the pets app.
+    """
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="password")
         self.client.login(username="testuser", password="password")
@@ -352,16 +360,27 @@ class PetViewsTestCase(TestCase):
         )
 
     def test_view_pet(self):
+        """
+        Test the view_pet view.
+        """
+
         response = self.client.get(reverse("pets:mypet"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "pets/mypet.html")
         self.assertEqual(response.context["pet"], self.pet)
 
     def test_equip_cosmetic(self):
+        """
+        Test the equip_cosmetic view.
+
+        :return: None
+        """
         cosmetic_type = CosmeticCategory.objects.create(name="Hat")
-        cosmetic = Cosmetic.objects.create(name="Red Hat", category=cosmetic_type, price=10, fits=self.pet.type,
+        cosmetic = Cosmetic.objects.create(name="Red Hat", category=cosmetic_type, price=10,
+                                           fits=self.pet.type,
                                            icon=SimpleUploadedFile(
-                                               "icon.png", b"file content", content_type="image/png"
+                                               "icon.png",
+                                               b"file content", content_type="image/png"
                                            ), video=SimpleUploadedFile(
                 "axolotl.webm", b"file content", content_type="video/webm"
             ))
@@ -371,6 +390,11 @@ class PetViewsTestCase(TestCase):
         self.assertRedirects(response, reverse("pets:mypet"))
 
     def test_shop_view(self):
+        """
+        Test the shop view.
+
+        :return: None
+        """
         response = self.client.get(reverse("pets:shop"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "pets/shop.html")
