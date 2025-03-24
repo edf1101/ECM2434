@@ -53,7 +53,7 @@ class LeaderboardViewTest(TestCase):
         Test that an unauthenticated user is redirected to the login page
         when trying to access the leaderboard.
 
-        @return: None
+        :return: None
         """
         response = self.client.get(reverse("leaderboard:leaderboard"))
         self.assertEqual(response.status_code, 302)
@@ -64,7 +64,7 @@ class LeaderboardViewTest(TestCase):
         including rendering the correct template and ensuring that the context
         contains the expected 'users' and 'pets' data sorted by points.
 
-        @return: None
+        :return: None
         """
         self.client.login(username="user1", password="testpass")
         response = self.client.get(reverse("leaderboard:leaderboard"))
@@ -88,7 +88,7 @@ class LeaderboardViewTest(TestCase):
     #     is selected from the group dropdown. Verifies that the correct users
     #     from the selected group are displayed and sorted by points.
     #
-    #     @return: None
+    #     :return: None
     #     """
     #     self.client.login(username="user1", password="testpass")
     #     response = self.client.get(
@@ -117,7 +117,7 @@ class LeaderboardViewTest(TestCase):
     #     Verifies that 'selected_group' is None and no group users are included
     #     in the context.
     #
-    #     @return: None
+    #     :return: None
     #     """
     #     self.client.login(username="user1", password="testpass")
     #     response = self.client.get(reverse("leaderboard:leaderboard"))

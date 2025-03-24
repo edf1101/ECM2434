@@ -22,9 +22,9 @@ class Command(BaseCommand):
         """
         This function clears the 3D map chunk data from the database
 
-        @param args: None expected
-        @param kwargs: None expected
-        @return: None
+        :param args: None
+        :param kwargs: None
+        :return: None
         """
 
         self.clear_feature_types()
@@ -36,7 +36,7 @@ class Command(BaseCommand):
         """
         Clear the feature types data
 
-        @return: None
+        :return: None
         """
         # clear the media feature_type_img folder
         folder = os.path.join(MEDIA_ROOT, "locations/feature_type_img")
@@ -62,7 +62,7 @@ class Command(BaseCommand):
         """
         Clear the feature instances data
 
-        @return: None
+        :return: None
         """
 
         # clear the media feature_type_img folder
@@ -89,6 +89,6 @@ class Command(BaseCommand):
         """
         Clear the question data from the database
 
-        @return: None
+        :return: None
         """
         QuestionFeature.objects.all().delete()

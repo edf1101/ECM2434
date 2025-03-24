@@ -14,8 +14,8 @@ def base_locations(request) -> HttpResponse:
     """
     This function returns the homepage for the locations app.
 
-    @param request: The request object that gets passed to the view.
-    @return: An HTTP webpage to render to the user.
+    :param request: The request object that gets passed to the view.
+    :return: An HTTP webpage to render to the user.
     """
     generic_features = FeatureType.objects.all()
     context = {"feature_type_list": generic_features}
@@ -26,9 +26,9 @@ def individual_feature_page(request, slug) -> HttpResponse:
     """
     This function returns the page for a specific feature instance ie not a feature type.
 
-    @param request: The request object that gets passed to the view.
-    @param slug: The slug (unique url name) of the feature.
-    @return: An HTTP webpage to render to the user.
+    :param request: The request object that gets passed to the view.
+    :param slug: The slug (unique url name) of the feature.
+    :return: An HTTP webpage to render to the user.
     """
     feature_instance: FeatureInstance = FeatureInstance.objects.get(slug=slug)
     context = {"feature_instance": feature_instance}
@@ -62,9 +62,9 @@ def generic_feature_page(request, id_arg) -> HttpResponse:
     This function returns the page for a generic feature type.
     Ie a generic Water fountain NOT a specific water fountain.
 
-    @param request: The request object that gets passed to the view.
-    @param id_arg: The id (PK) of the feature.
-    @return: The HTTP webpage to render to the user.
+    :param request: The request object that gets passed to the view.
+    :param id_arg: The id (PK) of the feature.
+    :return: The HTTP webpage to render to the user.
     """
     feature_type: FeatureType = FeatureType.objects.get(id=id_arg)
 

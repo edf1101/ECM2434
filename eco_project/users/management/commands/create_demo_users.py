@@ -1,5 +1,7 @@
 """
 This module is used to run a command 'create_demo_users' that sets up a gamekeeper and an admin
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import sys
 
@@ -22,7 +24,7 @@ class Command(BaseCommand):
         """
         Create the roles required
 
-        @return: None
+        :return: None
         """
         self.create_users()
 
@@ -30,7 +32,7 @@ class Command(BaseCommand):
         """
         Try to create demo admin and gamekeeper users
 
-        @return: None
+        :return: None
         """
 
         # Try to get the 'gamekeepers' group

@@ -20,11 +20,11 @@ def create_or_update_user_profile(sender, instance, created, **kwargs) -> None:
     Creates a Profile if one doesn't exist,
     and then saves it.
 
-    @param sender: The sender of the signal
-    @param instance: The instance of the sender
-    @param created: Whether the instance was created
-    @param kwargs: Additional keyword arguments
-    @return: None
+    :param sender: The sender of the signal
+    :param instance: The instance of the sender
+    :param created: Whether the instance was created
+    :param kwargs: Additional keyword arguments
+    :return: None
     """
     profile, _ = Profile.objects.get_or_create(user=instance)
     profile.save()

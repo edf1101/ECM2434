@@ -1,6 +1,6 @@
 """
 This file contains the API endpoints for the challenges app.
-@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
+@author 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 from django.http import JsonResponse
@@ -27,8 +27,8 @@ def collect_streak(request) -> Response:
     """
     this gets called when the user wants to collect their streak
 
-    @param request: The POST request object.
-    @return: A JSON response with a message to the front end
+    :param request: The POST request object.
+    :return: A JSON response with a message to the front end
     """
     user = request.user
 
@@ -45,7 +45,6 @@ def collect_streak(request) -> Response:
     previous_window_start = current_window_start - interval
 
     # Also update the last seen for the user profile
-
     user.profile.last_active = now_time
 
     # If already collected in this window, return a message.
@@ -57,12 +56,11 @@ def collect_streak(request) -> Response:
             }
         )
 
-    # If the last check-in was in the immediately preceding window, increment
-    # streak.
+    # If the last check-in was in the immediately preceding window, increment streak
     if streak.last_window == previous_window_start:
         streak.raw_count += 1
     else:
-        # Otherwise, the streak is broken; start over.
+        # Otherwise, the streak is broken - start over.
         streak.raw_count = 1
 
     # add points to the user
@@ -82,9 +80,9 @@ def submit_answer_api(request) -> Response:
     """
     This function handles the submission of answers to questions.
 
-    @param request: The POST request object. Need a JSON object with 'answer'
+    :param request: The POST request object. Need a JSON object with 'answer'
     and 'question_id' keys.
-    @return: A JSON response with a message to the front end
+    :return: A JSON response with a message to the front end
     """
 
     signed_in = request.user and request.user.is_authenticated
@@ -145,8 +143,8 @@ def nearest_challenges_api(request) -> JsonResponse:
     """
     Returns up to 10 nearest challenges as JSON, sorted by distance.
 
-    @param request: The GET request object.
-    @return: A JSON response with a list of challenges
+    :param request: The GET request object.
+    :return: A JSON response with a list of challenges
     """
     challenges = []
     if (
@@ -167,8 +165,8 @@ def score_quiz(request: HttpRequest) -> Response:
     """
     This API endpoint handles when a quiz is submitted and grades it.
 
-    @param request: The POST request object.
-    @return: A response with a message to the front end.
+    :param request: The POST request object.
+    :return: A response with a message to the front end.
     """
 
     # Get the quiz id and the user's answers

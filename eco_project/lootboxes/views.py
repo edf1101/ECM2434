@@ -1,5 +1,7 @@
 """
 This module contains the views for the lootboxes app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 import random
@@ -14,8 +16,8 @@ def wheel_view(request: HttpRequest) -> HttpResponse:
     """
     Renders the actual spinning wheel page.
 
-    @param request: The HTTP request object.
-    @return: The HTTP response object.
+    :param request: The HTTP request object.
+    :return: The HTTP response object.
     """
     return render(
         request,
@@ -33,8 +35,8 @@ def spin_wheel(request: HttpRequest) -> JsonResponse:
     API endpoint that returns the result of spinning the wheel, or an error if the user cant
     afford to spin the wheel.
 
-    @param request: The HTTP request object.
-    @return: The JSON response object.
+    :param request: The HTTP request object.
+    :return: The JSON response object.
     """
 
     if request.user.profile.pet_bucks < 5:  # Check if the user can afford it

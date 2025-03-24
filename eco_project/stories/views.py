@@ -1,5 +1,7 @@
 """
 This module holds the views for the stories app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.http import HttpResponse
 from django.http.request import HttpRequest
@@ -14,8 +16,8 @@ def stories_home(request: HttpRequest) -> HttpResponse:
     """
     Renders the stories home page with all the photos and reactions.
 
-    @param request: The HTTP request.
-    @return: The HTTP response.
+    :param request: The HTTP request.
+    :return: The HTTP response.
     """
     now = timezone.now()
 

@@ -26,9 +26,9 @@ class Command(BaseCommand):
         """
         This function creates an Axolotl, Elephant, and Bat in the database.
 
-        @param args: None expected
-        @param kwargs: None expected
-        @return: None
+        :param args: None expected
+        :param kwargs: None expected
+        :return: None
         """
 
         pets = [
@@ -168,11 +168,13 @@ class Command(BaseCommand):
                     self.stderr.write(self.style.WARNING(
                         f"Could not create {pet['name']}, skipping it: {str(e)}"))
 
+            # create cosmetics for each pet
             for cosmetic_data in pet["cosmetics"]:
                 cosmetic = Cosmetic(name=cosmetic_data["name"],
                                     description=cosmetic_data["description"],
                                     price=cosmetic_data["price"])
 
+                # open image and videos to load them
                 with open(os.path.join(
                         os.getcwd(),
                         "pets/management/commands/media/cosmetic_icons",
@@ -192,6 +194,7 @@ class Command(BaseCommand):
                         cosmetic.category = category
                         cosmetic.fits = pet_type
 
+                        # save cosmetic to the database
                         try:
                             cosmetic.save()
                             self.stderr.write(self.style.SUCCESS(f"Created {cosmetic_data['name']}"

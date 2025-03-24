@@ -18,7 +18,7 @@ class LocationsConfig(AppConfig):
         """
         When the app is set up it imports the signals from the signals file
 
-        @return: None
+        :return: None
         """
         # pylint: disable=unused-import, import-outside-toplevel
         import locations.signals

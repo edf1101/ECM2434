@@ -19,11 +19,12 @@ class Command(BaseCommand):
         """
         This function creates an Axolotl, Elephant, and Bat in the database.
 
-        @param args: None expected
-        @param kwargs: None expected
-        @return: None
+        :param args: None expected
+        :param kwargs: None expected
+        :return: None
         """
 
+        # This is a dict of the reaction types that will be created
         reaction_types = [{'name': 'Thumbs Up', 'icon': '👍'},
                           {'name': 'Thumbs Down', 'icon': '👎'},
                           {'name': 'Heart', 'icon': '❤️'},
@@ -31,6 +32,7 @@ class Command(BaseCommand):
                           {'name': 'Tree', 'icon': '🌳'},
                           {'name': 'Elephant', 'icon': '🐘'}]
 
+        # import each one to the DB
         for reaction_type in reaction_types:
             reaction_type_model = ReactionType.objects.create(name=reaction_type['name'],
                                                               icon=reaction_type['icon'])

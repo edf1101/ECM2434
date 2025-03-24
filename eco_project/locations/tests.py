@@ -23,10 +23,10 @@ class ViewsTestCase(TestCase):
     when the user is not logged in.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         """
         Set up with necessary data for following view tests including feature type, instance,
-        question, and user (user name and password)
+        question, and user (username and password)
         """
         self.factory = RequestFactory()
         self.feature_type = FeatureType.objects.create(
@@ -53,7 +53,7 @@ class ViewsTestCase(TestCase):
         """
         Test if returns homepage for the locations app
         
-        @return: None
+        :return: None
         """
         response = self.client.get(reverse("locations:base"))
         self.assertEqual(response.status_code, 200)
@@ -64,7 +64,7 @@ class ViewsTestCase(TestCase):
     #     """
     #     Test if returns test map for the locations app
     #
-    #     @return: None
+    #     :return: None
     #     """
     #     response = self.client.get(reverse("locations:map"))
     #     self.assertEqual(response.status_code, 200)
@@ -74,7 +74,7 @@ class ViewsTestCase(TestCase):
         """
         Test if the page displays a feature instance with a question
 
-        @return: None
+        :return: None
         """
         self.client.login(username="testuser", password="testpass")
 
@@ -93,7 +93,7 @@ class ViewsTestCase(TestCase):
         """
         Test if the page displays a feature instance without a question
 
-        @return: None
+        :return: None
         """
         self.client.login(username="testuser", password="testpass")
         self.feature_instance.questionfeature_set.all().delete()
@@ -108,7 +108,7 @@ class ViewsTestCase(TestCase):
         """
         Test if the user is directed to a with a specific feature instance page
 
-        @return: None
+        :return: None
         """
         self.client.login(username="testuser", password="testpass")
         self.feature_instance.questionfeature_set.all().delete()
@@ -123,7 +123,7 @@ class ViewsTestCase(TestCase):
     #     """
     #     Test if the page displays a generic feature type
 
-    #     @return: None
+    #     :return: None
     #     """
     #     response = self.client.get(
     #         reverse("locations:generic-feature-list"))
@@ -135,7 +135,7 @@ class ViewsTestCase(TestCase):
     #     """
     #     Test if it returns a page with the list of all the generic features types with hyperlinks
 
-    #     @return: None
+    #     :return: None
     #     """
     #     response = self.client.get(reverse("locations:generic-feature-list"))
     #     self.assertEqual(response.status_code, 200)
@@ -155,7 +155,7 @@ class SignalsTests(TestCase):
         Necessary set up for the following tests including creation of feature type,
         instance, and map
 
-        @return: None
+        :return: None
         """
         LocationsAppSettings.get_instance()
         self.feature_type = FeatureType.objects.create(
@@ -173,7 +173,7 @@ class SignalsTests(TestCase):
         """
         Test the update min max position post save signal
 
-        @return: None
+        :return: None
         """
         Map3DChunk.objects.create(
             bottom_left_lat=0.0,
@@ -199,7 +199,7 @@ class SignalsTests(TestCase):
         """
         Test the update tile feature map post save map chunk signal
         
-        @return: None
+        :return: None
         """
         chunk = Map3DChunk.objects.create(
             bottom_left_lat=0.0,
@@ -225,7 +225,7 @@ class SignalsTests(TestCase):
         """
         Test the update feature instance qr code post save signal
 
-        @return: None
+        :return: None
         """
         self.feature_instance.update_qr_code()
         self.assertEqual(FeatureInstanceTileMap.objects.count(), 0)
@@ -286,7 +286,7 @@ class ModelsTests(TestCase):
         """
         Test the str method of feature type
         
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.feature_type), self.feature_type.name)
 
@@ -294,7 +294,7 @@ class ModelsTests(TestCase):
         """
         Test if the feature instance has a question and return appropriate boolean (true)
         
-        @return: None
+        :return: None
         """
         QuestionFeature.objects.create(
             feature=self.feature_instance,
@@ -306,7 +306,7 @@ class ModelsTests(TestCase):
         """
         Test if the feature instance has a question and return appropriate boolean (false)
         
-        @return: None
+        :return: None
         """
         self.assertFalse(self.feature_instance.has_question)
 
@@ -314,7 +314,7 @@ class ModelsTests(TestCase):
         """
         Test if the feature instance has a challenge and return appropriate boolean (true)
         
-        @return: None
+        :return: None
         """
         QuestionFeature.objects.create(
             feature=self.feature_instance,
@@ -326,7 +326,7 @@ class ModelsTests(TestCase):
         """
         Test if the feature instance has a challenge and return appropriate boolean (false)
         
-        @return: None
+        :return: None
         """
         self.assertFalse(self.feature_instance.has_challenge())
 
@@ -334,7 +334,7 @@ class ModelsTests(TestCase):
         """
         Test the str method of feature instance
         
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.feature_instance),
                          f'{self.feature_type.name} "test-feature-instance"')
@@ -343,7 +343,7 @@ class ModelsTests(TestCase):
         """
         Test the str method of map chunk
         
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.map_chunk), self.map_chunk.file_original_name)
 
@@ -351,14 +351,16 @@ class ModelsTests(TestCase):
         """
         Test the get instance method of locations app settings
 
-        @return: None
+        :return: None
         """
         settings = LocationsAppSettings.get_instance()
         self.assertEqual(settings, LocationsAppSettings.objects.first())
 
-    def test_locations_app_settings_str(self):
+    def test_locations_app_settings_str(self)-> None:
         """
         Test the str method of locations app settings
+
+        :return: None
         """
         settings = LocationsAppSettings.get_instance()
         self.assertEqual(str(settings), "Map Settings")
@@ -367,7 +369,7 @@ class ModelsTests(TestCase):
         """
         Test the str method of question feature
         
-        @return: None
+        :return: None
         """
         question = QuestionFeature.objects.create(
             question_text="Test question",
@@ -379,7 +381,7 @@ class ModelsTests(TestCase):
         """
         Test if the answer is valid for a given sample question and return correct boolean
         
-        @return: None
+        :return: None
         """
         question = QuestionFeature.objects.create(
             question_text="Test question",
@@ -395,7 +397,7 @@ class ModelsTests(TestCase):
         """
         # Test the str method of question answer
         
-        @return: None
+        :return: None
         """
         question = QuestionFeature.objects.create(
             question_text="Test question",

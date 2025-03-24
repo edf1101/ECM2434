@@ -21,6 +21,8 @@ def get_pet_data(request, username) -> JsonResponse:
     :param username: The username of the user to get the pet data for.
     :return: A JsonResponse containing the pet data.
     """
+
+    # get the user and pets or throw an error if they don't exist
     try:
         target_user = User.objects.get(username=username)
     except User.DoesNotExist:

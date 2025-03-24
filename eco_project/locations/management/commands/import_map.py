@@ -3,6 +3,8 @@ This script is used to import 3D map chunk data into the database.
 It would be a long manual process to import all ~400 chunks into the database so this script
 automates it. There must be the console_out.txt file from blender in the same directory as this
 script and the exports folder with all the .glb files in the same directory as this script.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 from random import choice
@@ -21,7 +23,7 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
     This function reads the console_out.txt file and extracts the data from it about all the
     3D map chunks.
 
-    @return: A dictionary with the relevant data for each 3D map chunk.
+    :return: A dictionary with the relevant data for each 3D map chunk.
     """
     with open(os.path.join(
             os.getcwd(), "locations/management/commands/console_out.txt"
@@ -30,14 +32,12 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
 
     data: dict[str, dict[str, Any]] = {}  # dict to store the data
 
-    # These are the geodesic coordinates of the center, bottom left and top
-    # right of the chunk
+    # These are the geodesic coordinates of the center, bottom left and top right of the chunk
     center_deg = (0, 0)
     bottom_left_deg = (0, 0)
     top_right_deg = (0, 0)
 
-    # These are the 3d blender coordinates of the bottom left and top right of
-    # the chunk
+    # These are the 3d blender coordinates of the bottom left and top right of the chunk
     bottom_left_blender = (0, 0, 0)
     top_right_blender = (0, 0, 0)
 
@@ -63,9 +63,7 @@ def get_mesh_data_from_file() -> dict[str, dict[str, Any]]:
                 round(float(d[2].split(", ")[1]), 5),
             )
 
-        if (
-                "Tile center in" in line
-        ):  # if the line contains the blender coordinates of the chunk
+        if "Tile center in" in line:  # if the line contains the blender coordinates of the chunk
             t = line.split("((")[1:]
 
             for i, item in enumerate(t):
@@ -107,9 +105,9 @@ class Command(BaseCommand):
         """
         This function is called when the import_chunks script is run.
 
-        @param args:  None expected
-        @param kwargs: None expected
-        @return: None
+        :param args:  None expected
+        :param kwargs: None expected
+        :return: None
         """
 
         post_save.disconnect(update_tile_feature_map, sender=Map3DChunk)

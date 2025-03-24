@@ -3,7 +3,7 @@ Views for the leaderboard app.
 """
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from pets.models import Pet
 from users.models import UserGroup
@@ -12,12 +12,16 @@ User = get_user_model()
 
 
 @login_required
-def leaderboard_view(request) -> HttpResponse:
+def leaderboard_view(request: HttpRequest) -> HttpResponse:
     """
     View to render the leaderboard page, showing the top users, pets, groups, and friends.
+
+    :param request: HttpRequest object
+    :return: HttpResponse object showing the template with the leaderboard data
     """
+
     top_users = User.objects.prefetch_related('pet').all()
-    # sort top_users by profile.points
+    # sort users by their points
     top_users = sorted(top_users, key=lambda user: user.profile.points, reverse=True)
 
     pet = Pet.objects.order_by("-health")[:10]
@@ -51,7 +55,7 @@ def leaderboard_view(request) -> HttpResponse:
             'users': sorted_users,
         })
 
-    # Build the friend leaderboard: include yourself and your friends
+    # Build the friend leaderboard include own user and friends
     friend_profiles = request.user.profile.friends.all()
     # Convert friend profiles to User objects and add the current user
     friend_list = [request.user] + [friend.user for friend in friend_profiles]

@@ -15,8 +15,8 @@ def challenges_home(request) -> HttpResponse:
     """
     This view renders the home page.
 
-    @param request: The request from the user.
-    @return: The rendered home page.
+    :param request: The request from the user.
+    :return: The rendered home page.
     """
 
     # get nearby location features
@@ -36,7 +36,7 @@ def challenges_home(request) -> HttpResponse:
         quizzes.append({
             'title': quiz.title,
             'points': quiz.total_points,
-            'url': reverse('challenges:quiz_detail', kwargs={'quiz_id': quiz.id})  # Generate URL
+            'url': reverse('challenges:quiz_detail', kwargs={'quiz_id': quiz.id})
         })
     context = {
         "nearby_features": nearby_features,
@@ -50,9 +50,9 @@ def quiz_detail(request: HttpRequest, quiz_id: int) -> HttpResponse:
     """
     This view renders the quiz page.
 
-    @param request: The request from the user.
-    @param quiz_id: The id of the quiz.
-    @return: The rendered quiz page.
+    :param request: The request from the user.
+    :param quiz_id: The id of the quiz.
+    :return: The rendered quiz page.
     """
 
     # get the quiz object and its questions

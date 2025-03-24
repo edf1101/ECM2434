@@ -21,7 +21,7 @@ class ProfileModelTests(TestCase):
         Create a user and profile for testing.
         This is run before each test method to set up the test environment.
 
-        @return: None
+        :return: None
         """
         # Create a user
         self.user = User.objects.create_user(
@@ -39,7 +39,7 @@ class ProfileModelTests(TestCase):
         """
         This test asserts that the __str__ method of the Profile model returns the expected string.
 
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.profile), "testuser's Profile")
 
@@ -52,6 +52,8 @@ class BadgeModelTests(TestCase):
     def test_badge_str(self) -> None:
         """
         This test asserts that the __str__ method of the Badge model works correctly.
+
+        :return: None
         """
 
         # create a test badge
@@ -74,7 +76,7 @@ class BadgeInstanceModelTests(TestCase):
         """
         A badge and user need to be created before each test - do that here.
 
-        @return: None
+        :return: None
         """
 
         self.user = User.objects.create_user(
@@ -90,7 +92,7 @@ class BadgeInstanceModelTests(TestCase):
         """
         Test the __str__ method of the BadgeInstance model.
 
-        @return: None
+        :return: None
         """
 
         # create an instance of the Badge type made in the setUp method
@@ -104,7 +106,7 @@ class BadgeInstanceModelTests(TestCase):
         """
         Test that a BadgeInstance can only be created once for a given user and badge.
 
-        @return: None
+        :return: None
         """
         BadgeInstance.objects.create(
             badge=self.badge, user=self.user
@@ -125,7 +127,7 @@ class UserGroupModelTests(TestCase):
         The setUp method is run before each test method to set up the test environment
         to test the groups an admin member is needed along with a normal member and group.
 
-        @return: None
+        :return: None
         """
 
         # create the objects
@@ -146,7 +148,7 @@ class UserGroupModelTests(TestCase):
         """
         Test that the users_in_group property returns a string of all users in the group.
 
-        @return: None
+        :return: None
         """
         self.group.users.add(self.member_user)
         expected = f"{self.admin_user.username}, {self.member_user.username}"
@@ -156,7 +158,7 @@ class UserGroupModelTests(TestCase):
         """
         Test that the add_user method adds a user to the group.
 
-        @return: None
+        :return: None
         """
         self.group.add_user(self.member_user)
         self.assertIn(self.member_user, self.group.users.all())
@@ -165,7 +167,7 @@ class UserGroupModelTests(TestCase):
         """
         Test that the remove_user method removes a user from the group.
 
-        @return: None
+        :return: None
         """
         self.group.add_user(self.member_user)
         self.group.remove_user(self.member_user)
@@ -174,6 +176,8 @@ class UserGroupModelTests(TestCase):
     def test_remove_admin_raises_error(self) -> None:
         """
         Test that trying to remove the admin from the group raises an error.
+
+        :return: None
         """
         with self.assertRaises(Exception):
             self.group.remove_user(self.admin_user)
@@ -189,7 +193,7 @@ class GenerateUniqueCodeTests(TestCase):
         """
         Test that the generate_unique_code function returns a string of 6 uppercase letters.
 
-        @return: None
+        :return: None
         """
         code = generate_unique_code()
         self.assertEqual(len(code), 6)

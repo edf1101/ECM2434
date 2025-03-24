@@ -13,12 +13,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-#pylint: disable=W0613,C0415,W0611
+# pylint: disable=W0613,C0415,W0611
 
 import challenges.signals
 
 from users.models import Profile
-
 
 User = get_user_model()
 
@@ -32,7 +31,7 @@ class ChallengesAPITests(TestCase):
         """
         This method runs before each test to set up the environment for the tests.
 
-        @return: None
+        :return: None
         """
 
         # Create a test user, create a profile for them, then log them in
@@ -56,25 +55,22 @@ class ChallengesAPITests(TestCase):
         """
         This gets an up to date version of the profile from the db
 
-        @return: Profile
+        :return: Profile
         """
         self.profile.refresh_from_db()
         return self.profile
 
     @patch("challenges.api.QuestionFeature")
-    def test_submit_answer_api_not_authenticated(
-        self, mock_question_feature: MagicMock
-    ) -> None:
+    def test_submit_answer_api_not_authenticated(self, mock_question_feature: MagicMock) -> None:
         """
         Test that if a user is not authenticated, the API responds still with a correct/ incorrect
         message it just doesn't give points
 
-        @param mock_question_feature: A mock of the QuestionFeature model
-        @return: None
+        :param mock_question_feature: A mock of the QuestionFeature model
+        :return: None
         """
 
-        # Create a dummy question so we can control the behaviour of
-        # is_valid_answer
+        # Create a dummy question so we can control the behaviour of is_valid_answer
         dummy_question = MagicMock()
         dummy_question.is_valid_answer.return_value = True
         mock_question_feature.objects.get.return_value = dummy_question
@@ -96,15 +92,14 @@ class ChallengesAPITests(TestCase):
 
     @patch("challenges.api.user_in_range_of_feature", return_value=False)
     @patch("challenges.api.QuestionFeature")
-    def test_submit_answer_api_out_of_range(
-        self, mock_question_feature: MagicMock, mock_in_range: MagicMock
-    ) -> None:
+    def test_submit_answer_api_out_of_range(self, mock_question_feature: MagicMock,
+                                            mock_in_range: MagicMock) -> None:
         """
         If the user is not in range of the feature, the API should respond appropriately.
 
-        @param mock_question_feature: A mock of the QuestionFeature model
-        @param mock_in_range: A mock of the user_in_range_of_feature function
-        @return: None
+        :param mock_question_feature: A mock of the QuestionFeature model
+        :param mock_in_range: A mock of the user_in_range_of_feature function
+        :return: None
         """
 
         # create the dummy question
@@ -130,20 +125,18 @@ class ChallengesAPITests(TestCase):
     @patch("challenges.api.user_already_reached_in_window", return_value=True)
     @patch("challenges.api.user_in_range_of_feature", return_value=True)
     @patch("challenges.api.QuestionFeature")
-    def test_submit_answer_api_already_reached(
-        self,
-        mock_question_feature: MagicMock,
-        mock_in_range: MagicMock,
-        mock_already_reached: MagicMock,
-    ) -> None:
+    def test_submit_answer_api_already_reached(self, mock_question_feature: MagicMock,
+                                               mock_in_range: MagicMock,
+                                               mock_already_reached: MagicMock,
+                                               ) -> None:
         """
         If the user has already reached the feature in the current window the api should respond
         with that in the message content
 
-        @param mock_question_feature: A mock of the QuestionFeature model
-        @param mock_in_range: A mock of the user_in_range_of_feature function
-        @param mock_already_reached: A mock of the user_already_reached_in_window function
-        @return: None
+        :param mock_question_feature: A mock of the QuestionFeature model
+        :param mock_in_range: A mock of the user_in_range_of_feature function
+        :param mock_already_reached: A mock of the user_already_reached_in_window function
+        :return: None
         """
         dummy_question = MagicMock()
         dummy_question.is_valid_answer.return_value = True
@@ -167,19 +160,16 @@ class ChallengesAPITests(TestCase):
     @patch("challenges.api.user_already_reached_in_window", return_value=False)
     @patch("challenges.api.user_in_range_of_feature", return_value=True)
     @patch("challenges.api.QuestionFeature")
-    def test_submit_answer_api_correct_answer(
-        self,
-        mock_question_feature: MagicMock,
-        mock_in_range: MagicMock,
-        mock_already_reached: MagicMock,
-    ) -> None:
+    def test_submit_answer_api_correct_answer(self, mock_question_feature: MagicMock,
+                                              mock_in_range: MagicMock,
+                                              mock_already_reached: MagicMock, ) -> None:
         """
         This test asserts that a valid user in range who submits a correct answer is awarded points.
 
-        @param mock_question_feature: A mock of the QuestionFeature model
-        @param mock_in_range: A mock of the user_in_range_of_feature function
-        @param mock_already_reached: A mock of the user_already_reached_in_window function
-        @return: None
+        :param mock_question_feature: A mock of the QuestionFeature model
+        :param mock_in_range: A mock of the user_in_range_of_feature function
+        :param mock_already_reached: A mock of the user_already_reached_in_window function
+        :return: None
         """
 
         # create mock question
@@ -210,19 +200,17 @@ class ChallengesAPITests(TestCase):
     @patch("challenges.api.user_already_reached_in_window", return_value=False)
     @patch("challenges.api.user_in_range_of_feature", return_value=True)
     @patch("challenges.api.QuestionFeature")
-    def test_submit_answer_api_incorrect_answer(
-        self,
-        mock_question_feature: MagicMock,
-        mock_in_range: MagicMock,
-        mock_already_reached: MagicMock,
-    ) -> None:
+    def test_submit_answer_api_incorrect_answer(self, mock_question_feature: MagicMock,
+                                                mock_in_range: MagicMock,
+                                                mock_already_reached: MagicMock,
+                                                ) -> None:
         """
         This tests that a user who submits an incorrect answer does not receive points.
 
-        @param mock_question_feature: A mock of the QuestionFeature model
-        @param mock_in_range: A mock of the user_in_range_of_feature function
-        @param mock_already_reached: A mock of the user_already_reached_in_window function
-        @return: None
+        :param mock_question_feature: A mock of the QuestionFeature model
+        :param mock_in_range: A mock of the user_in_range_of_feature function
+        :param mock_already_reached: A mock of the user_already_reached_in_window function
+        :return: None
         """
 
         # create a dummy question
@@ -247,14 +235,13 @@ class ChallengesAPITests(TestCase):
 
     @patch("challenges.api.user_already_reached_in_window", return_value=False)
     @patch("challenges.challenge_helpers.haversine", return_value=1500)
-    def test_nearest_challenges_api_authenticated(
-        self, mock_haversine: MagicMock, mock_already_reached: MagicMock
-    ) -> None:
+    def test_nearest_challenges_api_authenticated(self, mock_haversine: MagicMock,
+                                                  mock_already_reached: MagicMock) -> None:
         """
         For an authenticated user, nearest_challenges_api should return a list of nearby challenges
 
-        @param mock_haversine: A mock of the haversine dist function
-        @param mock_already_reached: A mock of the user_already_reached_in_window function
+        :param mock_haversine: A mock of the haversine dist function
+        :param mock_already_reached: A mock of the user_already_reached_in_window function
         """
         # locally import the FeatureType and FeatureInstance models to avoid
         # circular imports
@@ -295,7 +282,7 @@ class ChallengesAPITests(TestCase):
         """
         For an unauthenticated user, nearest_challenges_api should return an empty list
 
-        @return: None
+        :return: None
         """
 
         self.client.logout()  # make sure the user is logged out
@@ -312,7 +299,7 @@ class ChallengesAPITests(TestCase):
         Test that when a new user is created, a Streak object is also created with it using
         the signals.py module.
 
-        @return: None
+        :return: None
         """
         # create a new user
         new_user = User.objects.create_user(

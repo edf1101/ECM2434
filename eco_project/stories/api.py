@@ -1,5 +1,7 @@
 """
 This page handles the API endpoints for the stories app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import base64
 import json
@@ -21,8 +23,8 @@ def add_reaction(request: HttpRequest) -> HttpResponse:
     """
     Adds a reaction to a photo.
 
-    @param request: The HTTP request.
-    @return: The HTTP response.
+    :param request: The HTTP request.
+    :return: The HTTP response.
     """
 
     if request.method == 'POST':  # Only allow POST requests.
@@ -69,8 +71,8 @@ def add_story(request: HttpRequest) -> HttpResponse:
     """
     Adds a story photo.
 
-    @param request: The HTTP request.
-    @return: The HTTP response.
+    :param request: The HTTP request.
+    :return: The HTTP response.
     """
     if request.method == 'POST':
         data = json.loads(request.body)

@@ -32,13 +32,13 @@ class ProfileInline(admin.StackedInline):
     extra = 0
     max_num = 1
 
-    def has_add_permission(self, request, obj):
+    def has_add_permission(self, request, obj) -> bool:
         """
         Prevent adding a new profile if one already exists.
 
-        @param request: The request object.
-        @param obj: The object being edited.
-        @return: False if a profile already exists, True otherwise.
+        :param request: The request object.
+        :param obj: The object being edited.
+        :return: False if a profile already exists, True otherwise.
         """
         if obj and hasattr(obj, "profile"):
             return False
@@ -89,9 +89,9 @@ class CustomUserAdmin(BaseUserAdmin):
         When adding a new user, do not display inlines.
         This prevents duplicate profile creation.
 
-        @param request: The request object.
-        @param obj: The object being edited.
-        @return: Empty list if obj is None, otherwise the default inlines.
+        :param request: The request object.
+        :param obj: The object being edited.
+        :return: Empty list if obj is None, otherwise the default inlines.
         """
         if not obj:
             return []
@@ -101,8 +101,8 @@ class CustomUserAdmin(BaseUserAdmin):
         """
         Display the user's points from their profile.
 
-        @param obj: The user object.
-        @return: The user's points if they have a profile, otherwise "N/A".
+        :param obj: The user object.
+        :return: The user's points if they have a profile, otherwise "N/A".
         """
         return obj.profile.points if hasattr(obj, "profile") else "N/A"
 
@@ -112,8 +112,8 @@ class CustomUserAdmin(BaseUserAdmin):
         """
         Display the last_active_string field from their profile.
 
-        @param obj: The user object.
-        @return: The user's last_active if they have a profile, otherwise "N/A".
+        :param obj: The user object.
+        :return: The user's last_active if they have a profile, otherwise "N/A".
         """
         return obj.profile.last_active_string if hasattr(obj, "profile") else "N/A"
 
@@ -123,8 +123,8 @@ class CustomUserAdmin(BaseUserAdmin):
         """
         Display the number of badge instances associated with the user.
 
-        @param obj: The user object.
-        @return: The number of badge instances if they have any, otherwise "N/A".
+        :param obj: The user object.
+        :return: The number of badge instances if they have any, otherwise "N/A".
         """
         return (
             obj.badgeinstance_set.count()

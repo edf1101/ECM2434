@@ -1,6 +1,8 @@
 """
 This file is used to configure the stories app. It is used to schedule the removal of expired photos
 and import signals
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import atexit
 import os

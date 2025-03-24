@@ -26,12 +26,22 @@ def get_img_ext(base_dir, extra) -> str:
     """
     Get the extension of the image file
 
-    @param base_dir: The base directory of the image file
-    @param extra: The extra data to get the extension from
-    @return: The extension of the image file
+    :param base_dir: The base directory of the image file
+    :param extra: The extra data to get the extension from
+    :return: The extension of the image file
     """
 
     return os.path.join(base_dir, "images", extra[0] if extra else "").split(".")[-1]
+
+
+def random_letters(length: int = 5) -> str:
+    """
+    Return a random string of letters and numbers of a given length.
+
+    :param length: The length of the random string (default 5)
+    :return: The random string
+    """
+    return "".join(choice("1234567890ABCDEF") for _ in range(length))
 
 
 class Command(BaseCommand):
@@ -42,6 +52,13 @@ class Command(BaseCommand):
     help = "Import 3D map chunk data into the database"
 
     def handle(self, *args, **kwargs) -> None:
+        """
+        Handle the command to import feature instance and type data into the database.
+
+        :param args: None
+        :param kwargs: None
+        :return: None
+        """
         # Disconnect the QR code update signal to prevent it from running on every save.
         post_save.disconnect(update_feature_instance_qr_code, sender=FeatureInstance)
         post_save.disconnect(update_feature_instance_qr_code, sender=LocationsAppSettings)
@@ -62,40 +79,55 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Saved QR codes to database"))
 
     def _read_clean_lines(self, file_path: str) -> list:
-        """Read a file and return a list of cleaned lines (ignoring blank lines and comments)."""
+        """
+        Read the lines from a file and remove any empty lines or comments.
+
+        :param file_path: The path to the file to read
+        :return: The cleaned lines from the file
+        """
         try:
             with open(file_path, "r", encoding="utf-8") as f:
+                # read, then clean lines before returning
                 return [line.strip() for line in f.readlines()
                         if line.strip() and not line.strip().startswith("#")]
         except FileNotFoundError:
+            # If the file is not found, print an error message and return an empty list
             self.stdout.write(self.style.ERROR(f"File {file_path} not found"))
             return []
 
-    def _random_letters(self, length: int = 5) -> str:
-        """Return a random string of letters and digits of given length."""
-        return "".join(choice("1234567890ABCDEF") for _ in range(length))
-
     def _process_feature_type_line(self, line: str, base_dir: str) -> bool:
-        """Process one line of feature type data and save it to the database."""
+        """
+        Process one line of feature type data and save it to the database.
 
+        :param line: The line of data to process
+        :param base_dir: The base directory of the image and mesh files
+        :return: True if the data was saved successfully, False otherwise
+        """
+
+        # get the data from the line
         name, description, colour, image_file, mesh_file = [data.strip() for data in
                                                             line.split(",")]
+
+        # check image exists
         if not (os.path.exists(os.path.join(base_dir, "images", image_file)) and
                 os.path.isfile(os.path.join(base_dir, "images", image_file))):
             self.stdout.write(self.style.ERROR("Image does not exist"))
             sys.exit()
         img_extension = os.path.join(base_dir, "images", image_file).split(".")[-1]
 
+        # save it to the database
         with open(os.path.join(base_dir, "images", image_file), "rb") as f:
             img_file = default_storage.save(f"locations/feature_type_img/"
-                                            f"{name}{self._random_letters()}.{img_extension}",
+                                            f"{name}{random_letters()}.{img_extension}",
                                             File(f))
+
+        # save mesh to the db if it exists
         mesh_saved = None
         if bool(mesh_file):
             with open(os.path.join(base_dir, "meshes", mesh_file) if bool(mesh_file) else "",
                       "rb") as f:
                 mesh_saved = default_storage.save(f"locations/feature_mesh/"
-                                                  f"{name}{self._random_letters()}.glb", File(f))
+                                                  f"{name}{random_letters()}.glb", File(f))
         feature = FeatureType(name=name, description=description, colour=colour,
                               generic_img=img_file)
         if bool(mesh_file):
@@ -104,24 +136,43 @@ class Command(BaseCommand):
         return True
 
     def import_feature_types(self) -> None:
-        """Import the generic feature types from the file."""
+        """
+        Import the generic feature types from a text file.
+
+        :return: None
+        """
+        # open the file and read the lines
         base_dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
         file_path = os.path.join(base_dir, "feature_types.txt")
+
         lines = self._read_clean_lines(file_path)
+
         successes = 0
-        for line in lines:
+        for line in lines:  # process each feature type line by line
             if self._process_feature_type_line(line, base_dir):
                 successes += 1
+
         self.stdout.write(self.style.SUCCESS(f"Saved {successes} feature type(s) to database"))
 
     def _process_feature_instance_line(self, line: str, base_dir: str) -> bool:
-        """Process one line of feature instance data and save it to the database."""
+        """
+        Process one line of feature instance data and save it to the database.
+
+        :param line: The line of data to process
+        :param base_dir: The base directory of the image files
+        :return: True if the data was saved successfully, False otherwise
+        """
+
+        # check data given is valid
         if len(line.split(",")) < 5:
             self.stdout.write(self.style.ERROR(f"Invalid instance line (not enough data): {line}"))
             return False
 
+        # get the data from the line
         (instance_name, general_type_name,
          slug, lat_str, lon_str, *extra) = [x.strip() for x in line.split(",")]
+
+        # import lat and long
         try:
             latitude, longitude = float(lat_str), float(lon_str)
         except ValueError:
@@ -129,6 +180,7 @@ class Command(BaseCommand):
                                                f"longitude for instance {instance_name}"))
             return False
 
+        # get the feature type
         try:
             feature = FeatureType.objects.get(name=general_type_name)
         except FeatureType.DoesNotExist:
@@ -137,6 +189,7 @@ class Command(BaseCommand):
             ))
             return False
 
+        # check if there is a specific image file for this feature
         specific_img_file = None
         if extra[0] if extra else "":
             if not (os.path.exists(os.path.join(base_dir, "images", extra[0] if extra else "")) and
@@ -149,8 +202,9 @@ class Command(BaseCommand):
             with open(os.path.join(base_dir, "images", extra[0] if extra else ""), "rb") as f:
                 specific_img_file = default_storage.save(
                     (f"locations/feature_instance_img/{instance_name}"
-                     f"{self._random_letters()}.{get_img_ext(base_dir, extra)}"), File(f))
+                     f"{random_letters()}.{get_img_ext(base_dir, extra)}"), File(f))
 
+        # save the instance to the database
         instance = FeatureInstance(
             name=instance_name,
             slug=slug,
@@ -164,23 +218,41 @@ class Command(BaseCommand):
         return True
 
     def import_feature_instances(self) -> None:
-        """Import feature instances from a text file."""
+        """
+        Import the feature instances from a text file into the database.
+
+        :return: None
+        """
         base_dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
         file_path = os.path.join(base_dir, "feature_instances.txt")
+
         lines = self._read_clean_lines(file_path)
+
+        # process each feature instance line by line
         for line in lines:
             self._process_feature_instance_line(line, base_dir)
+
         self.stdout.write(self.style.SUCCESS("Saved feature instances to database"))
 
     def _process_feature_question_line(self, line: str) -> bool:
-        """Process one line of feature question data and save it to the database."""
-        fields = [field.strip() for field in line.split(",")]
-        if len(fields) < 6:
+        """
+        Process one line of question feature data and save it to the database.
+
+        :param line: the line of data to process
+        :return: True if the data was saved successfully, False otherwise
+        """
+
+        fields = [field.strip() for field in line.split(",")]  # split up fields
+
+        if len(fields) < 6:  # check if there is enough data
             self.stdout.write(self.style.ERROR(f"Not enough data in line: {line}"))
             return False
 
+        # get data from fields
         question_text, feature_instance_slug = fields[0], fields[1]
         case_sensitive = fields[2].lower() == "true"
+
+        # check fuzzy data is right
         use_fuzzy_comparison = fields[3].lower() == "true"
         try:
             fuzzy_threshold = int(fields[4])
@@ -193,6 +265,8 @@ class Command(BaseCommand):
                 f"Fuzzy threshold must be between 0 and 100, not {fuzzy_threshold} in line: {line}"
             ))
             return False
+
+        # import the choices for the answers
         answer_choices = fields[5:]
         try:
             feature_instance = FeatureInstance.objects.get(slug=feature_instance_slug)
@@ -203,6 +277,7 @@ class Command(BaseCommand):
             ))
             return False
 
+        # Save the question feature to the database
         question_feature = QuestionFeature(
             question_text=question_text,
             feature=feature_instance,
@@ -217,12 +292,18 @@ class Command(BaseCommand):
         return True
 
     def import_feature_questions(self) -> None:
-        """Import question and answer data for feature instances from a text file."""
+        """
+        Import the feature questions from a text file into the database.
+
+        :return: None
+        """
         base_dir = os.path.join(os.getcwd(), "locations/management/commands/feature_data")
         file_path = os.path.join(base_dir, "feature_questions.txt")
+
+        # Read in all the lines from the file
         lines = self._read_clean_lines(file_path)
         successes = 0
-        for line in lines:
+        for line in lines: # go through each line and import each one
             if self._process_feature_question_line(line):
                 successes += 1
         self.stdout.write(self.style.SUCCESS(f"Saved {successes} question feature(s) to database"))

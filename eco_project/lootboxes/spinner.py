@@ -1,5 +1,7 @@
 """
 This module contains the spinning wheel logic for the lootboxes app
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from users.models import User
 
@@ -13,9 +15,9 @@ def handle_result(result: str, user: User) -> None:
     """
     This function handles the result of the spinning wheel ie adding points etc to users
 
-    @param result: the result of the spinning wheel
-    @param user: the user to add the result to
-    @return: None
+    :param result: the result of the spinning wheel
+    :param user: the user to add the result to
+    :return: None
     """
 
     if result == '5 PetBucks':
