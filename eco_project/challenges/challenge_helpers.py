@@ -85,6 +85,7 @@ def user_in_range_of_feature(
 
     # Calculate the distance between the user and the feature
     dist = haversine(feature_lat, feature_lon, user_lat, user_lon)
+
     return dist <= range_dist
 
 
@@ -138,11 +139,11 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     """
 
     if not user_in_range_of_feature(user, feature_inst):
-        print("User not in range of feature")
+        # print("User not in range of feature")
         return
 
     if user_already_reached_in_window(user, feature_inst):
-        print("User already reached feature in window")
+        # print("User already reached feature in window")
         return
 
     # needed to avoid circular import
