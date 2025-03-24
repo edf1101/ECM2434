@@ -114,8 +114,8 @@ class LocationAppSettingsAdmin(admin.ModelAdmin):
         """
         Returns a description of the page.
 
-        @param obj: None
-        @return: A string description of the page.
+        :param obj: None
+        :return: A string description of the page.
         """
         return "This page is a singleton model that stores the settings for the Locations app."
 
@@ -183,5 +183,4 @@ admin.site.register(FeatureInstance, FeatureInstanceAdmin)
 admin.site.register(QuestionFeature, QuestionFeatureAdmin)
 
 admin.site.register(Map3DChunk, Map3DChunkAdmin)  # Only for dev Gamekeeper doesn't need
-admin.site.register(FeatureInstanceTileMap)  # Only for dev Gamekeeper
-# doesn't need
+admin.site.register(FeatureInstanceTileMap)  # Only for dev Gamekeeper doesn't need

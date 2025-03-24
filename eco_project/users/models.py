@@ -40,7 +40,7 @@ class Profile(models.Model):
         This method adds points and petBucks to the user's profile.
 
         @:param points: how many to add
-        @return: None
+        :return: None
         """
         self.points += points
         self.pet_bucks += points
@@ -69,8 +69,8 @@ class Profile(models.Model):
         """
         Add a profile to the friends list.
 
-        @param profile: the profile to add
-        @return: None
+        :param profile: the profile to add
+        :return: None
         """
         if profile != self:
             self.friends.add(profile)
@@ -81,7 +81,7 @@ class Profile(models.Model):
         """
         Return a string representation of the profile.
 
-        @return: a string representation of the profile
+        :return: a string representation of the profile
         """
         return f"{self.user.username}'s Profile"
 
@@ -105,11 +105,11 @@ class Badge(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(10)],
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Return a string representation of the badge
 
-        @return: a string representation of the badge
+        :return: a string representation of the badge
         """
         return self.title
 
@@ -122,7 +122,7 @@ class BadgeInstance(models.Model):
     badge = models.OneToOneField(Badge, on_delete=models.CASCADE)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Return a string representation of the badge instance.
         """
@@ -140,7 +140,7 @@ def generate_unique_code() -> str:
     """
     Generate a unique 6-character code for a UserGroup.
 
-    @return: a unique 6-character code
+    :return: a unique 6-character code
     """
     length = 6
     while True:
@@ -179,7 +179,7 @@ class UserGroup(models.Model):
         """
         Returns a string listing the users in the group.
 
-        @return: a string listing the users in the group
+        :return: a string listing the users in the group
         """
         return ", ".join(user.username for user in self.users.all())
 
@@ -187,8 +187,8 @@ class UserGroup(models.Model):
         """
         Add a user to the group.
 
-        @param user: the user to add
-        @return: None
+        :param user: the user to add
+        :return: None
         """
         self.users.add(user)
 
@@ -197,8 +197,8 @@ class UserGroup(models.Model):
         Remove a user from the group.
         Cannot remove the group admin.
 
-        @param user: the user to remove
-        @return: None
+        :param user: the user to remove
+        :return: None
         """
         if self.group_admin == user:
             raise ValueError("Cannot remove the group admin")
@@ -208,6 +208,6 @@ class UserGroup(models.Model):
         """
         Return a string representation of the group.
 
-        @return: a string representation of the group
+        :return: a string representation of the group
         """
         return f"{self.name} ({self.code})"

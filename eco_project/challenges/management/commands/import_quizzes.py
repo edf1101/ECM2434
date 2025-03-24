@@ -1,5 +1,7 @@
 """
 This script is used to import example quizzes from a JSON file
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 import os
 import json
@@ -13,9 +15,11 @@ class Command(BaseCommand):
     """
     help = "Import quizzes from a JSON file."
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options) -> None:
         """
         Handle the command.
+
+        :return: None
         """
 
 
@@ -36,6 +40,12 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Successfully imported quizzes."))
 
     def __create_quiz(self, quiz_item) -> None:
+        """
+        Create a quiz from the given data.
+
+        :param quiz_item: JSON data about the quiz
+        :return: None
+        """
         # get the quiz data
         title = quiz_item.get("title")
         total_points = quiz_item.get("total_points", 100)

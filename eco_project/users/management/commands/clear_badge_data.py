@@ -18,9 +18,9 @@ class Command(BaseCommand):
         """
         This function clears the badge data from the database
 
-        @param args: None expected
-        @param kwargs: None expected
-        @return: None
+        :param args: None expected
+        :param kwargs: None expected
+        :return: None
         """
         Badge.objects.all().delete()
         self.stdout.write(self.style.SUCCESS("Cleared the Badge data"))

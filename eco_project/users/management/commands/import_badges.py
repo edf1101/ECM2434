@@ -27,9 +27,9 @@ class Command(BaseCommand):
         """
         Reads badge data from badge_data.txt and creates Badge objects.
 
-        @param args: Command line arguments
-        @param kwargs: Command line keyword arguments
-        @return: None
+        :param args: Command line arguments
+        :param kwargs: Command line keyword arguments
+        :return: None
         """
         file_path = os.path.join(
             os.getcwd(), "users/management/commands/badge_data.txt"

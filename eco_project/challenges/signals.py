@@ -18,11 +18,11 @@ def create_user_streak(sender, instance, created, **kwargs):
     """
     Automatically create a Streak record for the new user if one does not already exist.
 
-    @param sender: The sender of the signal
-    @param instance: The instance of the sender
-    @param created: Whether the instance was created or updated
-    @param kwargs: Additional keyword
-    @return: None
+    :param sender: The sender of the signal
+    :param instance: The instance of the sender
+    :param created: Whether the instance was created or updated
+    :param kwargs: Additional keyword
+    :return: None
     """
     if created:
         # Automatically create a Streak record for the new user

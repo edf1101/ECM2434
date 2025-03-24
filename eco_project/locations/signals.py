@@ -28,8 +28,8 @@ def update_feature_instance_qr_code(sender, instance, progress_bar=False, **kwar
     :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
     :param instance: The instance of the sender
     :param progress_bar: Whether to display a progress bar
-    @param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
-    @param instance: The instance of the sender
+    :param sender: The sender of the signal (should be FeatureInstance or LocationsAppSettings)
+    :param instance: The instance of the sender
     """
     # If this save is triggered by an update_qr_code call skip to avoid
     # infinite recursion.

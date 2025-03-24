@@ -21,8 +21,8 @@ def update_location(request) -> JsonResponse:
     """
     Update the logged-in user's profile with a new latitude and longitude.
 
-    @param request: The request object.
-    @return: The JSON response.
+    :param request: The request object.
+    :return: The JSON response.
     """
 
     if not request.user.is_authenticated:  # handle non-signed in users
@@ -62,13 +62,17 @@ def create_group(request) -> JsonResponse:
     """
     API endpoint to create a new group.
 
-    @param request: the request object
-    @return: the JSON response
+    :param request: the request object
+    :return: the JSON response
     """
+
+    # try load the json data if it is invalid then just make an empty dict
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         data = {}
+
+    # create a group from the data
     group_name = data.get("name", "").strip()
     new_group = UserGroup.objects.create(
         group_admin=request.user, name=group_name)
@@ -83,15 +87,13 @@ def delete_group(request, code) -> JsonResponse:
     API endpoint to delete a group.
     Only the group admin can delete the group.
 
-    @param request: the request object
-    @param code: the group code
-    @return : the JSON response
+    :param request: the request object
+    :param code: the group code
+    :return : the JSON response
     """
     group = get_object_or_404(UserGroup, code=code)
 
-    if (
-        request.user != group.group_admin
-    ):  # if the user is not the admin return an error
+    if request.user != group.group_admin:  # if the user is not the admin return an error
         return JsonResponse({"error": "Permission denied."}, status=403)
 
     group.delete()
@@ -104,19 +106,15 @@ def remove_user_from_group(request, code) -> JsonResponse:
     """
     API endpoint to remove a user from a group (only group admin can do this).
 
-    @param request: the request object
-    @param code: the group code
-    @return : the JSON response
+    :param request: the request object
+    :param code: the group code
+    :return : the JSON response
     """
 
     group = get_object_or_404(UserGroup, code=code)  # get the group
 
-    if (
-        request.user != group.group_admin
-    ):  # if the user is not the admin return an error
-        return JsonResponse(
-            {"error": "Permission denied."}, status=403
-        )  # 403 is no perms
+    if request.user != group.group_admin:  # if the user is not the admin return an error
+        return JsonResponse({"error": "Permission denied."}, status=403)  # 403 is no perms
 
     try:
         data = json.loads(request.body)
@@ -144,8 +142,8 @@ def join_group(request) -> JsonResponse:
     """
     API endpoint for a user to join an existing group using a group code
 
-    @param request: the request object
-    @return : the JSON response
+    :param request: the request object
+    :return : the JSON response
     """
     try:  # Try to parse the JSON data else return an error
         data = json.loads(request.body)
@@ -166,7 +164,7 @@ def join_group(request) -> JsonResponse:
         )  # 404 is not found
 
     if (
-        request.user in group.users.all()
+            request.user in group.users.all()
     ):  # If the user is already in the group, return an error
         return JsonResponse(
             {"error": "You are already a member of this group."}, status=400
@@ -184,9 +182,9 @@ def leave_group(request, code) -> JsonResponse:
     """
     API endpoint for a user to leave a group
 
-    @param request: the request object
-    @param code: the group code
-    @return   : the JSON response
+    :param request: the request object
+    :param code: the group code
+    :return   : the JSON response
     """
     group = get_object_or_404(UserGroup, code=code)
 

@@ -41,11 +41,11 @@ class FeatureType(models.Model):
         upload_to="locations/feature_mesh/", blank=True, null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the object.
 
-        @return: The name of the feature.
+        :return: The name of the feature.
         """
         return f"{self.name}"
 
@@ -82,7 +82,7 @@ class FeatureInstance(models.Model):
         Returns the description of the feature instance if there is one else
         returns the description of the feature type.
 
-        @return: The description of the feature instance.
+        :return: The description of the feature instance.
         """
 
         return str(self.instance_description if self.instance_description else
@@ -93,7 +93,7 @@ class FeatureInstance(models.Model):
         """
         Updates the QR code for this feature instance.
 
-        @param skip_signal: Whether to skip the signal that triggers this method.
+        :param skip_signal: Whether to skip the signal that triggers this method.
         """
         # Find the absolute path of the static image
         logo_path = finders.find("locations/media/ecopetLogoWhiteBG.png")
@@ -132,12 +132,16 @@ class FeatureInstance(models.Model):
     def has_question(self) -> bool:
         """
         Returns whether this feature instance has a question or not.
+
+        :return: True if the feature instance has a question, False otherwise.
         """
         return self.questionfeature_set.exists()
 
     def has_challenge(self) -> bool:
         """
         Returns whether this feature instance has a challenge or not.
+
+        :return: True if the feature instance has a challenge, False otherwise.
         """
         return self.has_question
 
@@ -145,7 +149,7 @@ class FeatureInstance(models.Model):
         """
         Returns a string representation of the object.
 
-        @return: the name of the feature and the slug.
+        :return: the name of the feature and the slug.
         """
         return f'{self.feature.name} "{self.slug}"'
 
@@ -153,6 +157,8 @@ class FeatureInstance(models.Model):
     def image(self) -> Union[ImageFieldFile, ImageField]:
         """
         Returns specific_img if it exists, otherwise returns the related feature's generic_img.
+
+        :return: The specific image if it exists, otherwise the generic image.
         """
         if self.specific_img:
             return self.specific_img
@@ -193,11 +199,11 @@ class Map3DChunk(models.Model):
     top_right_y: models.FloatField() = models.FloatField(blank=False, default=0)
     top_right_z: models.FloatField() = models.FloatField(blank=False, default=0)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the object.
 
-        @return: The original file name.
+        :return: The original file name.
         """
         return f"{self.file_original_name}"
 
@@ -258,9 +264,9 @@ class LocationsAppSettings(models.Model):
         """
         Overriding the save method to ensure there is only one instance of this model.
 
-        @param args: Likely None
-        @param kwargs: Likely None
-        @return: None
+        :param args: Likely None
+        :param kwargs: Likely None
+        :return: None
         """
         self.pk = 1  # Ensure there's only one instance
         super().save(*args, **kwargs)
@@ -269,9 +275,9 @@ class LocationsAppSettings(models.Model):
         """
         Prevent deletion of this model.
 
-        @param args: Likely None.
-        @param kwargs: Likely None.
-        @return: None
+        :param args: Likely None.
+        :param kwargs: Likely None.
+        :return: None
         """
         return None  # Prevent deletion
 
@@ -281,15 +287,15 @@ class LocationsAppSettings(models.Model):
         Static method to return the instance of this model.
         If there is no instance, it will create one.
 
-        @return: The singleton instance of this model.
+        :return: The singleton instance of this model.
         """
         return cls.objects.first() or cls.objects.create()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         A nicer string representation of the model.
 
-        @return: String representation of the model.
+        :return: String representation of the model.
         """
         return "Map Settings"
 
@@ -303,11 +309,11 @@ class FeatureInstanceTileMap(models.Model):
         FeatureInstance, on_delete=models.CASCADE)
     map_chunk = models.ForeignKey(Map3DChunk, on_delete=models.CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the object.
 
-        @return: The name of the feature and the original file name of the map chunk.
+        :return: The name of the feature and the original file name of the map chunk.
         """
         return (f'{self.feature_instance.feature.name} "{self.feature_instance.slug}" in "'
                 f'{self.map_chunk.file_original_name}"')
@@ -332,10 +338,11 @@ class QuestionFeature(models.Model):
         default=65, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the object.
-        @return: The question.
+
+        :return: The question.
         """
         return f"{self.question_text}"
 
@@ -343,8 +350,8 @@ class QuestionFeature(models.Model):
         """
         This function checks if a given answer is valid for this question
 
-        @param input_answer: The answer to query
-        @return: A bool true or false for if this is a valid answer
+        :param input_answer: The answer to query
+        :return: A bool true or false for if this is a valid answer
         """
 
         # get all the answers for this question
@@ -382,6 +389,6 @@ class QuestionAnswer(models.Model):
         """
         Returns a string representation of the object.
 
-        @return: The choice text.
+        :return: The choice text.
         """
         return self.choice_text

@@ -30,7 +30,7 @@ class PetTypeTestCase(TestCase):
         """
         Creation of PetType instance including name, description, and video.
 
-        @return: None
+        :return: None
         """
 
         self.pet_type = PetType.objects.create(
@@ -55,7 +55,7 @@ class PetTypeTestCase(TestCase):
         """
         Clean up any PetType video files created in setUp.
 
-        @return: None
+        :return: None
         """
         # Loop through all PetType instances and delete the file on disk if it
         # exists.
@@ -72,7 +72,7 @@ class PetTypeTestCase(TestCase):
         Tests the __str__ method of PetType, ensuring that the correct name of the
         PetType is returned as str.
 
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.pet_type), "Axolotl")
 
@@ -87,7 +87,7 @@ class CosmeticCategoryTestCase(TestCase):
         """
         Creation of cosmetic object for Pet
 
-        @return: None
+        :return: None
         """
         CosmeticCategory.objects.create(name="Hat")
         hat = CosmeticCategory.objects.get(name="Hat")
@@ -97,7 +97,7 @@ class CosmeticCategoryTestCase(TestCase):
         """
         Tests the __str__ method of CosmeticCategory
 
-        @return: None
+        :return: None
         """
 
         CosmeticCategory.objects.create(name="Hat")
@@ -114,7 +114,7 @@ class CosmeticModelTestCase(TestCase):
         """
         Set up with necessary data for PetType and CosmeticCategory objects.
 
-        @return: None
+        :return: None
         """
         self.pet_type = PetType.objects.create(
             name="Axolotl",
@@ -131,7 +131,7 @@ class CosmeticModelTestCase(TestCase):
         """
         Clean up any PetType video files created in setUp.
 
-        @return: None
+        :return: None
         """
 
         # Clean up any PetType video files created in setUp.
@@ -147,7 +147,7 @@ class CosmeticModelTestCase(TestCase):
         """
         Creation of cosmetic object for Pet and addition to pet.
 
-        @return: None
+        :return: None
         """
         hat = Cosmetic.objects.create(
             name="Hat", description="Red stylish hat", category=self.cosmetic_type,
@@ -163,7 +163,7 @@ class CosmeticModelTestCase(TestCase):
         """
         Tests the __str__ method of accessory.
 
-        @return: None
+        :return: None
         """
         hat = Cosmetic.objects.create(
             name="Red Hat", description="Red stylish hat", category=self.cosmetic_type,
@@ -182,7 +182,7 @@ class PetModelTestCase(TestCase):
         """
         Necessary setup for test: pet and profile (user).
 
-        @return: None
+        :return: None
         """
         self.user = User.objects.create_user(
             username="testuser", password="password")
@@ -204,7 +204,7 @@ class PetModelTestCase(TestCase):
         """
         Test for setting up pet and its attributes.
 
-        @return: None
+        :return: None
         """
         self.assertEqual(self.pet.name, "Axo")
         self.assertEqual(self.pet.type, self.pet_type)
@@ -215,7 +215,7 @@ class PetModelTestCase(TestCase):
         """
         Test for __str__ method of pet
 
-        @return: None
+        :return: None
         """
         self.assertEqual(str(self.pet), "testuser's Axo (Axolotl)")
 
@@ -223,7 +223,7 @@ class PetModelTestCase(TestCase):
         """
         Test for the get_pet_data api endpoint
 
-        @return: None
+        :return: None
         """
         url = reverse("pets:get_pet_data", args=[self.user.username])
         response = self.client.post(url)
@@ -236,7 +236,7 @@ class PetModelTestCase(TestCase):
         """
         Test for the get_pet_data api endpoint
 
-        @return: None
+        :return: None
         """
         url = reverse("pets:get_pet_data", args=["nonexistentuser"])
         response = self.client.post(url)
@@ -247,7 +247,7 @@ class PetModelTestCase(TestCase):
         """
         Test for the get_pet_data api endpoint
 
-        @return: None
+        :return: None
         """
         self.pet.delete()
         url = reverse("pets:get_pet_data", args=[self.user.username])
@@ -259,7 +259,7 @@ class PetModelTestCase(TestCase):
         """
         Clean up any PetType video files created in setUp.
 
-        @return: None
+        :return: None
         """
         # Clean up the PetType video file created in setUp.
         for pet in PetType.objects.all():

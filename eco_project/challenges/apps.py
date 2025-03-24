@@ -27,6 +27,8 @@ class ChallengesConfig(AppConfig):
     def ready(self) -> None:
         """
         This method is called when the app is ready to be used
+
+        :return: None
         """
 
         # Skip scheduling if its just a reload of the server.

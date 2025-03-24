@@ -30,8 +30,8 @@ def registration_view(request) -> HttpResponse:
     """
     This view is used to register a new user.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
 
     # if the user is already logged in, redirect them to the homepage
@@ -52,9 +52,10 @@ def registration_view(request) -> HttpResponse:
 
 def login_view(request) -> HttpResponse:
     """
-    Logs in a user. If the POST request comes from the homepage (via the hidden "next" field)
-    and the login form is invalid, re-render the home_non_auth template so errors appear inline.
-    Otherwise, render the standard login page.
+    Logs in a user
+
+    :param request: The request object.
+    :return: The response will be a redirect to home most likely.
     """
     if request.user.is_authenticated:
         return redirect("homepage")
@@ -84,8 +85,8 @@ def logout_view(request) -> HttpResponse:
     """
     This view is used to log out a user then return them to the homepage.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
     # if request.method == "POST":
     logout(request)
@@ -96,9 +97,9 @@ def profile_view(request, username) -> HttpResponse:
     """
     This view is used to display a user's profile.
 
-    @param request: The request object.
-    @param username: The username of the user whose profile is being viewed.
-    @return: The response object.
+    :param request: The request object.
+    :param username: The username of the user whose profile is being viewed.
+    :return: The response object.
     """
 
     user = get_object_or_404(get_user_model(), username=username)
@@ -142,8 +143,8 @@ def edit_profile(request) -> HttpResponse:
     """
     Users who are logged in can edit their profile.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
 
     user = request.user  # get the current user
@@ -174,8 +175,8 @@ def change_password(request) -> HttpResponse:
     """
     Allow a logged-in user to change their password.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
 
     if not request.user.is_authenticated:  # handle non-signed in users
@@ -203,8 +204,8 @@ def groups_home(request) -> HttpResponse:
     It has a list of all the groups the user is a member of as a link to the group page.
     It also has a button to create a new group.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
 
     user = request.user
@@ -221,8 +222,8 @@ def friends_view(request: HttpRequest) -> HttpResponse:
     """
     View to display a user's friends and search for new friends.
 
-    @param request: The request object.
-    @return: The response object.
+    :param request: The request object.
+    :return: The response object.
     """
     profile = request.user.profile
     # Get current friends (the ManyToManyField on Profile)
@@ -251,9 +252,9 @@ def add_friend(request: HttpRequest, user_id: int) -> HttpResponse:
     """
     Add a user as a friend.
 
-    @param request: The request object.
-    @param user_id: The id of the user to add as a friend.
-    @return: The response object.
+    :param request: The request object.
+    :param user_id: The id of the user to add as a friend.
+    :return: The response object.
     """
 
     friend_user = get_object_or_404(User, pk=user_id)  # Get the user to add as a friend
@@ -267,9 +268,9 @@ def remove_friend(request: HttpRequest, user_id: int) -> HttpResponse:
     """
     Remove a user as a friend.
 
-    @param request: The request object.
-    @param user_id: The id of the user to remove as a friend.
-    @return: The response object.
+    :param request: The request object.
+    :param user_id: The id of the user to remove as a friend.
+    :return: The response object.
     """
     friend_user = get_object_or_404(User, pk=user_id)
 

@@ -1,5 +1,7 @@
 """
 This module is used to run a command 'create roles' that sets up a gamekeeper group
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 
 from django.core.management.base import BaseCommand
@@ -16,7 +18,7 @@ class Command(BaseCommand):
         """
         Create the roles required
 
-        @return: None
+        :return: None
         """
         self.create_gamekeepers_role()
 
@@ -24,7 +26,7 @@ class Command(BaseCommand):
         """
         This function is used to setup the gamekeepers group
 
-        @return: None
+        :return: None
         """
         # Hardcoded list of permissions
         permissions_list = [

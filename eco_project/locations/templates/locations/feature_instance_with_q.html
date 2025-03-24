@@ -40,8 +40,8 @@
     <script>
         /**
          * Function to get a cookie
-         * @param name The name of the cookie
-         * @return The cookie value
+         * :param name The name of the cookie
+         * :return The cookie value
          */
         function getCookie(name) {
             let cookieValue = null;
@@ -60,7 +60,7 @@
 
         /**
          * Function sending a POST request to the API to submit an answer
-         * @return {Promise<void>} A promise that resolves when the answer is submitted
+         * :return {Promise<void>} A promise that resolves when the answer is submitted
          */
         async function submitAnswer() {
             const answerText = document.getElementById('answer').value;

@@ -3,6 +3,7 @@ Models for the Challenges app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+
 #pylint: disable R0401
 from datetime import timedelta
 
@@ -41,19 +42,19 @@ class ChallengeSettings(models.Model):
         auto_now_add=True
     )  # The last time the pet's health depreciated
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Override the string representation of this model.
         """
         return "Challenge Settings"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """
         Override the save method to ensure only one instance of this model exists.
 
-        @param args: Additional arguments.
-        @param kwargs: Additional keyword
-        @return: None
+        :param args: Additional arguments.
+        :param kwargs: Additional keyword
+        :return: None
         """
         self.pk = 1
         super().save(*args, **kwargs)
@@ -61,9 +62,9 @@ class ChallengeSettings(models.Model):
     @classmethod
     def get_solo(cls):
         """
-        Returns the single StreakSettings instance, creating it if there isnt one already.
+        Returns the single StreakSettings instance, creating it if there isn't one already.
 
-        @return: The single StreakSettings instance.
+        :return: The single StreakSettings instance.
         """
 
         obj, _ = cls.objects.get_or_create(
@@ -96,7 +97,7 @@ class Streak(models.Model):
         If the last check-in window is not the current or immediately previous one,
         the streak is considered broken.
 
-        @return int: The effective streak count.
+        :return int: The effective streak count.
         """
         settings_obj = ChallengeSettings.get_solo()
         interval = settings_obj.interval
@@ -113,7 +114,7 @@ class Streak(models.Model):
         """
         Returns True if the user's streak is about to be broken.
 
-        @return: True if the streak is about to be broken, False otherwise.
+        :return: True if the streak is about to be broken, False otherwise.
         """
         if self.effective_streak == 0:  # no streak to run out of
             return False
@@ -128,7 +129,7 @@ class Streak(models.Model):
         """
         Override the string representation of this model.
 
-        @return: The string representation of this model.
+        :return: The string representation of this model.
         """
         return f"{self.user.username} - Streak: {self.effective_streak}"
 
@@ -143,11 +144,11 @@ class UserFeatureReach(models.Model):
     reached_at = models.DateTimeField(auto_now_add=True)
     extra = models.CharField(max_length=20, blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Override the string representation of this model.
 
-        @return: The string representation of this model.
+        :return: The string representation of this model.
         """
         return (
             f"{self.user.username} reached {self.feature_instance} at {self.reached_at}"
@@ -164,6 +165,8 @@ class Quiz(models.Model):
     def __str__(self) -> str:
         """
         The string representation of this model.
+
+        :return: The string representation of this model.
         """
         return self.title
 
@@ -178,6 +181,8 @@ class Question(models.Model):
     def __str__(self) -> str:
         """
         The string representation of this model.
+
+        :return: The string representation of this model.
         """
         return self.text
 
@@ -193,6 +198,8 @@ class Choice(models.Model):
     def __str__(self) -> str:
         """
         The string representation of this model.
+
+        :return: The string representation of this model.
         """
         return self.text
 
@@ -211,5 +218,7 @@ class QuizAttempt(models.Model):
     def __str__(self) -> str:
         """
         The string representation of this model.
+
+        :return: The string representation of this model.
         """
         return f"{self.user} - {self.quiz} ({self.score})"

@@ -18,8 +18,8 @@ def view_pet(request) -> HttpResponse:
     """
     View for displaying the pet details
 
-    @param request: HttpRequest object
-    @return: HttpResponse object
+    :param request: HttpRequest object
+    :return: HttpResponse object
     """
 
     if request.user.is_authenticated and request.user.profile:
@@ -54,30 +54,31 @@ def equip_cosmetic(request, cosmetic_id: int, equip: int) -> HttpResponse:
     """
     Handle the equipping (if `equip=1`) or removal (if `equip=0`) of a cosmetic.
 
-    @param request: HttpRequest object
-    @param cosmetic_id: The ID of the cosmetic
-    @param equip: Whether to equip (1) or remove (0) the cosmetic
-    @return: Redirect to mypet page
+    :param request: HttpRequest object
+    :param cosmetic_id: The ID of the cosmetic
+    :param equip: Whether to equip (1) or remove (0) the cosmetic
+    :return: Redirect to mypet page
     """
 
+    # get the cosmetic, profile, and pet
     cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
     profile = request.user.profile
     pet: Pet = request.user.pet
 
-    if cosmetic not in profile.owned_cosmetics.all():
+    if cosmetic not in profile.owned_cosmetics.all():  # check if the user owns the cosmetic
         return JsonResponse({"error": "You do not own this cosmetic."}, status=404)
 
-    if cosmetic.fits != pet.type:
+    if cosmetic.fits != pet.type:  # check if the cosmetic fits the pet
         return JsonResponse({"error": "This cosmetic does not fit your pet."}, status=404)
 
     if equip:
-        if cosmetic == pet.current_cosmetic:
+        if cosmetic == pet.current_cosmetic:  # check if the cosmetic is already equipped
             return JsonResponse({"error": "This cosmetic is already equipped."}, status=404)
 
         pet.current_cosmetic = cosmetic
         messages.success(request, f"{cosmetic.name} has been equipped.")
     else:
-        if cosmetic == pet.current_cosmetic:
+        if cosmetic == pet.current_cosmetic:  # for removing the cosmetic
             pet.current_cosmetic = None
             messages.success(request, f"{cosmetic.name} has been removed.")
         else:
@@ -93,10 +94,11 @@ def shop(request) -> HttpResponse:
     """
     View for the pet accessories shop.
 
-    @param request: HttpRequest object
-    @return: HttpResponse object
+    :param request: HttpRequest object
+    :return: HttpResponse object
     """
 
+    # Get all cosmetics and cosmetic types
     all_cosmetics = Cosmetic.objects.all()
     cosmetic_types = CosmeticCategory.objects.all()
 
@@ -121,19 +123,20 @@ def buy_cosmetic(request, cosmetic_id: int):
     """
     Requests to buy cosmetic with ID `cosmetic_id`.
 
-    @param request: HttpRequest object
-    @param cosmetic_id: The ID of the cosmetic to buy
-    @return: Redirects to shop
+    :param request: HttpRequest object
+    :param cosmetic_id: The ID of the cosmetic to buy
+    :return: Redirects to shop
     """
 
+    # get the cosmetic and profile
     cosmetic = get_object_or_404(Cosmetic, id=cosmetic_id)
     profile = request.user.profile
 
-    if cosmetic in profile.owned_cosmetics.all():
+    if cosmetic in profile.owned_cosmetics.all():  # check if the user already owns the cosmetic
         messages.error(request, "You already own this cosmetic.")
         return redirect('pets:shop')
 
-    if profile.pet_bucks < cosmetic.price:
+    if profile.pet_bucks < cosmetic.price:  # check the user can afford the cosmetic
         messages.error(request, "Not enough pet bucks.")
         return redirect('pets:shop')
 

@@ -21,7 +21,7 @@ def get_interval() -> timedelta:
     """
     Get the interval for the streaks.
 
-    @return: The interval for the streaks.
+    :return: The interval for the streaks.
     """
     # pylint: disable=import-outside-toplevel
     from .models import ChallengeSettings
@@ -38,14 +38,16 @@ def get_current_window(now_time, interval):
     Buckets the current time into fixed windows.
     For example, if interval is 1 day, returns the start and end of the current day.
 
-    @param now_time: The current time.
-    @param interval: The size of the window.
-    @return: A tuple of (window_start, window_end).
+    :param now_time: The current time.
+    :param interval: The size of the window.
+    :return: A tuple of (window_start, window_end).
     """
     base = now_time.replace(hour=0, minute=0, second=0, microsecond=0)
     seconds_since_base = (now_time - base).total_seconds()
+
     interval_seconds = interval.total_seconds()
     window_index = int(seconds_since_base // interval_seconds)
+
     window_start = base + timedelta(seconds=window_index * interval_seconds)
     window_end = window_start + interval
     return window_start, window_end
@@ -55,8 +57,8 @@ def streak_to_points(streak_count: int) -> int:
     """
     Given a streak count, returns the number of points that should be awarded.
 
-    @param streak_count: The number of days in the streak.
-    @return: The number of points to award.
+    :param streak_count: The number of days in the streak.
+    :return: The number of points to award.
     """
     return int(log2(streak_count) + 1) * 5
 
@@ -67,10 +69,10 @@ def user_in_range_of_feature(
     """
     Checks if a user is within the range of a feature.
 
-    @param user: The user to check.
-    @param feature_inst: The feature to check.
-    @param range_dist: The range to check in meters.
-    @return: True if the user is in range, False otherwise.
+    :param user: The user to check.
+    :param feature_inst: The feature to check.
+    :param range_dist: The range to check in meters.
+    :return: True if the user is in range, False otherwise.
     """
 
     if not settings.CHECK_USER_CHALLENGE_RANGE:
@@ -91,16 +93,15 @@ def user_in_range_of_feature(
 
 
 def user_already_reached_in_window(
-        user: User, feature_inst: FeatureInstance, extra="", update=True
-) -> bool:
+        user: User, feature_inst: FeatureInstance, extra="", update=True) -> bool:
     """
     Check if a user has already reached the feature in the current window.
 
-    @param user: The user to check.
-    @param feature_inst: The feature instance to check.
-    @param extra: An extra field to check.
-    @param update: If True, will add a record if the user has not already reached the feature.
-    @return: True if the user has reached the feature in the current window, False otherwise.
+    :param user: The user to check.
+    :param feature_inst: The feature instance to check.
+    :param extra: An extra field to check.
+    :param update: If True, will add a record if the user has not already reached the feature.
+    :return: True if the user has reached the feature in the current window, False otherwise.
     """
     # pylint: disable=import-outside-toplevel
     from .models import UserFeatureReach, ChallengeSettings  # avoid circular import
@@ -135,8 +136,8 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
     """
     Does some things when a user reaches a feature.
 
-    @param user: The user to check.
-    @param feature_inst: The feature to check.
+    :param user: The user to check.
+    :param feature_inst: The feature to check.
     """
 
     if not user_in_range_of_feature(user, feature_inst):
@@ -153,6 +154,7 @@ def user_reached_feature(user: User, feature_inst: FeatureInstance) -> None:
 
     points_for_feature = ChallengeSettings.get_solo().reached_feature_points
 
+    # add points and health to user and pet
     user.profile.add_points(points_for_feature)
     reward_health = 20
 
@@ -168,11 +170,11 @@ def get_features_near(lat: float, lon: float, user=None, specific_feature=None) 
     Returns a list of dictionaries representing the challenges near the given location.
     Dicts are in format {directions:"1km away",description:"East park pond"}
 
-    @param lat: The latitude of the location.
-    @param lon: The longitude of the location.
-    @param user: If included then check that the user hasn't visited before
-    @param specific_feature: The specific feature type to search for.
-    @return: A list of dictionaries representing the challenges near the given location.
+    :param lat: The latitude of the location.
+    :param lon: The longitude of the location.
+    :param user: If included then check that the user hasn't visited before
+    :param specific_feature: The specific feature type to search for.
+    :return: A list of dictionaries representing the challenges near the given location.
     """
 
     challenge_data: dict[FeatureInstance, float] = {}
@@ -180,6 +182,7 @@ def get_features_near(lat: float, lon: float, user=None, specific_feature=None) 
     if specific_feature:
         all_features = all_features.filter(feature=specific_feature)
 
+    # calculate the distance to each feature
     for feature in all_features:
         if not user_already_reached_in_window(
                 user, feature, update=False):

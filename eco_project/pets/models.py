@@ -28,7 +28,7 @@ class PetType(models.Model):
         """
         Returns the name of the pet type.
 
-        @return: The name of the pet type.
+        :return: The name of the pet type.
         """
         return self.name
 
@@ -46,7 +46,7 @@ class CosmeticCategory(models.Model):
         """
         Returns the name of the cosmetic category.
 
-        @return: The name of the cosmetic category.
+        :return: The name of the cosmetic category.
         """
         return self.name
 
@@ -66,6 +66,9 @@ class Cosmetic(models.Model):
     video = models.FileField(upload_to="pets/videos/", blank=False)
 
     class Meta:
+        """
+        Config class for the Cosmetic model.
+        """
         constraints = [
             models.UniqueConstraint(fields=["name", "fits"], name="unique_name_fits")
         ]
@@ -74,7 +77,7 @@ class Cosmetic(models.Model):
         """
         Returns the name of the cosmetic.
 
-        @return: The name of the cosmetic.
+        :return: The name of the cosmetic.
         """
         return f"{self.name} ({self.fits.name} {self.category.name})"
 
@@ -105,6 +108,6 @@ class Pet(models.Model):
         """
         Returns the name of the pet.
 
-        @return: The name of the pet
+        :return: The name of the pet
         """
         return f"{self.owner.username}'s {self.name} ({self.type.name})"

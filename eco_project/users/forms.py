@@ -53,8 +53,8 @@ class UserCreationFormWithNames(UserCreationForm):
         """
         This method is used to save the user to the database.
 
-        @param commit: Whether to commit the changes to the database.
-        @return: The saved User instance.
+        :param commit: Whether to commit the changes to the database.
+        :return: The saved User instance.
         """
         user = super().save(commit=False)
 
@@ -69,7 +69,7 @@ class UserCreationFormWithNames(UserCreationForm):
         """
         This method is used to check if the form is valid.
 
-        @return: True if the form is valid, False otherwise.
+        :return: True if the form is valid, False otherwise.
         """
 
         valid = super().is_valid()
@@ -110,8 +110,8 @@ class PetCreationForm(forms.ModelForm):
         """
         Saves the pet instance to the database.
 
-        @param commit: Whether to commit the changes to the database.
-        @return: The saved Pet instance.
+        :param commit: Whether to commit the changes to the database.
+        :return: The saved Pet instance.
         """
         pet = super().save(commit=False)
         if commit:
@@ -122,7 +122,7 @@ class PetCreationForm(forms.ModelForm):
         """
         This method is used to check if the form is valid.
 
-        @return: True if the form is valid, False otherwise.
+        :return: True if the form is valid, False otherwise.
         """
         valid = super().is_valid()
         if not valid:
@@ -158,7 +158,7 @@ class RegistrationForm(forms.Form):
         """
         Checks if both the user form and the pet form are valid.
 
-        @return: True if both forms are valid, False otherwise.
+        :return: True if both forms are valid, False otherwise.
         """
         return self.user_form.is_valid() and self.pet_form.is_valid()
 
@@ -166,8 +166,8 @@ class RegistrationForm(forms.Form):
         """
         Saves the user and their pet to the database.
 
-        @param commit: Whether to commit the changes to the database.
-        @return: The saved User and Pet instances.
+        :param commit: Whether to commit the changes to the database.
+        :return: The saved User and Pet instances.
         """
         user = self.user_form.save(commit)
 
@@ -201,7 +201,7 @@ class ModifyUserForm(forms.ModelForm):
         """
         This method is used to check if the form is valid.
 
-        @return: True if the form is valid, False otherwise.
+        :return: True if the form is valid, False otherwise.
         """
         valid = super().is_valid()
         if not valid:

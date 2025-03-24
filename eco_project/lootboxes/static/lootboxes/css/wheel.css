@@ -137,14 +137,12 @@
 
 	animation: 10s rotate linear infinite;
 }
-/* Animate the custom property for the conic gradient */
 @keyframes rotate {
     to {
         --angle: 360deg;
     }
 }
 
-/* Enable animation of the custom property */
 @property --angle {
   syntax: '<angle>';
   initial-value: 0deg;

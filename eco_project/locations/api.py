@@ -5,7 +5,7 @@ This file contains the API endpoints for the Locations app
 """
 import json
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST
@@ -26,8 +26,8 @@ def nearby_tiles(request) -> Response:
     """
     This function returns a list of nearby 3D map tiles given a latitude, longitude and distance.
 
-    @param request: The get request object that hopefully contains lat, lon and distance.
-    @return: the JSON response containing the nearby tiles.
+    :param request: The get request object that hopefully contains lat, lon and distance.
+    :return: the JSON response containing the nearby tiles.
     """
     try:
         # Get the lat, lon and distance from the GET request
@@ -59,10 +59,10 @@ def get_features_for_tiles(request) -> Response:
     """
     Returns a dictionary where each key is a tile file URL and each value is a list of
     features on that tile. Each feature is represented by its latitude, longitude,
-    and feature colour. Expects a GET parameter "tiles" with a comma-separated list of tile IDs.
+    and feature colour. Expects a GET parameter "tiles" with a list of tile IDs.
 
-    @param request: The GET request object.
-    @return: The response containing the dictionary of features.
+    :param request: The GET request object.
+    :return: The response containing the dictionary of features.
     """
     tiles_param = request.GET.get("tiles")
     if not tiles_param:
@@ -106,8 +106,8 @@ def api_get_map_data(request) -> Response:
     """
     This function returns the map settings data for the 3D map.
 
-    @param request: The get request object. No data to read here.
-    @return: The map settings data in JSON format.
+    :param request: The get request object. No data to read here.
+    :return: The map settings data in JSON format.
     """
 
     # Get the map settings data from the LocationsAppSettings model
@@ -156,10 +156,10 @@ def api_get_map_data(request) -> Response:
 def get_current_location(request) -> Response:
     """
     This function returns a random location for the user that is not within 300m of
-     the map's border.
+    the map's border.
 
-    @param request: The GET request object. No data to read here.
-    @return The current location of the user as a JSON response.
+    :param request: The GET request object. No data to read here.
+    :return The current location of the user as a JSON response.
     """
 
     # get default lat and lon
@@ -191,8 +191,8 @@ def get_feature_instances(request) -> Response:
     """
     This function returns all feature instances in the database.
 
-    @param request: The GET request object. No data to read here.
-    @return: A JSON response containing all feature instances.
+    :param request: The GET request object. No data to read here.
+    :return: A JSON response containing all feature instances.
     """
     feature_instances = FeatureInstance.objects.all()
 
@@ -210,10 +210,14 @@ def get_feature_instances(request) -> Response:
 
 
 @require_POST
-def validate_qr(request):
+def validate_qr(request: HttpRequest):
     """
     Validates a QR code link to a feature and redirects to its page if valid.
+
+    :param request: The POST request object.
+    :return: A JSON response if the QR code is invalid, otherwise a redirect.
     """
+
     try:
         # Parse the JSON data
         data = json.loads(request.body)

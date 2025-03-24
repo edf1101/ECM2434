@@ -1,5 +1,7 @@
 """
 Signals for the pets app.
+
+@author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -12,10 +14,10 @@ def notify_low_health(sender, instance:Pet, **kwargs) -> None:
     """
     Sends an email to the pet's owner if the pet's health drops below 25%.
 
-    @param sender: The sender of the signal
-    @param instance: The instance of the model that was saved
-    @param kwargs: The keyword arguments passed to the signal
-    @return: None
+    :param sender: The sender of the signal
+    :param instance: The instance of the model that was saved
+    :param kwargs: The keyword arguments passed to the signal
+    :return: None
     """
 
     # If the pet's health is below 25 and an email hasn't been sent yet:

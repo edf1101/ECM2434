@@ -16,7 +16,7 @@ def update_challenges() -> None:
     """
     Gets called every 1m by the scheduler to update any time dependent challenges.
 
-    @return: None
+    :return: None
     """
     reset_missed_streaks()
     cleanup_user_feature_reaches()
@@ -27,7 +27,7 @@ def reset_missed_streaks() -> None:
     Checks all Streak objects and resets raw_count for users who missed their check-in window.
     The window is determined by the interval (from StreakSettings or default to 1 day).
 
-    @return: None
+    :return: None
     """
     now_time = timezone.now()
 
@@ -51,7 +51,7 @@ def cleanup_user_feature_reaches() -> None:
     """
     Deletes any UserFeatureReach record that is in a past window.
 
-    @return: None
+    :return: None
     """
     now_time = timezone.now()
 
@@ -66,7 +66,7 @@ def update_pet_health() -> None:
     Reduces the health of each Pet by 5% if created over 1 day ago,
      ensuring health doesn't drop below zero.
 
-    @return: None
+    :return: None
     """
 
     settings = ChallengeSettings.get_solo()

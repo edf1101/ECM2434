@@ -22,9 +22,9 @@ class Command(BaseCommand):
         """
         This function clears the 3D map chunk data from the database
 
-        @param args: None expected
-        @param kwargs: None expected
-        @return: None
+        :param args: None expected
+        :param kwargs: None expected
+        :return: None
         """
 
         # clear the media 3d_map_chunks folder
