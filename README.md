@@ -73,7 +73,7 @@ python manage.py runserver
 
 ### Regular Usage
 
-For normal users you can access the website by going to the hosted version at [this link.](edfillingham1.pythonanywhere.com)
+For normal users you can access the website by going to the hosted version at [this link.](https://edfillingham1.pythonanywhere.com)
 
 
 ## Code Maintenance and Quality
