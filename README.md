@@ -31,6 +31,10 @@ location of the challenge.
 Users can then check out our leaderboard page to compare how they are doing in terms of completing
 chanllenges compared to the rest of the community.
 
+## Deployed Link
+To access the deployed website follow this link:
+https://edfillingham1.pythonanywhere.com/ 
+
 ## Installing
 
 Assuming you have a virtual environment set up (We will containerise later before submission?)
