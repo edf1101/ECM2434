@@ -14,7 +14,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from fontTools.misc.cython import returns
 
 from challenges.challenge_helpers import (
     get_interval,
@@ -42,6 +41,7 @@ from users.models import Profile
 
 # pylint: disable=W0613,C0415,W0611
 
+import challenges.signals
 
 User = get_user_model()
 
@@ -588,7 +588,7 @@ class StreakModelTest(TestCase):
         """
         self.user = User.objects.create_user(
             username="testuser", password="testpass")
-        self.streak = Streak.objects.create(user=self.user)
+        self.streak, _ = Streak.objects.get_or_create(user=self.user)
         self.challenge_settings = ChallengeSettings.get_solo()
         self.challenge_settings.interval = timedelta(days=1)
         self.challenge_settings.save()
