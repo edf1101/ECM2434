@@ -14,7 +14,7 @@ from .models import Profile, Badge, UserGroup
 
 User = get_user_model()
 
-
+#pylint: disable=R0901
 class UserCreationFormWithNames(UserCreationForm):
     """
     This form is used to register a new user, it includes required fields for first name

@@ -6,3 +6,6 @@ ignore-patterns=migrations/*.py
 
 [DJANGO]
 django-settings-module=mysite.settings
+
+[MESSAGES CONTROL]
+disable=R0401

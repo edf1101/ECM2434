@@ -154,13 +154,11 @@ class Command(BaseCommand):
                 description=pet["description"],
             )
 
-            vid = os.path.join(
-                os.getcwd(),
-                "pets/management/commands/media/videos",
-                pet["video"]
-            )
-
-            with open(vid, "rb") as f:
+            with open(os.path.join(
+                    os.getcwd(),
+                    "pets/management/commands/media/videos",
+                    pet["video"])
+                    , "rb") as f:
                 pet_type.base_video = File(f, name=pet["video"])
 
                 try:
@@ -175,43 +173,35 @@ class Command(BaseCommand):
                                     description=cosmetic_data["description"],
                                     price=cosmetic_data["price"])
 
-                icon = os.path.join(
-                    os.getcwd(),
-                    "pets/management/commands/media/cosmetic_icons",
-                    cosmetic_data["icon"]
-                )
-
-                with open(icon, "rb") as icon_f:
+                with open(os.path.join(
+                        os.getcwd(),
+                        "pets/management/commands/media/cosmetic_icons",
+                        cosmetic_data["icon"]
+                ), "rb") as icon_f:
                     cosmetic.icon = File(icon_f, name=cosmetic_data["icon"])
 
-                    vid = os.path.join(
-                        os.getcwd(),
-                        "pets/management/commands/media/videos",
-                        cosmetic_data["video"]
-                    )
-
-                    with open(vid, "rb") as vid_f:
+                    with open(os.path.join(
+                            os.getcwd(),
+                            "pets/management/commands/media/videos",
+                            cosmetic_data["video"]
+                    ), "rb") as vid_f:
                         cosmetic.video = File(vid_f, name=cosmetic_data["video"])
 
-                        try:
-                            category = CosmeticCategory.objects.get(name=cosmetic_data["category"])
-                        except CosmeticCategory.DoesNotExist:
-                            new_category = CosmeticCategory(name=cosmetic_data["category"])
-                            new_category.save()
-                            category = new_category
-
+                        category, _ = CosmeticCategory.objects.get_or_create(
+                            name=cosmetic_data["category"])
                         cosmetic.category = category
-                        cosmetic.fits = PetType.objects.get(name=pet["name"])
+                        cosmetic.fits = pet_type
 
                         try:
                             cosmetic.save()
-                            msg = f"Created {cosmetic_data['name']} for {pet['name']}"
-                            self.stderr.write(self.style.SUCCESS(msg))
+                            self.stderr.write(self.style.SUCCESS(f"Created {cosmetic_data['name']}"
+                                                                 f" for {pet['name']}"))
                         except IntegrityError as e:
-                            msg = (f"Could not create {cosmetic_data['name']} "
-                                   f"for {pet['name']}, skipping it: {str(e)}")
-                            self.stderr.write(self.style.WARNING(msg))
 
+                            self.stderr.write(self.style.WARNING((f"Could not create "
+                                                                  f"{cosmetic_data['name']} "
+                                                                  f"for {pet['name']}, "
+                                                                  f"skipping it: {str(e)}")))
 
         # Create example user and default pet
         try:

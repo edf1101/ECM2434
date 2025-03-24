@@ -10,6 +10,7 @@ from .models import Streak, ChallengeSettings, UserFeatureReach, Choice, Questio
 
 
 # pylint: disable=E1101
+# pylint: disable=too-few-public-methods
 
 class StreakAdmin(admin.ModelAdmin):
     """

@@ -4,11 +4,10 @@ This includes the frontend calling get_pet_data(user) to get the data for a pet.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
-
-from users.models import Profile
 
 User = get_user_model()  # Get the user model
 
@@ -29,7 +28,7 @@ def get_pet_data(request, username) -> JsonResponse:
 
     try:
         pet = target_user.pet
-    except Exception as e:
+    except ObjectDoesNotExist:
         return JsonResponse(
             {"error": "No pet found for this user."}, status=404)
 

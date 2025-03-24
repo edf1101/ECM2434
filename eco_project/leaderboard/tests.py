@@ -6,7 +6,7 @@ This module contains the test suite for the leaderboard app.
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
-from pets.models import Pet, PetType
+from pets.models import Pet
 from users.models import Profile, UserGroup
 
 User = get_user_model()
@@ -39,15 +39,11 @@ class LeaderboardViewTest(TestCase):
             user=self.user2, defaults={"points": 100}
         )
 
-        self.pet_type = PetType.objects.create(
-            name="Dog", description="Test Dog")
-
-        self.pet1 = Pet.objects.create(
-            name="Pet1", type=self.pet_type, owner=self.user1
-        )
-        self.pet2 = Pet.objects.create(
-            name="Pet2", type=self.pet_type, owner=self.user2
-        )
+        # self.pet_type = PetType.objects.create(
+        #     name="Dog", description="Test Dog")
+        #
+        # self.pets = [Pet.objects.create(name="Pet1", type=self.pet_type, owner=self.user1),
+        #              Pet.objects.create(name="Pet2", type=self.pet_type, owner=self.user2)]
 
         self.group = UserGroup.objects.create(name="Group1", code="G1")
         self.group.users.add(self.user1, self.user2)

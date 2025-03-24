@@ -209,9 +209,8 @@ def score_quiz(request: HttpRequest) -> Response:
             correct_count += 1
 
     # calculate the score
-    total_questions = questions.count()
-    percentage = int(correct_count / total_questions * 100)
-    points = int(correct_count / total_questions * quiz.total_points)
+    percentage = int(correct_count / questions.count() * 100)
+    points = int(correct_count / questions.count() * quiz.total_points)
 
     # If the user is logged in and the attempt is new, save the attempt and give the user points
     if request.user.is_authenticated:
@@ -224,11 +223,9 @@ def score_quiz(request: HttpRequest) -> Response:
             request.user.profile.add_points(points)
 
             if percentage > 80:
-                reward_health = 20
-                pet = request.user.pet
-                if pet:
-                    pet.health = min(pet.health + reward_health, 100)
-                    pet.save()
+                if request.user.pet:
+                    request.user.pet.health = min(request.user.pet.health + 20, 100)
+                    request.user.pet.save()
 
     return Response({
         "message": f"You got {percentage}% correct. Total points awarded: {points}",

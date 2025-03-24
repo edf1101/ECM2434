@@ -3,6 +3,7 @@ Models for the Challenges app.
 
 @author: 730003140, 730009864, 730020278, 730022096, 730002704, 730019821, 720039505
 """
+#pylint: disable R0401
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
